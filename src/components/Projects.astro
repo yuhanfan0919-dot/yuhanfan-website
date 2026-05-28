@@ -1,0 +1,78 @@
+---
+import type { Content } from '../data/content.ts';
+
+interface Props {
+  data: Content['projects'];
+}
+const { data } = Astro.props;
+const item = data.item;
+---
+
+<section id="projects" class="section">
+  <div class="container-page">
+    <!-- 段标题 -->
+    <div class="mb-10 md:mb-12">
+      <p class="eyebrow mb-4 reveal">{data.eyebrow}</p>
+      <h2 class="display text-3xl md:text-4xl lg:text-5xl reveal">{data.title}</h2>
+    </div>
+
+    <!-- 单张大卡 -->
+    <a href={item.href} class="card reveal group block">
+      <!-- 卡片头：项目名 + 状态 -->
+      <div
+        class="flex flex-wrap items-baseline justify-between gap-3 mb-6 pb-5 border-b"
+        style="border-color: var(--color-border);"
+      >
+        <h3
+          class="font-serif text-3xl md:text-4xl font-semibold transition-colors"
+          style="color: var(--color-ink);"
+        >
+          {item.name}
+        </h3>
+        <span class="font-mono text-xs md:text-sm" style="color: var(--color-accent-deep);">
+          {item.status}
+        </span>
+      </div>
+
+      <!-- 卡片描述 -->
+      <p
+        class="text-base md:text-lg leading-relaxed mb-8 max-w-3xl"
+        style="color: var(--color-ink-2);"
+      >
+        {item.description}
+      </p>
+
+      <!-- 子模块列表 -->
+      <div class="space-y-8 mb-8">
+        {item.submodules.map((sub) => (
+          <div class="pl-5" style="border-left: 2px solid var(--color-accent-violet);">
+            <h4 class="font-semibold text-lg md:text-xl mb-2" style="color: var(--color-ink);">
+              ▸ {sub.title}
+            </h4>
+            <p class="text-sm md:text-base mb-3" style="color: var(--color-ink-2);">
+              {sub.description}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {sub.stack.map((tech) => (
+                <span class="chip">#{tech}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- 底部 CTA -->
+      <div
+        class="pt-5 border-t flex justify-end"
+        style="border-color: var(--color-border);"
+      >
+        <span
+          class="font-medium text-sm md:text-base flex items-center gap-2 transition-all group-hover:gap-3"
+          style="color: var(--color-accent);"
+        >
+          {item.ctaLabel}
+        </span>
+      </div>
+    </a>
+  </div>
+</section>

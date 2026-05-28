@@ -1,0 +1,25 @@
+---
+import type { Content } from '../data/content.ts';
+
+interface Props {
+  data: Content['skills'];
+}
+const { data } = Astro.props;
+---
+
+<section id="skills" class="section">
+  <div class="container-page">
+    <!-- 段标题（只保留 SKILLS H2，无副标题） -->
+    <div class="mb-10 md:mb-12">
+      <p class="eyebrow mb-4 reveal">{data.eyebrow}</p>
+      <h2 class="display text-3xl md:text-4xl lg:text-5xl reveal">{data.title}</h2>
+    </div>
+
+    <!-- 单行扁平 chips（自动 wrap） -->
+    <div class="flex flex-wrap gap-2 md:gap-3 reveal">
+      {data.chips.map((chip) => (
+        <span class="chip">#{chip}</span>
+      ))}
+    </div>
+  </div>
+</section>

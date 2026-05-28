@@ -1,0 +1,213 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout
+  title="oppachikin — Online ordering for a Minsk-local fried chicken shop | Rain Fan"
+  description="A production-grade e-commerce system shipped from 0 to 1 in 5 weeks by a self-taught developer using AI co-pilots."
+  lang="en"
+>
+  <article class="container-page py-20 md:py-28 max-w-3xl">
+    <a href="/en/" class="inline-flex items-center gap-2 text-sm text-muted hover:text-accent mb-12 transition-colors">
+      <span aria-hidden="true">←</span>
+      <span>Back to home</span>
+    </a>
+
+    <p class="eyebrow mb-6">Project / Mar 2026 – Present</p>
+
+    <h1 class="display text-4xl md:text-6xl mb-6">
+      oppachikin<span class="text-accent">.</span>
+    </h1>
+    <p class="font-serif text-xl md:text-2xl text-muted mb-10 leading-snug">
+      Online ordering system for a Minsk-local fried chicken shop — a production-grade
+      e-commerce system shipped from 0 to 1 in 5 weeks, by a self-taught dev using AI co-pilots.
+    </p>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-16">
+      <div class="p-4 bg-canvas border border-border rounded-xl">
+        <p class="font-mono text-xs text-muted mb-1">Timeline</p>
+        <p class="font-serif text-2xl font-semibold">5 weeks</p>
+      </div>
+      <div class="p-4 bg-canvas border border-border rounded-xl">
+        <p class="font-mono text-xs text-muted mb-1">Code</p>
+        <p class="font-serif text-2xl font-semibold">9,850 lines</p>
+      </div>
+      <div class="p-4 bg-canvas border border-border rounded-xl">
+        <p class="font-mono text-xs text-muted mb-1">Pages / API</p>
+        <p class="font-serif text-2xl font-semibold">23 / 19</p>
+      </div>
+      <div class="p-4 bg-canvas border border-border rounded-xl">
+        <p class="font-mono text-xs text-muted mb-1">Commits</p>
+        <p class="font-serif text-2xl font-semibold">52</p>
+      </div>
+    </div>
+
+    <div class="space-y-12 text-ink/85">
+      <section>
+        <p class="eyebrow mb-3">01</p>
+        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">The problem</h2>
+        <p class="leading-relaxed mb-4">
+          My sister runs a fried chicken shop in Minsk, Belarus. Unlike China's "everything-on-Meituan"
+          delivery ecosystem, Minsk has weak local delivery platform coverage — most restaurant orders
+          still come through walk-ins, phone calls, and the shop's own website.
+          <strong>A website here isn't a bonus channel — it's the primary acquisition channel.</strong>
+        </p>
+        <p class="leading-relaxed">
+          She hired me, <strong>paid me a development fee</strong>, and gave me my first real freelance gig.
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow mb-3">02</p>
+        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">My angle</h2>
+        <p class="leading-relaxed">
+          I was a financial analyst at SF Tech with no formal frontend/backend experience.
+          My bet going in: <strong>using Cursor + Claude Code, I could translate my understanding
+          of business and users into working code.</strong>
+          AI handles syntax, library choices, best practices; I handle product judgment, debugging
+          intuition, and the feedback loop with a real customer (my sister).
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow mb-3">03</p>
+        <h2 class="font-serif text-3xl font-semibold text-ink mb-6">Architecture & key decisions</h2>
+
+        <div class="overflow-x-auto -mx-2 px-2">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="border-b-2 border-ink">
+                <th class="text-left py-3 font-serif text-base">Layer</th>
+                <th class="text-left py-3 font-serif text-base">Choice</th>
+                <th class="text-left py-3 font-serif text-base">Why</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border">
+              <tr><td class="py-3 pr-3 text-muted">Framework</td><td class="py-3 pr-3 font-mono text-xs">Next.js 16 + React 19</td><td class="py-3">One codebase, FE + BE</td></tr>
+              <tr><td class="py-3 pr-3 text-muted">UI</td><td class="py-3 pr-3 font-mono text-xs">Tailwind v4 + shadcn/ui</td><td class="py-3">Zero custom CSS to ship a clean look</td></tr>
+              <tr><td class="py-3 pr-3 text-muted">DB</td><td class="py-3 pr-3 font-mono text-xs">Supabase (Postgres)</td><td class="py-3">Auth + RLS out of the box</td></tr>
+              <tr><td class="py-3 pr-3 text-muted">Payments</td><td class="py-3 pr-3 font-mono text-xs">Alfa Bank API</td><td class="py-3">Local-market constraint, not a tech preference</td></tr>
+              <tr><td class="py-3 pr-3 text-muted">Notifications</td><td class="py-3 pr-3 font-mono text-xs">Telegram Bot</td><td class="py-3">Russian-speaking customers all use Telegram</td></tr>
+              <tr><td class="py-3 pr-3 text-muted">SMS</td><td class="py-3 pr-3 font-mono text-xs">SMS.by</td><td class="py-3">Local Belarus operator for OTP</td></tr>
+              <tr><td class="py-3 pr-3 text-muted">Rate limit</td><td class="py-3 pr-3 font-mono text-xs">Upstash Redis</td><td class="py-3">Protect login + OTP endpoints</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <blockquote class="pullquote mt-8">
+          <p class="mb-2"><strong>A decision I'm proud of</strong>: loyalty points are stored as
+          an append-only transaction log, not as a mutable balance.</p>
+          <p>Direct instinct from my finance background — anything money-shaped needs an audit trail.
+          When something goes wrong, you can replay every change, not just stare at a wrong number.</p>
+        </blockquote>
+      </section>
+
+      <section>
+        <p class="eyebrow mb-3">04</p>
+        <h2 class="font-serif text-3xl font-semibold text-ink mb-6">The hardest (and proudest) parts</h2>
+
+        <div class="space-y-8">
+          <div>
+            <h3 class="font-serif text-xl font-semibold mb-2">1. Idempotent payment callbacks</h3>
+            <p class="leading-relaxed">
+              Gateway "success" callbacks get retried due to network issues. Without idempotency,
+              a single payment can flip order state twice and double-credit points. Solution:
+              gate state transitions on current order status — duplicates return 200 but do nothing.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-serif text-xl font-semibold mb-2">2. Server-side total recomputation</h3>
+            <p class="leading-relaxed">
+              The first version trusted the client-submitted total. Classic
+              <strong>amount-tampering vulnerability</strong> — a user could change 25 to 1
+              in the request and eat for a buck. Fix: always recompute the final total server-side
+              from item IDs.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-serif text-xl font-semibold mb-2">3. Telegram webhook forgery protection</h3>
+            <p class="leading-relaxed">
+              Used Telegram's <code class="font-mono text-sm bg-highlight px-1.5 py-0.5 rounded">secret_token</code>
+              mechanism — validate the token in the webhook header, reject 401 on mismatch.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-serif text-xl font-semibold mb-2">4. Auth & OTP rate limiting</h3>
+            <p class="leading-relaxed">
+              SMS codes cost real money. Login is a classic brute-force target. Upstash Redis
+              limiting on both IP and phone dimensions.
+            </p>
+          </div>
+        </div>
+
+        <p class="text-sm text-muted mt-8 leading-relaxed">
+          None of this was built up front — <strong class="text-ink">I dedicated a full week
+          near launch to a security audit and patched these one by one.</strong> The commit log shows
+          a week of consecutive <code class="font-mono text-xs bg-highlight px-1.5 py-0.5 rounded">security:</code>
+          prefixed commits. This is the part of the project I'm most proud of.
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow mb-3">05</p>
+        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">AI collaboration workflow</h2>
+        <p class="leading-relaxed mb-4">
+          Day-to-day coding in Cursor. Architecture-level decisions: discussed in Claude Code chat,
+          weighing trade-offs, then generating code. Complex integrations (e.g. Alfa Bank): fed the
+          gateway docs into Claude Code, had it produce a doc-grounded integration plan, then
+          debugged together.
+        </p>
+        <p class="leading-relaxed mb-4 text-muted italic">
+          [Specific vibe-coding moment — TBD: one feature I had zero intuition for, that AI helped
+          me decompose and ship.]
+        </p>
+        <p class="leading-relaxed">
+          The biggest lesson: <strong>AI doesn't make product decisions for me. It makes the
+          gap between "an idea I can articulate" and "a working implementation" 10x narrower.
+          The bottleneck becomes how clearly I can think.</strong>
+          That muscle came from finance, and it transferred cleanly.
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow mb-3">06</p>
+        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">Current status</h2>
+        <ul class="space-y-2 leading-relaxed">
+          <li><span class="text-accent mr-2">✓</span>Engineering: done</li>
+          <li><span class="text-accent mr-2">✓</span>Security hardening: done</li>
+          <li><span class="text-accent mr-2">⏳</span>Launch: awaiting SMS.by sender name approval (local compliance, not engineering)</li>
+        </ul>
+      </section>
+
+      <section>
+        <p class="eyebrow mb-3">07</p>
+        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">What these 5 weeks taught me</h2>
+        <ol class="space-y-4 leading-relaxed list-decimal pl-5">
+          <li><strong>AI lowers the "can I do this" bar but raises the "have I thought it through" bar.</strong>
+            My finance background turned into an asset — I'm trained to define problems before acting.</li>
+          <li><strong>Production-grade ≠ feature-complete.</strong>
+            Features are the start; idempotency, validation, webhook signing, rate limiting, secret
+            management — a long tail.</li>
+          <li><strong>A paying customer is the best product teacher.</strong>
+            My sister's reactions to the UI taught me more than any tutorial.</li>
+          <li><strong>What's next</strong>: bring this "AI collaboration + business sense" combo into
+            companies trying to use agents to improve internal workflows.</li>
+        </ol>
+      </section>
+    </div>
+
+    <div class="mt-20 pt-10 border-t border-border">
+      <p class="font-serif text-2xl mb-4">Want to talk?</p>
+      <p class="text-muted mb-6">
+        If you're thinking about how to bring AI into a team's workflow —
+        <a href="/en/#contact" class="link">get in touch</a>.
+      </p>
+      <a href="/en/" class="text-sm text-muted hover:text-accent transition-colors">
+        ← Back to home
+      </a>
+    </div>
+  </article>
+</Layout>

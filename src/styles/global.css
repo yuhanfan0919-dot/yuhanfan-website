@@ -1,0 +1,397 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+@import "tailwindcss";
+
+/* ============================================================================
+   Tailwind v4 设计 Token —— Lavender 版（基于 Carrd #277 配色）
+
+   颜色映射逻辑：
+   - 原 cream (暖米白)     → mist (粉雾)
+   - 原 accent (赤陶橙)    → periwinkle 蓝紫
+   - 原 highlight (浅米黄) → lavender 淡紫
+   - 整体 background 增加多层径向渐变（peach → mist → lilac）
+   ============================================================================ */
+
+@theme {
+  /* ---- 背景渐变三段（Carrd #277 大背景） ---- */
+  --color-bg-peach: #FFD4B8;
+  --color-bg-mist:  #F0E0EC;
+  --color-bg-lilac: #C5B5E8;
+
+  /* ---- 兼容旧 token 名（Day 1.5+: 浅冷灰交替背景，参考 Robin / Zitilei） ---- */
+  --color-bg-light: #FAFBFC;       /* 浅段背景（Hero / About / Skills） */
+  --color-bg-mid:   #F1F3F6;       /* 深一档段背景（Projects / Experience / Contact） */
+  --color-cream:   #FAFBFC;        /* 等同 bg-light，给旧 token 引用 */
+  --color-canvas:  #FFFFFF;        /* 卡片背景：纯白浮起 */
+  --color-canvas-tint: #F4F5F8;    /* chip / 嵌套次级卡底：介于 light 和 mid 之间 */
+  --color-ink:     #2E3340;        /* 主文字：深岩板灰（非纯黑） */
+  --color-ink-2:   #4A4F5C;        /* 正文段落 */
+  --color-muted:   #7A7A8A;        /* 次要文字：灰紫 */
+  --color-whisper: #A8A8B8;        /* 更浅 */
+  --color-border:  #E1E3E8;        /* 分隔线：浅冷灰（在交替背景上都看得见） */
+
+  /* ---- 强调色：periwinkle 系 ---- */
+  --color-accent:        #7B82F0;
+  --color-accent-soft:   #9CA3F0;  /* 按钮渐变起点 */
+  --color-accent-deep:   #6B71E5;  /* hover */
+  --color-accent-violet: #B8A5E5;  /* 按钮渐变终点 */
+  --color-accent-dark:   #6B71E5;  /* 兼容旧名 */
+  --color-highlight:     #F4EFFB;  /* 原 highlight → 极淡紫 */
+
+  /* ---- 备用强调（截图里 Select 按钮的薄荷色，留作 CTA 备选） ---- */
+  --color-mint: #3DCFB6;
+
+  /* ---- 字体 ---- */
+  --font-serif: 'Source Serif 4', 'Source Serif Pro', 'Noto Serif SC', 'Songti SC', serif;
+  --font-sans:  'Inter', system-ui, -apple-system, 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ---- 容器宽度 ---- */
+  --container-prose: 70ch;
+  --container-page: 1200px;
+
+  /* ---- 动画 ---- */
+  --animate-fade-up: fade-up 0.6s ease-out;
+}
+
+@keyframes fade-up {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================================
+   基础样式
+   ============================================================================ */
+
+html {
+  /* Day 1.5+: html 用浅段背景作兜底，section 自己 nth-of-type 覆盖（Robin / Zitilei 风格） */
+  background: var(--color-bg-light);
+  color: var(--color-ink);
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-feature-settings: "ss01", "cv11";
+  background: transparent;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* ============================================================================
+   语义化 component classes
+   ============================================================================ */
+
+.container-page {
+  margin-inline: auto;
+  max-width: var(--container-page);
+  padding-inline: 1.5rem;
+}
+@media (min-width: 768px) {
+  .container-page { padding-inline: 3rem; }
+}
+
+.section {
+  padding-block: 5rem;
+}
+@media (min-width: 768px) {
+  .section { padding-block: 8rem; }
+}
+
+/* Day 1.5+: section 奇偶背景交替（Robin / Zitilei 风格）+ 虚线分隔双重视觉 */
+main > .section:nth-of-type(odd) {
+  background: var(--color-bg-light);
+}
+main > .section:nth-of-type(even) {
+  background: var(--color-bg-mid);
+}
+main > .section + .section {
+  border-top: 1px dashed var(--color-border);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--color-accent);
+}
+
+/* 大标题（Hero / About 双标语用 serif 衬线） */
+.display {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
+/* 链接：periwinkle 下划线 */
+.link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s;
+}
+.link:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+/* 引用块（Day 1.5: 去渐变，用纯淡紫底，保留 accent 左线作为唯一色彩点缀） */
+.pullquote {
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-highlight);
+  padding: 1.5rem 1.75rem;
+  border-radius: 0 14px 14px 0;
+  font-style: italic;
+  color: var(--color-ink);
+}
+
+/* 卡片（项目卡）（Day 1.5: 去渐变背景，纯白 + 浅灰边框） */
+.card {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  border-radius: 1.125rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  display: block;
+}
+.card:hover {
+  border-color: var(--color-accent-violet);
+  box-shadow: 0 20px 50px -30px rgba(46, 51, 64, .15);
+  transform: translateY(-3px);
+}
+
+/* 主按钮 —— periwinkle 渐变 */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.875rem 1.375rem;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: #fff;
+  background: linear-gradient(135deg,
+    var(--color-accent-soft) 0%,
+    var(--color-accent) 60%,
+    var(--color-accent-violet) 100%);
+  box-shadow: 0 10px 28px -10px rgba(123, 130, 240, .35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px -10px rgba(123, 130, 240, .45);
+}
+
+/* 幽灵按钮 */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.375rem;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--color-ink);
+  background: transparent;
+  border: 1.5px solid var(--color-border);
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+.btn-ghost:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+/* 标签（skill chips）—— 填充淡色底 + 无边框 + 圆角 */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  background: var(--color-canvas-tint);
+  border: 1px solid transparent;
+  color: var(--color-ink-2);
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.chip:hover {
+  background: var(--color-highlight);
+  color: var(--color-accent-deep);
+  transform: translateY(-1px);
+}
+
+/* 入场动画 */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================================
+   Modal (原生 <dialog>) 样式
+   ============================================================================ */
+dialog {
+  border: none;
+  border-radius: 1.25rem;
+  padding: 0;
+  background: var(--color-canvas);
+  /* Day 1.5: 用 min() 替代 calc()，避免在大屏被 max-width cap 时浏览器原生居中失效 */
+  width: min(720px, calc(100vw - 2rem));
+  max-width: 720px;
+  max-height: 85vh;
+  /* 强制居中 —— 解决"Modal 显示在屏幕最左边"的问题 */
+  margin: auto;
+  inset: 0;
+  box-shadow:
+    0 30px 80px -20px rgba(46, 51, 64, .35),
+    0 12px 32px -8px rgba(123, 130, 240, .22);
+  color: var(--color-ink);
+}
+dialog::backdrop {
+  background: rgba(46, 51, 64, 0.55);
+  backdrop-filter: blur(4px);
+}
+dialog[open] {
+  animation: dialog-fade-in 0.25s ease-out;
+}
+@keyframes dialog-fade-in {
+  from { opacity: 0; transform: translateY(20px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ============================================================================
+   Deep Think 模块（Experience 段上方）
+   ============================================================================ */
+.deep-think {
+  /* Day 1.5: 去渐变，纯次级白底 + 浅灰边框 */
+  background: var(--color-canvas-tint);
+  border: 1px solid var(--color-border);
+  border-radius: 1.25rem;
+  padding: 1.75rem 2rem;
+}
+.deep-think-chip {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1.5px solid var(--color-border);
+  color: var(--color-ink-2);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.deep-think-chip:hover {
+  border-color: var(--color-accent-violet);
+  color: var(--color-accent-deep);
+}
+.deep-think-chip[aria-selected="true"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+.deep-think-content {
+  transition: opacity 0.2s ease-out;
+}
+.deep-think-content.fading {
+  opacity: 0;
+}
+
+/* ============================================================================
+   Header: 品牌 logo + 导航链接 + 语言 toggle 胶囊
+   ============================================================================ */
+
+/* 品牌 "i am Rain"（两行 italic serif，参考 Robin 的 "i am robin"） */
+.brand-link {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.brand-line-1 {
+  font-weight: 400;
+  color: var(--color-muted);
+  transition: color 0.3s ease;
+}
+.brand-line-2 {
+  font-weight: 600;
+  margin-left: 0.6rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+  display: inline-block;
+}
+.brand-link:hover {
+  color: var(--color-accent);
+}
+.brand-link:hover .brand-line-1 {
+  color: var(--color-accent-soft);
+}
+.brand-link:hover .brand-line-2 {
+  transform: translateX(3px);
+  color: var(--color-accent);
+}
+
+/* 导航链接 */
+.nav-link {
+  color: var(--color-ink-2);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.nav-link:hover {
+  color: var(--color-accent);
+}
+
+/* 语言 toggle 胶囊（参考截图的 EN / 中 toggle 风格） */
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-canvas-tint);
+  border-radius: 9999px;
+  padding: 3px;
+  border: 1px solid var(--color-border);
+  gap: 2px;
+}
+.lang-toggle-item {
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  line-height: 1;
+}
+.lang-toggle-item:hover:not(.active) {
+  color: var(--color-ink-2);
+}
+.lang-toggle-item.active {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+  cursor: default;
+}

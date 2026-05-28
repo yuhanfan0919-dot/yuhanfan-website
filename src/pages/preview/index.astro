@@ -1,0 +1,142 @@
+---
+const variants = [
+  {
+    slug: 'v1',
+    name: 'V1 · Editorial',
+    desc: '杂志大刊风。深森绿 + 暖沙，Fraunces 衬线大字，不对称排版。',
+    bg: '#F5EFE2',
+    fg: '#1A1A1A',
+    accent: '#2D4A2B',
+  },
+  {
+    slug: 'v2',
+    name: 'V2 · Bold Statement',
+    desc: '极简宣言风。全屏暖砂 + 锈红，巨型 Bricolage 大字，一句话讲完。',
+    bg: '#E8DCC7',
+    fg: '#1F1F1F',
+    accent: '#C44829',
+  },
+  {
+    slug: 'v3',
+    name: 'V3 · Soft Portrait',
+    desc: '暖人像风。奶油渐变 + 玫调强调，大圆角卡片，Cormorant 优雅衬线。',
+    bg: 'linear-gradient(135deg, #F8EDE3 0%, #E8D5C4 100%)',
+    fg: '#3D2C24',
+    accent: '#C97B7B',
+  },
+];
+---
+
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>视觉风格预览 · Rain Yu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: #FAF6F0;
+        color: #1A1A1A;
+        font-family: 'Inter', system-ui, sans-serif;
+        padding: 4rem 1.5rem;
+        min-height: 100vh;
+      }
+      .wrap { max-width: 1080px; margin: 0 auto; }
+      h1 {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+      }
+      .lede {
+        color: #6B6B6B;
+        max-width: 38rem;
+        margin-bottom: 3rem;
+        line-height: 1.7;
+      }
+      .grid { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+      @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+      .card {
+        display: block;
+        border-radius: 1rem;
+        overflow: hidden;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+        position: relative;
+      }
+      .card:hover { transform: translateY(-6px); }
+      .card-preview {
+        aspect-ratio: 4/5;
+        display: flex;
+        align-items: flex-end;
+        padding: 1.5rem;
+        position: relative;
+      }
+      .card-preview::before {
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%);
+      }
+      .card-meta {
+        position: relative;
+        color: white;
+        z-index: 1;
+      }
+      .card-name {
+        font-family: 'Fraunces', serif;
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+      .card-desc { font-size: 0.875rem; line-height: 1.5; opacity: 0.9; }
+      .card-fade {
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(circle at 30% 40%, var(--accent) 0%, transparent 50%),
+          var(--bg);
+      }
+      .back {
+        display: inline-block; margin-top: 3rem;
+        font-size: 0.875rem; color: #6B6B6B; text-decoration: none;
+      }
+      .back:hover { color: #C2563A; }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>视觉风格预览</h1>
+      <p class="lede">
+        三个方向，三种气质。点进去看完整的 Hero + About 样本，然后回来比较。
+        告诉我你选哪个，或者哪几处想互相借鉴。
+      </p>
+
+      <div class="grid">
+        {
+          variants.map((v) => (
+            <a class="card" href={`/preview/${v.slug}/`}>
+              <div
+                class="card-preview"
+                style={`--bg:${v.bg};--accent:${v.accent};color:${v.fg}`}
+              >
+                <div class="card-fade" />
+                <div class="card-meta">
+                  <p class="card-name">{v.name}</p>
+                  <p class="card-desc">{v.desc}</p>
+                </div>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+
+      <a class="back" href="/">← 回到正式主页</a>
+    </main>
+  </body>
+</html>

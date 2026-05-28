@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import About from '../../components/About.astro';
+import Experience from '../../components/Experience.astro';
+import Projects from '../../components/Projects.astro';
+import Contact from '../../components/Contact.astro';
+import { en as content } from '../../data/content.ts';
+---
+
+<Layout
+  title="Rain Fan · AI Implementation / FDE Direction"
+  description="Turning real business workflows into working AI systems. Finance and audit training plus Claude Code agent delivery."
+  lang="en"
+>
+  <Hero data={content.hero} lang="en" />
+  <Projects data={content.projects} />
+  <About data={content.about} />
+  <Experience data={content.experience} lang="en" />
+  <Contact data={content.contact} />
+</Layout>

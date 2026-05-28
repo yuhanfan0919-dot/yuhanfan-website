@@ -1,0 +1,37 @@
+---
+import type { Content } from '../data/content.ts';
+
+interface Props {
+  data: Content['contact'];
+}
+const { data } = Astro.props;
+---
+
+<section id="contact" class="section">
+  <div class="container-page">
+    <div class="max-w-3xl">
+      <p class="eyebrow mb-4 reveal">{data.eyebrow}</p>
+      <h2 class="display text-4xl md:text-5xl lg:text-6xl mb-6 reveal">
+        {data.title}
+      </h2>
+      <p
+        class="text-base md:text-lg leading-relaxed mb-10 reveal max-w-2xl"
+        style="color: var(--color-ink-2);"
+      >
+        {data.body}
+      </p>
+
+      <!-- 3 个 CTA 按钮 -->
+      <div class="flex flex-wrap gap-3 md:gap-4 reveal">
+        {data.methods.map((method, i) => (
+          <a
+            href={method.href}
+            class={i === 0 ? 'btn-primary' : 'btn-ghost'}
+          >
+            {method.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

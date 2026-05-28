@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
+import Projects from '../components/Projects.astro';
+import Contact from '../components/Contact.astro';
+import { zh as content } from '../data/content.ts';
+---
+
+<Layout
+  title="Rain Fan · AI 落地 / FDE 方向"
+  description="把真实业务流程交付成可运行的 AI 系统。财务与审计训练 + Claude Code agent 交付实战。"
+  lang="zh"
+>
+  <Hero data={content.hero} lang="zh" />
+  <Projects data={content.projects} />
+  <About data={content.about} />
+  <Experience data={content.experience} lang="zh" />
+  <Contact data={content.contact} />
+</Layout>

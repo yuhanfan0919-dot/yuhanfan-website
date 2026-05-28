@@ -1,0 +1,40 @@
+---
+interface Props {
+  lang: 'zh' | 'en';
+}
+const { lang } = Astro.props;
+
+const t = lang === 'zh'
+  ? {
+      tagline: '用 AI 让"还在做重复劳动的人"先解放出来。',
+      built: '本站用 Astro + Tailwind + Claude Code 搭建',
+      year: '© 2026 Rain Fan',
+    }
+  : {
+      tagline: "Bringing AI to the people who haven't had the chance yet.",
+      built: 'Built with Astro + Tailwind + Claude Code',
+      year: '© 2026 Rain Fan',
+    };
+---
+
+<footer
+  class="mt-20 py-12"
+  style="border-top: 1px dashed var(--color-border);"
+>
+  <div class="container-page">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+      <div>
+        <p
+          class="font-serif text-xl leading-snug max-w-md"
+          style="color: var(--color-ink);"
+        >
+          {t.tagline}
+        </p>
+      </div>
+      <div class="text-xs space-y-1 font-mono" style="color: var(--color-whisper);">
+        <p>{t.built}</p>
+        <p>{t.year}</p>
+      </div>
+    </div>
+  </div>
+</footer>

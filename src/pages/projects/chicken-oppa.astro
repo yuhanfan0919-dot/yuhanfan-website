@@ -1,0 +1,865 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const highlights = [
+  { label: '交付周期', value: '5 周', detail: '从 0 到生产级电商系统' },
+  { label: '系统范围', value: '外部 + 内部', detail: '顾客下单与门店运营一起设计' },
+  { label: '安全审计', value: '1 周', detail: '上线前集中补齐风险控制' },
+  { label: '价格采样', value: '30 次', detail: '14 小时内用真实数据校准配送系数' },
+];
+
+const timeline = [
+  ['01', '手动流程', '顾客和店员依赖电话、Telegram、人工叫车，流程能跑，但信息分散。'],
+  ['02', '官网点餐', '搭建菜单、购物车、结账、订单状态，把获客入口收回到自有网站。'],
+  ['03', '支付与会员', '接入 Alfa Bank、SMS.by、Supabase，用手机号和积分沉淀回头客。'],
+  ['04', '安全审计', '补齐支付幂等、金额重算、Webhook 验签、验证码限流等线上风险。'],
+  ['05', '配送定价', '用 Vercel Cron + Yandex CheckPrice 采样，发现隐藏高峰和价格剧烈波动。'],
+  ['06', '内部系统', '开始设计员工排班机器人，把门店内部流程也纳入 agent 化改造。'],
+];
+
+const securityItems = [
+  ['支付回调重复', '同一笔成功回调可能被银行重试多次。', '用订单状态做幂等判断，重复回调返回成功但不再触发副作用。'],
+  ['金额篡改', '早期版本曾把前端金额传到后端。', '付款前在服务端根据商品 ID 重新计算总价，前端价格只用于展示。'],
+  ['Webhook 伪造', '知道 URL 的人可能伪造 Telegram 消息。', '校验 Telegram secret token，不匹配直接拒绝。'],
+  ['验证码刷量', 'SMS 验证码是真成本，登录接口也可能被爆破。', '用 Upstash Redis 按 IP + 手机号双维度限流。'],
+];
+
+const surgeRows = [
+  ['凌晨 02-07', '1.1-1.4', '1.0x', '合伙人偏高估计'],
+  ['早 09', '1.1-1.3', '1.88x', '严重低估'],
+  ['晚餐 19-21', '1.5-1.8', '1.88x', '方向基本正确'],
+  ['22 时', '1.2-1.5', '3.0x', '隐藏高峰'],
+];
+
+const systemNodes = [
+  ['顾客端', '菜单、购物车、地址、支付、订单状态，让顾客不再靠聊天窗口完成下单。'],
+  ['店员端', 'Telegram 群收到订单、状态按钮和异常提醒，保留低学习成本。'],
+  ['经营端', '会员积分、审计流水、配送价格采样，把经验判断变成可复盘的数据。'],
+  ['内部端', '排班机器人设计：员工提交可上班时间，店长确认，系统提醒执行。'],
+];
+---
+
+<Layout
+  title="oppachikin 项目复盘：把炸鸡店流程交给 agent | Rain Fan"
+  description="一个由非科班开发者借助 AI 协作，从外部点餐系统延伸到内部运营流程的真实项目复盘。"
+  lang="zh"
+>
+  <article class="case-study">
+    <header class="case-hero">
+      <div class="container-page case-hero-grid">
+        <div>
+          <a href="/" class="case-back" aria-label="返回主页">
+            <span aria-hidden="true">←</span>
+            <span>返回主页</span>
+          </a>
+
+          <p class="eyebrow mb-5">Project retrospective / 2026.03 - Present</p>
+          <h1 class="display case-title">
+            oppachikin<span class="text-accent">.</span>
+          </h1>
+          <p class="case-lead">
+            我为明斯克一家本地炸鸡店做的不只是官网，而是一套把顾客下单、店员操作、配送决策和内部排班逐步交给系统与 agent 的运营改造。
+          </p>
+
+          <div class="case-claim">
+            <span>核心命题</span>
+            <strong>把流程交给 agent，先把流程想清楚。</strong>
+          </div>
+        </div>
+
+        <figure class="case-visual" aria-label="oppachikin 项目预览">
+          <img src="/experience/chickenoppa-no-sparkle.png" alt="oppachikin 项目视觉预览" />
+        </figure>
+      </div>
+    </header>
+
+    <main class="container-page case-main">
+      <section class="metric-grid" aria-label="项目关键数据">
+        {highlights.map((item) => (
+          <div class="metric-tile">
+            <p>{item.label}</p>
+            <strong>{item.value}</strong>
+            <span>{item.detail}</span>
+          </div>
+        ))}
+      </section>
+
+      <section class="case-section">
+        <div class="section-kicker">01 / What changed</div>
+        <div class="section-heading">
+          <h2>从“能接单”到“能运营”</h2>
+          <p>这个项目的价值不在于多做了几个页面，而在于把一家门店每天反复发生的人工流程拆开、排序、再交给系统。</p>
+        </div>
+
+        <div class="flow-compare">
+          <div class="flow-column before">
+            <p class="flow-label">Before</p>
+            <ol>
+              <li>顾客发消息或打电话</li>
+              <li>店员手动确认菜单和地址</li>
+              <li>人工打开 Yandex Go 叫车</li>
+              <li>凭经验估运费和时间</li>
+              <li>再把状态同步回顾客</li>
+            </ol>
+          </div>
+          <div class="flow-column after">
+            <p class="flow-label">After</p>
+            <ol>
+              <li>顾客在官网自助下单</li>
+              <li>Alfa Bank 完成支付</li>
+              <li>Telegram 推送给店员</li>
+              <li>CheckPrice 校准配送成本</li>
+              <li>异常交给人工兜底</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <div class="section-kicker">02 / Timeline</div>
+        <div class="section-heading">
+          <h2>项目不是线性开发，而是一轮轮靠近真实运营</h2>
+          <p>每一次推进都来自一个具体问题：顾客怎么买、老板怎么看、钱如何安全、配送如何不亏、员工如何协作。</p>
+        </div>
+
+        <div class="timeline">
+          {timeline.map(([step, title, detail]) => (
+            <article class="timeline-item">
+              <span>{step}</span>
+              <div>
+                <h3>{title}</h3>
+                <p>{detail}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="case-section">
+        <div class="section-kicker">03 / System map</div>
+        <div class="section-heading">
+          <h2>外部是顾客体验，内部是门店协作</h2>
+          <p>排班机器人不是另一个独立项目，而是同一家店的内部运营系统。它和点餐网站一起构成 Oppa Chicken 的完整流程改造。</p>
+        </div>
+
+        <div class="system-map" data-system-map>
+          <div class="system-node-list" role="tablist" aria-label="系统模块">
+            {systemNodes.map(([title], index) => (
+              <button
+                class={index === 0 ? 'system-node active' : 'system-node'}
+                type="button"
+                role="tab"
+                aria-selected={index === 0 ? 'true' : 'false'}
+                data-system-trigger={index}
+              >
+                {title}
+              </button>
+            ))}
+          </div>
+          <div class="system-detail" aria-live="polite">
+            <p class="system-detail-title">{systemNodes[0][0]}</p>
+            <p class="system-detail-body">{systemNodes[0][1]}</p>
+          </div>
+        </div>
+
+        <div class="mini-flow">
+          <span>员工提交可上班时间</span>
+          <span>Bot 汇总冲突</span>
+          <span>生成排班草案</span>
+          <span>店长确认</span>
+          <span>Telegram 提醒</span>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <div class="section-kicker">04 / Security audit</div>
+        <div class="section-heading">
+          <h2>上线前最重要的一周：安全审计</h2>
+          <p>我最骄傲的不是“功能能跑”，而是专门花一周把它改到经得起真实线上使用。</p>
+        </div>
+
+        <div class="security-grid">
+          {securityItems.map(([risk, problem, fix]) => (
+            <article class="risk-card">
+              <p class="risk-label">{risk}</p>
+              <h3>{problem}</h3>
+              <p>{fix}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="case-section pricing-section">
+        <div class="section-kicker">05 / Data-driven pricing</div>
+        <div class="section-heading">
+          <h2>拍脑袋的系数表，输给了真实数据</h2>
+          <p>合伙人的经验方向有价值，但具体数值会带来 30%-100% 的误差。我的判断是：配送费不能靠感觉定，必须先采样。</p>
+        </div>
+
+        <div class="pricing-layout">
+          <div class="pricing-panel">
+            <p class="panel-label">采样方法</p>
+            <h3>Vercel Cron 每 30 分钟调用一次 Yandex CheckPrice</h3>
+            <div class="sample-equation" aria-label="采样公式">
+              <span>7 个距离</span>
+              <strong>×</strong>
+              <span>1-2 种车型</span>
+              <strong>=</strong>
+              <span>9 个数据点/次</span>
+            </div>
+            <p>
+              结果写入 Supabase 的 <code>delivery_price_samples</code> 表。14 小时、30 次采样后，足够看出经验表里看不到的波动。
+            </p>
+          </div>
+
+          <div class="surge-table" role="table" aria-label="合伙人估算与实测 surge 对比">
+            <div class="surge-row surge-head" role="row">
+              <span>时段</span>
+              <span>估算</span>
+              <span>实测</span>
+              <span>结论</span>
+            </div>
+            {surgeRows.map(([time, estimate, measured, verdict]) => (
+              <div class={time === '22 时' ? 'surge-row alert' : 'surge-row'} role="row">
+                <span>{time}</span>
+                <span>{estimate}</span>
+                <strong>{measured}</strong>
+                <span>{verdict}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="insight-strip">
+          <div>
+            <p>反直觉发现</p>
+            <strong>22 时 surge 3.0x</strong>
+            <span>这是合伙人完全没预料到的隐藏高峰。</span>
+          </div>
+          <div>
+            <p>派单策略</p>
+            <strong>派单前必须再 CheckPrice</strong>
+            <span>Express 价格曾在 30 分钟内从 34 BYN 跌到 11 BYN。</span>
+          </div>
+          <div>
+            <p>学到的</p>
+            <strong>便宜的数据工具链，能保护真实利润</strong>
+            <span>Cron + Supabase + Python 分析，比凭感觉定价可靠得多。</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <div class="section-kicker">06 / Compliance</div>
+        <div class="section-heading">
+          <h2>SMS 集成教会我的，不是技术而是合规节奏</h2>
+          <p>SMS.by 的 alphaname 审批等了 5 个工作日。它提醒我：真实项目里，阻塞上线的经常不是代码，而是外部流程。</p>
+        </div>
+
+        <div class="compliance-row">
+          <div>
+            <span>Plan A</span>
+            <strong>等待 alphaname 审批</strong>
+          </div>
+          <div>
+            <span>Plan B</span>
+            <strong>提前准备替代通知路径</strong>
+          </div>
+          <div>
+            <span>Lesson</span>
+            <strong>合规细节要进入项目排期</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section agent-section">
+        <div class="section-kicker">07 / Agent collaboration</div>
+        <div class="section-heading">
+          <h2>AI 没有替我思考，但它放大了我的判断</h2>
+          <p>这个项目最像我简历里那句话：把流程交给 agent。前提是，我先把业务规则、风险边界和取舍想清楚。</p>
+        </div>
+
+        <div class="agent-split">
+          <div>
+            <p class="panel-label">我负责</p>
+            <ul>
+              <li>理解真实门店的操作习惯</li>
+              <li>判断哪些风险上线前必须补</li>
+              <li>把“经验”转成可验证的数据假设</li>
+              <li>决定哪里自动化，哪里保留人工兜底</li>
+            </ul>
+          </div>
+          <div>
+            <p class="panel-label">Agent 负责</p>
+            <ul>
+              <li>拆解 API 对接路径</li>
+              <li>生成和重构 TypeScript 代码</li>
+              <li>辅助定位支付、Webhook、Cron 问题</li>
+              <li>把安全 checklist 落到具体实现</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-close">
+        <p class="eyebrow mb-4">Reflection</p>
+        <h2>这不是一个“我会写网站”的证明。</h2>
+        <p>
+          它更像一个证据：我能和真实客户一起，把一个模糊、琐碎、充满例外的业务流程，拆成能运行、能审计、能继续迭代的系统。
+        </p>
+        <a href="/#contact" class="btn-primary">聊聊流程自动化</a>
+      </section>
+    </main>
+  </article>
+
+  <script define:vars={{ systemNodes }}>
+    const map = document.querySelector('[data-system-map]');
+    if (map) {
+      const buttons = [...map.querySelectorAll('[data-system-trigger]')];
+      const title = map.querySelector('.system-detail-title');
+      const body = map.querySelector('.system-detail-body');
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const index = Number(button.dataset.systemTrigger);
+          buttons.forEach((item) => {
+            item.classList.remove('active');
+            item.setAttribute('aria-selected', 'false');
+          });
+          button.classList.add('active');
+          button.setAttribute('aria-selected', 'true');
+          title.textContent = systemNodes[index][0];
+          body.textContent = systemNodes[index][1];
+        });
+      });
+    }
+  </script>
+</Layout>
+
+<style>
+  .case-study {
+    background: var(--color-bg-light);
+  }
+
+  .case-hero {
+    padding: 6.5rem 0 4.5rem;
+    background: var(--color-bg-light);
+    border-bottom: 1px dashed var(--color-border);
+  }
+
+  .case-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.75fr);
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .case-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .case-back:hover {
+    color: var(--color-accent);
+  }
+
+  .case-title {
+    margin-bottom: 1.5rem;
+    font-size: clamp(3.25rem, 8vw, 7rem);
+  }
+
+  .case-lead {
+    max-width: 760px;
+    color: var(--color-ink-2);
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 2.5vw, 2.1rem);
+    line-height: 1.35;
+  }
+
+  .case-claim {
+    display: inline-grid;
+    gap: 0.35rem;
+    margin-top: 2rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--color-accent);
+  }
+
+  .case-claim span,
+  .panel-label,
+  .section-kicker,
+  .flow-label,
+  .risk-label {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .case-claim strong {
+    color: var(--color-ink);
+    font-size: 1rem;
+  }
+
+  .case-visual {
+    overflow: hidden;
+    margin: 0;
+    border: 1px dashed var(--color-border);
+    border-radius: 1rem;
+    background: var(--color-canvas-tint);
+    box-shadow: 0 18px 48px -34px rgba(46, 51, 64, 0.34);
+  }
+
+  .case-visual img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .case-main {
+    padding-bottom: 6rem;
+  }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 5rem;
+  }
+
+  .metric-tile,
+  .flow-column,
+  .risk-card,
+  .pricing-panel,
+  .system-detail,
+  .agent-split > div,
+  .case-close {
+    border: 1px solid var(--color-border);
+    border-radius: 0.875rem;
+    background: var(--color-canvas);
+    box-shadow: 0 16px 42px -38px rgba(46, 51, 64, 0.28);
+  }
+
+  .metric-tile {
+    padding: 1.1rem;
+  }
+
+  .metric-tile p,
+  .metric-tile span {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+  }
+
+  .metric-tile strong {
+    display: block;
+    margin: 0.35rem 0;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .case-section {
+    padding: 5rem 0;
+    border-top: 1px dashed var(--color-border);
+  }
+
+  .section-heading {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.9fr) minmax(280px, 1fr);
+    gap: 2rem;
+    align-items: start;
+    margin-top: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-heading h2,
+  .case-close h2 {
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .section-heading p,
+  .case-close p {
+    color: var(--color-ink-2);
+    font-size: 1.04rem;
+    line-height: 1.75;
+  }
+
+  .flow-compare {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .flow-column {
+    padding: 1.5rem;
+  }
+
+  .flow-column ol {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .flow-column li {
+    position: relative;
+    padding-left: 1.35rem;
+    color: var(--color-ink-2);
+  }
+
+  .flow-column li::before {
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    content: '→';
+  }
+
+  .flow-column.before {
+    background: var(--color-canvas);
+  }
+
+  .flow-column.after {
+    background: var(--color-highlight);
+  }
+
+  .timeline {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 1rem;
+    align-items: start;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .timeline-item span {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  .timeline-item h3 {
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 600;
+  }
+
+  .timeline-item p,
+  .risk-card p,
+  .pricing-panel p,
+  .surge-row span,
+  .system-detail-body,
+  .agent-split li,
+  .insight-strip span,
+  .compliance-row span {
+    color: var(--color-ink-2);
+    line-height: 1.65;
+  }
+
+  .system-map {
+    display: grid;
+    grid-template-columns: 0.85fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .system-node-list {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .system-node {
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    background: var(--color-canvas);
+    color: var(--color-ink-2);
+    font-weight: 600;
+    text-align: left;
+    transition: all 0.2s ease;
+  }
+
+  .system-node:hover,
+  .system-node.active {
+    border-color: var(--color-accent);
+    background: var(--color-highlight);
+    color: var(--color-ink);
+  }
+
+  .system-detail {
+    min-height: 14rem;
+    padding: 1.5rem;
+  }
+
+  .system-detail-title {
+    margin-bottom: 0.75rem;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  .mini-flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .mini-flow span {
+    min-height: 4rem;
+    display: grid;
+    place-items: center;
+    padding: 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    background: var(--color-canvas-tint);
+    color: var(--color-ink-2);
+    font-size: 0.86rem;
+    text-align: center;
+  }
+
+  .security-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .risk-card {
+    padding: 1.25rem;
+  }
+
+  .risk-card h3 {
+    min-height: 4.2rem;
+    margin: 0.65rem 0 0.85rem;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .pricing-section {
+    margin-inline: -1.5rem;
+    padding-inline: 1.5rem;
+    background: var(--color-bg-mid);
+    border: 1px dashed var(--color-border);
+    border-radius: 1rem;
+  }
+
+  .pricing-layout {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 1rem;
+  }
+
+  .pricing-panel {
+    padding: 1.5rem;
+  }
+
+  .pricing-panel h3 {
+    margin: 0.8rem 0 1rem;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .sample-equation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .sample-equation span,
+  .sample-equation strong {
+    padding: 0.45rem 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-size: 0.86rem;
+  }
+
+  .pricing-panel code {
+    color: var(--color-accent-deep);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  .surge-table {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 0.875rem;
+    background: var(--color-canvas);
+    box-shadow: 0 16px 42px -38px rgba(46, 51, 64, 0.28);
+  }
+
+  .surge-row {
+    display: grid;
+    grid-template-columns: 1fr 0.9fr 0.75fr 1fr;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .surge-row:last-child {
+    border-bottom: 0;
+  }
+
+  .surge-head {
+    background: var(--color-canvas-tint);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .surge-row strong {
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+  }
+
+  .surge-row.alert {
+    background: var(--color-highlight);
+  }
+
+  .surge-row.alert strong {
+    color: var(--color-accent-deep);
+  }
+
+  .insight-strip,
+  .compliance-row,
+  .agent-split {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .insight-strip > div,
+  .compliance-row > div {
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.875rem;
+    background: var(--color-canvas);
+    box-shadow: 0 16px 42px -38px rgba(46, 51, 64, 0.28);
+  }
+
+  .insight-strip p,
+  .compliance-row span {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .insight-strip strong,
+  .compliance-row strong {
+    display: block;
+    margin: 0.55rem 0;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    line-height: 1.2;
+  }
+
+  .agent-split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .agent-split > div {
+    padding: 1.5rem;
+  }
+
+  .agent-split ul {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    padding-left: 1rem;
+  }
+
+  .case-close {
+    margin-top: 5rem;
+    padding: 2rem;
+  }
+
+  .case-close p {
+    max-width: 760px;
+    margin: 1rem 0 1.5rem;
+  }
+
+  @media (max-width: 960px) {
+    .case-hero-grid,
+    .section-heading,
+    .system-map,
+    .pricing-layout,
+    .agent-split {
+      grid-template-columns: 1fr;
+    }
+
+    .metric-grid,
+    .security-grid,
+    .insight-strip,
+    .compliance-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mini-flow {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .case-hero {
+      padding-top: 5.25rem;
+    }
+
+    .metric-grid,
+    .flow-compare,
+    .security-grid,
+    .insight-strip,
+    .compliance-row {
+      grid-template-columns: 1fr;
+    }
+
+    .timeline-item {
+      grid-template-columns: 3rem 1fr;
+    }
+
+    .mini-flow {
+      grid-template-columns: 1fr;
+    }
+
+    .surge-row {
+      grid-template-columns: 1fr 0.75fr;
+    }
+
+    .surge-row span:nth-child(4) {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

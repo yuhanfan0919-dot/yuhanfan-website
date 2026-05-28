@@ -1,0 +1,256 @@
+---
+import type { Content } from '../data/content.ts';
+
+interface Props {
+  data: Content['experience'];
+  lang: 'zh' | 'en';
+}
+const { data, lang } = Astro.props;
+const items = data.items;
+
+const closeAria = lang === 'zh' ? '关闭' : 'Close';
+const detailAria = lang === 'zh' ? '查看详情' : 'View details';
+const insightLabel = lang === 'zh' ? '我学到的' : 'Key insight';
+
+// slug → 实际 logo 图片路径（统一在 public/experience/，kpmg + 无限进制用 -hires 高清版）
+const imagePathMap: Record<string, string> = {
+  oppachikin: '/experience/chickenoppa-no-sparkle.png',
+  shunfeng:   '/experience/sf-technology-16x10.png',
+  wuxianjz:   '/experience/beyond-16x10-hires.png',
+  kpmg:       '/experience/banner-kpmg.png',
+};
+---
+
+<section id="experience" class="section">
+  <div class="container-page">
+    <!-- 段标题 -->
+    <div class="mb-10 md:mb-12">
+      <p class="eyebrow mb-4 reveal">{data.eyebrow}</p>
+      <h2 class="display text-3xl md:text-4xl lg:text-5xl reveal">{data.title}</h2>
+    </div>
+
+    <!-- 2×2 卡片网格 -->
+    <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+      {items.map((it) => (
+        <article
+          id={`exp-${it.slug}`}
+          class="card reveal flex flex-col overflow-hidden p-0 scroll-mt-24"
+        >
+          <!-- 代表图（logo 满铺圆角容器，无任何装饰背景） -->
+          <div class="relative aspect-[16/10] overflow-hidden m-5 md:m-6 mb-0 rounded-xl">
+            <img
+              src={imagePathMap[it.imageSlug] || `/experience/${it.imageSlug}.png`}
+              alt={it.title}
+              class="absolute inset-0 w-full h-full object-cover"
+              onerror="this.style.display='none';"
+            />
+          </div>
+
+          <!-- 卡片内容 -->
+          <div class="p-6 md:p-7 flex flex-col flex-1">
+            <p
+              class="font-mono text-[0.7rem] md:text-xs uppercase tracking-wider mb-2"
+              style="color: var(--color-accent);"
+            >
+              {it.category}
+            </p>
+            <h3 class="font-serif text-xl md:text-2xl font-semibold mb-2" style="color: var(--color-ink);">
+              {it.company}
+            </h3>
+            <p class="text-sm md:text-base mb-5" style="color: var(--color-ink-2);">
+              {it.title}
+            </p>
+
+            <!-- 数字指标 -->
+            <div
+              class="grid grid-cols-2 gap-4 pt-4 mb-5 border-t"
+              style="border-color: var(--color-border);"
+            >
+              <div>
+                <p
+                  class="font-serif text-xl md:text-2xl font-semibold leading-tight"
+                  style="color: var(--color-ink);"
+                >
+                  {it.metricA.value}
+                </p>
+                <p
+                  class="font-mono text-[0.7rem] uppercase tracking-wider mt-1"
+                  style="color: var(--color-muted);"
+                >
+                  {it.metricA.label}
+                </p>
+              </div>
+              <div>
+                <p
+                  class="font-serif text-xl md:text-2xl font-semibold leading-tight"
+                  style="color: var(--color-ink);"
+                >
+                  {it.metricB.value}
+                </p>
+                <p
+                  class="font-mono text-[0.7rem] uppercase tracking-wider mt-1"
+                  style="color: var(--color-muted);"
+                >
+                  {it.metricB.label}
+                </p>
+              </div>
+            </div>
+
+            <!-- 与经历绑定的思考 -->
+            <div
+              class="mb-5 rounded-xl p-4"
+              style="background: var(--color-canvas-tint); border: 1px dashed var(--color-border);"
+            >
+              <p
+                class="font-mono text-[0.7rem] uppercase tracking-wider mb-2"
+                style="color: var(--color-accent);"
+              >
+                {insightLabel}
+              </p>
+              <p class="text-sm leading-relaxed" style="color: var(--color-ink-2);">
+                {it.deepThinkContent}
+              </p>
+            </div>
+
+            <!-- → 详情按钮 -->
+            <button
+              type="button"
+              class="mt-auto self-end inline-flex items-center justify-center w-10 h-10 rounded-full transition-all hover:scale-110"
+              style="background: var(--color-canvas-tint); color: var(--color-accent); border: 1px solid var(--color-border);"
+              data-modal-trigger={it.slug}
+              aria-label={detailAria}
+            >
+              →
+            </button>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <!-- 4 个 Modal -->
+  {items.map((it) => (
+    <dialog id={`modal-${it.slug}`} class="exp-modal">
+      <div class="p-6 md:p-8 overflow-y-auto relative" style="max-height: 85vh;">
+        <!-- 关闭按钮 -->
+        <button
+          type="button"
+          class="absolute top-4 right-4 w-9 h-9 rounded-full inline-flex items-center justify-center transition-all hover:scale-110"
+          style="background: var(--color-canvas-tint); color: var(--color-ink-2); border: 1px solid var(--color-border);"
+          data-modal-close
+          aria-label={closeAria}
+        >
+          ×
+        </button>
+
+        <!-- 分类标签 -->
+        <p
+          class="font-mono text-xs uppercase tracking-wider mb-3"
+          style="color: var(--color-accent);"
+        >
+          {it.category}
+        </p>
+
+        <!-- 标题 -->
+        <h2
+          class="font-serif text-2xl md:text-3xl font-semibold mb-2 pr-12"
+          style="color: var(--color-ink);"
+        >
+          {it.company}
+        </h2>
+        <p class="text-base md:text-lg mb-6" style="color: var(--color-ink-2);">
+          {it.title}
+        </p>
+
+        <!-- 大数字指标卡 -->
+        <div
+          class="grid grid-cols-2 gap-6 my-6 p-5 rounded-xl"
+          style="background: var(--color-canvas-tint);"
+        >
+          <div>
+            <p
+              class="font-serif text-3xl md:text-4xl font-semibold"
+              style="color: var(--color-ink);"
+            >
+              {it.metricA.value}
+            </p>
+            <p
+              class="font-mono text-xs uppercase tracking-wider mt-1"
+              style="color: var(--color-muted);"
+            >
+              {it.metricA.label}
+            </p>
+          </div>
+          <div>
+            <p
+              class="font-serif text-3xl md:text-4xl font-semibold"
+              style="color: var(--color-ink);"
+            >
+              {it.metricB.value}
+            </p>
+            <p
+              class="font-mono text-xs uppercase tracking-wider mt-1"
+              style="color: var(--color-muted);"
+            >
+              {it.metricB.label}
+            </p>
+          </div>
+        </div>
+
+        <!-- 简介段 -->
+        <p class="text-base leading-relaxed mb-6" style="color: var(--color-ink-2);">
+          {it.modalIntro}
+        </p>
+
+        <!-- bullet 详情 -->
+        <ul class="space-y-4 mb-6">
+          {it.modalBullets.map((b) => (
+            <li class="flex gap-3">
+              <span
+                class="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0 mt-2.5"
+                style="background: var(--color-accent);"
+              ></span>
+              <div>
+                <strong class="font-semibold" style="color: var(--color-ink);">{b.title}:</strong>
+                <span class="ml-1.5" style="color: var(--color-ink-2);">{b.body}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <!-- 引用块结论 -->
+        <blockquote class="pullquote text-sm md:text-base">
+          {it.modalQuote}
+        </blockquote>
+      </div>
+    </dialog>
+  ))}
+</section>
+
+<script>
+  // ============================================================
+  // Modal 触发 & 关闭
+  // ============================================================
+  document.querySelectorAll<HTMLButtonElement>('[data-modal-trigger]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const slug = btn.dataset.modalTrigger;
+      if (!slug) return;
+      const dialog = document.getElementById(`modal-${slug}`) as HTMLDialogElement | null;
+      dialog?.showModal();
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('[data-modal-close]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const dialog = btn.closest('dialog') as HTMLDialogElement | null;
+      dialog?.close();
+    });
+  });
+
+  // 点击 backdrop 关闭 modal
+  document.querySelectorAll<HTMLDialogElement>('dialog.exp-modal').forEach((d) => {
+    d.addEventListener('click', (e) => {
+      if (e.target === d) d.close();
+    });
+  });
+</script>

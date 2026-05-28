@@ -1,0 +1,61 @@
+---
+interface Props {
+  lang: 'zh' | 'en';
+}
+const { lang } = Astro.props;
+
+// 导航锚点
+const nav = [
+  { label: 'Projects', href: '#projects' },
+  { label: 'About', href: '#about' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Contact', href: '#contact' },
+];
+
+// 中英文 toggle 两端 href
+const zhHref = lang === 'zh' ? '#' : '/';
+const enHref = lang === 'en' ? '#' : '/en/';
+---
+
+<header
+  class="sticky top-0 z-40 backdrop-blur-md"
+  style="background: color-mix(in srgb, var(--color-bg-light) 92%, transparent); border-bottom: 1px dashed var(--color-border);"
+>
+  <div class="container-page flex items-center justify-between py-5">
+    <!-- 左：品牌名 Rain（italic serif 两行 + hover 动效，参考 Robin 的 "i am robin"） -->
+    <a
+      href={lang === 'zh' ? '/' : '/en/'}
+      class="brand-link"
+      aria-label="Rain Fan"
+    >
+      <span class="brand-line-1">i am</span>
+      <span class="brand-line-2">Rain</span>
+    </a>
+
+    <!-- 中：导航锚点 -->
+    <nav class="hidden md:flex items-center gap-7 lg:gap-9 text-sm" style="color: var(--color-ink-2);">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          class="nav-link"
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- 右：中英文 toggle 胶囊 -->
+    <div class="lang-toggle">
+      <a
+        href={enHref}
+        class={`lang-toggle-item ${lang === 'en' ? 'active' : ''}`}
+        aria-label="Switch to English"
+      >EN</a>
+      <a
+        href={zhHref}
+        class={`lang-toggle-item ${lang === 'zh' ? 'active' : ''}`}
+        aria-label="切换到中文"
+      >中</a>
+    </div>
+  </div>
+</header>
