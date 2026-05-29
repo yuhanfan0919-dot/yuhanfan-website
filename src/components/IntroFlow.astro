@@ -1,0 +1,222 @@
+---
+const lines = ['NICE', 'TO', 'MEET', 'YOU'];
+---
+
+<div class="intro-type" data-intro-type aria-hidden="true">
+  <div class="intro-type__rail intro-type__rail--back">
+    <span>NICE TO MEET YOU</span>
+    <span>NICE TO MEET YOU</span>
+  </div>
+
+  <div class="intro-type__stack">
+    {lines.map((line, index) => (
+      <span class="intro-type__word" style={`--word-index: ${index};`}>
+        {line}
+      </span>
+    ))}
+  </div>
+
+  <div class="intro-type__rail intro-type__rail--front">
+    <span>NICE TO MEET YOU</span>
+    <span>NICE TO MEET YOU</span>
+  </div>
+</div>
+
+<script>
+  const intro = document.querySelector('[data-intro-type]');
+  const seenKey = 'intro-flow-seen';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const forceReplay = new URLSearchParams(window.location.search).has('intro');
+
+  const hasSeenIntro = () => {
+    try {
+      return sessionStorage.getItem(seenKey) === 'true';
+    } catch {
+      return true;
+    }
+  };
+
+  const markIntroSeen = () => {
+    try {
+      sessionStorage.setItem(seenKey, 'true');
+    } catch {
+      // Ignore storage failures and keep the page usable.
+    }
+  };
+
+  const removeIntro = () => {
+    intro?.remove();
+  };
+
+  const dismissIntro = () => {
+    if (!intro) return;
+    markIntroSeen();
+    intro.classList.add('intro-type--hidden');
+    window.setTimeout(removeIntro, 320);
+  };
+
+  if (!intro || reduceMotion || (!forceReplay && hasSeenIntro())) {
+    removeIntro();
+  } else {
+    markIntroSeen();
+    window.setTimeout(dismissIntro, 4800);
+    window.addEventListener('click', dismissIntro, { once: true });
+    window.addEventListener('keydown', dismissIntro, { once: true });
+    window.addEventListener('wheel', dismissIntro, { once: true, passive: true });
+    window.addEventListener('touchstart', dismissIntro, { once: true, passive: true });
+  }
+</script>
+
+<style>
+  .intro-type {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(61, 207, 182, 0.14), transparent 32%),
+      radial-gradient(circle at 86% 78%, rgba(123, 130, 240, 0.22), transparent 36%),
+      linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-bg-mist) 58%, #E9E4F6 100%);
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .intro-type--hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .intro-type__stack {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    gap: clamp(0rem, 1vw, 0.25rem);
+    transform: rotate(-3deg);
+    animation: intro-stack 4.6s cubic-bezier(.19, 1, .22, 1) both;
+  }
+
+  .intro-type__word {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: clamp(4.6rem, 15vw, 13rem);
+    font-weight: 800;
+    line-height: 0.76;
+    letter-spacing: 0;
+    color: var(--color-ink);
+    text-transform: uppercase;
+    transform: translateX(var(--start-x));
+    opacity: 0;
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.72),
+      0 24px 55px rgba(46, 51, 64, 0.12);
+    animation: intro-word 4.25s cubic-bezier(.19, 1, .22, 1) calc(var(--word-index) * 0.12s) both;
+  }
+
+  .intro-type__word:nth-child(1),
+  .intro-type__word:nth-child(3) {
+    --start-x: -22vw;
+  }
+
+  .intro-type__word:nth-child(2),
+  .intro-type__word:nth-child(4) {
+    --start-x: 24vw;
+    color: var(--color-accent);
+  }
+
+  .intro-type__word:nth-child(3) {
+    color: var(--color-ink);
+  }
+
+  .intro-type__rail {
+    position: absolute;
+    left: 0;
+    display: flex;
+    width: max-content;
+    gap: 2.5rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 2vw, 1.1rem);
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #7b82f0;
+    opacity: 0;
+  }
+
+  .intro-type__rail--back {
+    top: 12%;
+    animation: intro-rail-left 4.6s ease both;
+  }
+
+  .intro-type__rail--front {
+    bottom: 11%;
+    color: var(--color-mint);
+    animation: intro-rail-right 4.6s ease both;
+  }
+
+  @keyframes intro-word {
+    0% {
+      opacity: 0;
+      transform: translateX(var(--start-x)) scale(0.94);
+    }
+    16% {
+      opacity: 1;
+    }
+    62% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+    86% {
+      opacity: 1;
+      transform: translateX(calc(var(--start-x) * -0.28)) scale(1.03);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(calc(var(--start-x) * -0.55)) scale(1.06);
+    }
+  }
+
+  @keyframes intro-stack {
+    0% { transform: rotate(-4deg) scale(0.94); }
+    45% { transform: rotate(-2deg) scale(1); }
+    78% { transform: rotate(1deg) scale(1.04); }
+    100% { transform: rotate(2deg) scale(1.08); }
+  }
+
+  @keyframes intro-rail-left {
+    0% { opacity: 0; transform: translateX(-18vw); }
+    16%, 72% { opacity: 0.36; }
+    100% { opacity: 0; transform: translateX(34vw); }
+  }
+
+  @keyframes intro-rail-right {
+    0% { opacity: 0; transform: translateX(28vw); }
+    18%, 72% { opacity: 0.55; }
+    100% { opacity: 0; transform: translateX(-26vw); }
+  }
+
+  @media (max-width: 640px) {
+    .intro-type__stack {
+      transform: rotate(-3deg) translateY(-1rem);
+    }
+
+    .intro-type__word {
+      font-size: clamp(4.2rem, 22vw, 7rem);
+      line-height: 0.8;
+    }
+
+    .intro-type__rail {
+      gap: 1.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro-type {
+      display: none;
+    }
+  }
+</style>
