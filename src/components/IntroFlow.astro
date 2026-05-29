@@ -1,74 +1,126 @@
 ---
-const lines = ['NICE', 'TO', 'MEET', 'YOU'];
 ---
 
-<div class="intro-type" data-intro-type aria-hidden="true">
-  <div class="intro-type__rail intro-type__rail--back">
-    <span>NICE TO MEET YOU</span>
-    <span>NICE TO MEET YOU</span>
+<div class="intro-overlay" data-intro-overlay aria-hidden="true">
+  <!-- Phase 1: NICE TO MEET YOU（大字镂空 → 放大 → 淡去） -->
+  <div class="intro-phase1" data-phase1>
+    <span class="intro-word" style="--i:0">NICE</span>
+    <span class="intro-word" style="--i:1">TO</span>
+    <span class="intro-word" style="--i:2">MEET</span>
+    <span class="intro-word" style="--i:3">YOU</span>
   </div>
 
-  <div class="intro-type__stack">
-    {lines.map((line, index) => (
-      <span class="intro-type__word" style={`--word-index: ${index};`}>
-        {line}
+  <!-- Phase 2: 打字机台词 + hi 按钮 -->
+  <div class="intro-phase2" data-phase2>
+    <p class="intro-quote-line1" data-line1></p>
+    <p class="intro-quote-line2" data-line2>
+      <span class="phrase">good afternoon,</span> <span class="phrase">good evening,</span><br/>
+      <span class="phrase">and goodnight.</span>
+    </p>
+    <button class="intro-hi" data-hi-btn type="button" aria-label="进入主页 / Enter">
+      <span class="intro-hi__row">
+        <span class="intro-hi__word">hi</span>
+        <svg class="intro-face" viewBox="0 0 140 110" fill="none" aria-hidden="true">
+          <!-- 左眼：实心点 -->
+          <ellipse cx="44" cy="26" rx="6.5" ry="10.5" fill="currentColor" />
+          <!-- 右眼：眨眼 ＜（尖朝左） -->
+          <path d="M98 13 L82 27 L98 41" stroke="currentColor" stroke-width="8"
+                stroke-linecap="round" stroke-linejoin="round" />
+          <!-- 嘴：加长的微笑主弧 + 右端卷舌小圈 -->
+          <path d="M28 62 C50 96, 86 102, 114 80 C120 66, 102 60, 98 72 C95 81, 106 86, 114 80"
+                stroke="currentColor" stroke-width="8"
+                stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        </svg>
       </span>
-    ))}
-  </div>
-
-  <div class="intro-type__rail intro-type__rail--front">
-    <span>NICE TO MEET YOU</span>
-    <span>NICE TO MEET YOU</span>
+      <span class="intro-hi__hint">click to enter</span>
+    </button>
   </div>
 </div>
 
 <script>
-  const intro = document.querySelector('[data-intro-type]');
+  const overlay = document.querySelector('[data-intro-overlay]');
+  const phase1 = document.querySelector('[data-phase1]');
+  const phase2 = document.querySelector('[data-phase2]');
+  const line1El = document.querySelector('[data-line1]') as HTMLElement | null;
+  const line2El = document.querySelector('[data-line2]') as HTMLElement | null;
+  const hiBtn = document.querySelector('[data-hi-btn]');
   const seenKey = 'intro-flow-seen';
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const forceReplay = new URLSearchParams(window.location.search).has('intro');
 
+  const LINE1 = "In case I don't see you…";
+  const TYPE_SPEED = 55;
+  const PHRASE_GAP = 700;
+
+  const sleep = (ms: number) => new Promise((r) => window.setTimeout(r, ms));
+
   const hasSeenIntro = () => {
-    try {
-      return sessionStorage.getItem(seenKey) === 'true';
-    } catch {
-      return true;
-    }
+    try { return sessionStorage.getItem(seenKey) === 'true'; }
+    catch { return true; }
   };
-
   const markIntroSeen = () => {
-    try {
-      sessionStorage.setItem(seenKey, 'true');
-    } catch {
-      // Ignore storage failures and keep the page usable.
-    }
+    try { sessionStorage.setItem(seenKey, 'true'); }
+    catch {}
   };
-
-  const removeIntro = () => {
-    intro?.remove();
-  };
+  const removeOverlay = () => overlay?.remove();
 
   const dismissIntro = () => {
-    if (!intro) return;
+    if (!overlay) return;
     markIntroSeen();
-    intro.classList.add('intro-type--hidden');
-    window.setTimeout(removeIntro, 320);
+    overlay.classList.add('intro-overlay--exit');
+    window.setTimeout(removeOverlay, 500);
   };
 
-  if (!intro || reduceMotion || (!forceReplay && hasSeenIntro())) {
-    removeIntro();
+  async function typeText(el: HTMLElement, text: string, speed: number) {
+    el.classList.add('typing');
+    for (const ch of text) {
+      el.textContent += ch;
+      await sleep(speed);
+    }
+    el.classList.remove('typing');
+  }
+
+  async function revealPhrases(el: HTMLElement, gap: number) {
+    const phrases = el.querySelectorAll<HTMLElement>('.phrase');
+    for (const p of phrases) {
+      p.classList.add('phrase--visible');
+      await sleep(gap);
+    }
+  }
+
+  async function runPhase2() {
+    if (!line1El || !line2El) return;
+    await typeText(line1El, LINE1, TYPE_SPEED);   // 第一行逐字打字
+    await sleep(1000);                            // 停顿 1 秒
+    await revealPhrases(line2El, PHRASE_GAP);     // 第二行分短语淡入
+    await sleep(400);
+    hiBtn?.classList.add('intro-hi--show');       // 全部出现后才显示 hi
+  }
+
+  if (!overlay || reduceMotion || (!forceReplay && hasSeenIntro())) {
+    removeOverlay();
   } else {
-    markIntroSeen();
-    window.setTimeout(dismissIntro, 4800);
-    window.addEventListener('click', dismissIntro, { once: true });
-    window.addEventListener('keydown', dismissIntro, { once: true });
-    window.addEventListener('wheel', dismissIntro, { once: true, passive: true });
-    window.addEventListener('touchstart', dismissIntro, { once: true, passive: true });
+    // Phase 1 播放 ~2.0s 后淡去（加快一丢丢）
+    window.setTimeout(() => phase1?.classList.add('intro-phase1--out'), 2000);
+
+    // Phase 2 出现 + 启动打字机
+    window.setTimeout(() => {
+      phase2?.classList.add('intro-phase2--visible');
+      runPhase2();
+    }, 2700);
+
+    hiBtn?.addEventListener('click', dismissIntro);
+
+    // 兜底：20 秒后自动进入
+    window.setTimeout(dismissIntro, 20000);
   }
 </script>
 
 <style>
-  .intro-type {
+  /* ================================================================
+     全屏覆盖层
+     ================================================================ */
+  .intro-overlay {
     position: fixed;
     inset: 0;
     z-index: 9999;
@@ -76,147 +128,245 @@ const lines = ['NICE', 'TO', 'MEET', 'YOU'];
     place-items: center;
     overflow: hidden;
     background:
-      radial-gradient(circle at 18% 12%, rgba(61, 207, 182, 0.14), transparent 32%),
-      radial-gradient(circle at 86% 78%, rgba(123, 130, 240, 0.22), transparent 36%),
-      linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-bg-mist) 58%, #E9E4F6 100%);
-    color: var(--color-ink);
-    cursor: pointer;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+      radial-gradient(circle at 18% 12%, rgba(61, 207, 182, 0.06), transparent 34%),
+      radial-gradient(circle at 86% 80%, rgba(123, 130, 240, 0.08), transparent 38%),
+      #FAFBFC;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
   }
 
-  .intro-type--hidden {
+  .intro-overlay--exit {
     opacity: 0;
     visibility: hidden;
   }
 
-  .intro-type__stack {
-    position: relative;
-    z-index: 2;
+  /* ================================================================
+     Phase 1: NICE TO MEET YOU
+     ================================================================ */
+  .intro-phase1 {
+    position: absolute;
     display: grid;
     justify-items: center;
     gap: clamp(0rem, 1vw, 0.25rem);
     transform: rotate(-3deg);
-    animation: intro-stack 4.6s cubic-bezier(.19, 1, .22, 1) both;
+    transition: opacity 0.8s ease, transform 0.8s ease;
   }
 
-  .intro-type__word {
+  .intro-phase1--out {
+    opacity: 0;
+    transform: rotate(-2deg) scale(1.15);
+    pointer-events: none;
+  }
+
+  .intro-word {
     display: block;
-    font-family: var(--font-sans);
-    font-size: clamp(4.6rem, 15vw, 13rem);
-    font-weight: 800;
-    line-height: 0.76;
-    letter-spacing: 0;
-    color: var(--color-ink);
+    font-family: 'Gaegu', cursive;
+    font-size: clamp(5.5rem, 17vw, 15rem);
+    font-weight: 700;
+    line-height: 0.66;
+    letter-spacing: 0.01em;
     text-transform: uppercase;
-    transform: translateX(var(--start-x));
     opacity: 0;
-    text-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.72),
-      0 24px 55px rgba(46, 51, 64, 0.12);
-    animation: intro-word 4.25s cubic-bezier(.19, 1, .22, 1) calc(var(--word-index) * 0.12s) both;
+    background: linear-gradient(110deg,
+      #7B82F0 0%, #E48FB1 28%, #3DCFB6 55%, #B8A5E5 80%, #7B82F0 100%);
+    background-size: 260% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    filter: drop-shadow(0 6px 18px rgba(46, 51, 64, 0.10));
+    animation:
+      word-in 1.9s cubic-bezier(.19, 1, .22, 1) calc(var(--i) * 0.1s) both,
+      gradient-flow 5s ease-in-out infinite;
   }
 
-  .intro-type__word:nth-child(1),
-  .intro-type__word:nth-child(3) {
-    --start-x: -22vw;
+  .intro-word:nth-child(1), .intro-word:nth-child(3) { --start-x: -18vw; }
+  .intro-word:nth-child(2), .intro-word:nth-child(4) { --start-x: 20vw; }
+
+  @keyframes word-in {
+    0%   { opacity: 0; transform: translateX(var(--start-x, 0)) scale(0.92); }
+    25%  { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0) scale(1); }
   }
 
-  .intro-type__word:nth-child(2),
-  .intro-type__word:nth-child(4) {
-    --start-x: 24vw;
-    color: var(--color-accent);
+  @keyframes gradient-flow {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
   }
 
-  .intro-type__word:nth-child(3) {
-    color: var(--color-ink);
-  }
-
-  .intro-type__rail {
+  /* ================================================================
+     Phase 2: 打字机台词 + hi
+     ================================================================ */
+  .intro-phase2 {
     position: absolute;
-    left: 0;
     display: flex;
-    width: max-content;
-    gap: 2.5rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.19, 1, .22, 1);
+    pointer-events: none;
+    padding: 0 1.5rem;
+  }
+
+  .intro-phase2--visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  .intro-quote-line1,
+  .intro-quote-line2 {
+    font-family: 'Gaegu', cursive;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+
+  .intro-quote-line1 {
+    font-size: clamp(1.4rem, 4vw, 2.4rem);
+    color: var(--color-ink-2);
+    line-height: 1.3;
+    white-space: pre-wrap;       /* 占位防打字时跳动 */
+    min-height: 1.3em;
+  }
+
+  .intro-quote-line2 {
+    font-size: clamp(1.6rem, 5vw, 3rem);
+    color: var(--color-accent);
+    line-height: 1.25;
+    min-height: 2.5em;           /* 两行占位 */
+  }
+
+  /* 第二行：分短语逐个淡入 */
+  .intro-quote-line2 .phrase {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .intro-quote-line2 .phrase--visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 打字光标 */
+  .intro-quote-line1.typing::after,
+  .intro-quote-line2.typing::after {
+    content: '';
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: currentColor;
+    margin-left: 3px;
+    vertical-align: text-bottom;
+    animation: cursor-blink 0.7s step-end infinite;
+  }
+
+  @keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+  }
+
+  /* hi —— 苹果 hello 开机风：裸手写体，打完台词才"写"出来 */
+  .intro-hi {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    min-height: 4.5rem;          /* 占位防 hi 出现时跳动 */
+  }
+
+  /* 手绘眨眼笑脸——hi 写完后"蹦"出来 */
+  /* hi + 笑脸 横向并排 */
+  .intro-hi__row {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .intro-face {
+    height: clamp(1.9rem, 5vw, 2.8rem);   /* ≈ hi 的 h 长边的 2/3 */
+    width: auto;
+    color: var(--color-ink);
+    opacity: 0;
+    transform: scale(0.4) rotate(-10deg);
+    transform-origin: left center;
+  }
+
+  .intro-hi--show .intro-face {
+    animation: face-pop 0.6s cubic-bezier(.34, 1.56, .64, 1) 1.0s forwards;
+  }
+
+  .intro-hi__word {
+    font-family: 'Sacramento', cursive;
+    font-size: clamp(2.6rem, 7vw, 4rem);
+    line-height: 1;
+    color: var(--color-ink);
+    /* Sacramento 无粗体变体，用 text-stroke 给笔画加粗，跟笑脸 stroke 协调 */
+    -webkit-text-stroke: 0.9px var(--color-ink);
+    clip-path: inset(0 100% 0 0);   /* 默认裁切不可见 */
+  }
+
+  .intro-hi--show .intro-hi__word {
+    animation: hi-write 1.2s cubic-bezier(.65, 0, .35, 1) forwards;
+  }
+
+  .intro-hi__hint {
     font-family: var(--font-mono);
-    font-size: clamp(0.8rem, 2vw, 1.1rem);
-    font-weight: 600;
-    letter-spacing: 0.22em;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
-    white-space: nowrap;
-    color: #7b82f0;
+    color: var(--color-muted);
     opacity: 0;
   }
 
-  .intro-type__rail--back {
-    top: 12%;
-    animation: intro-rail-left 4.6s ease both;
+  .intro-hi--show .intro-hi__hint {
+    animation: hint-fade 0.6s ease 1.9s forwards;
   }
 
-  .intro-type__rail--front {
-    bottom: 11%;
-    color: var(--color-mint);
-    animation: intro-rail-right 4.6s ease both;
+  .intro-hi:hover { transform: translateY(-2px); }
+  .intro-hi:hover .intro-hi__word,
+  .intro-hi:hover .intro-face { color: var(--color-accent); }
+  .intro-hi:hover .intro-hi__word { -webkit-text-stroke-color: var(--color-accent); }
+
+  @keyframes face-pop {
+    0%   { opacity: 0; transform: scale(0.4) rotate(-10deg); }
+    60%  { opacity: 1; transform: scale(1.12) rotate(4deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
   }
 
-  @keyframes intro-word {
-    0% {
-      opacity: 0;
-      transform: translateX(var(--start-x)) scale(0.94);
-    }
-    16% {
-      opacity: 1;
-    }
-    62% {
-      opacity: 1;
-      transform: translateX(0) scale(1);
-    }
-    86% {
-      opacity: 1;
-      transform: translateX(calc(var(--start-x) * -0.28)) scale(1.03);
-    }
-    100% {
-      opacity: 0;
-      transform: translateX(calc(var(--start-x) * -0.55)) scale(1.06);
-    }
+  @keyframes hi-write {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0 0 0); }
   }
 
-  @keyframes intro-stack {
-    0% { transform: rotate(-4deg) scale(0.94); }
-    45% { transform: rotate(-2deg) scale(1); }
-    78% { transform: rotate(1deg) scale(1.04); }
-    100% { transform: rotate(2deg) scale(1.08); }
+  @keyframes hint-fade {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 0.85; transform: translateY(0); }
   }
 
-  @keyframes intro-rail-left {
-    0% { opacity: 0; transform: translateX(-18vw); }
-    16%, 72% { opacity: 0.36; }
-    100% { opacity: 0; transform: translateX(34vw); }
-  }
-
-  @keyframes intro-rail-right {
-    0% { opacity: 0; transform: translateX(28vw); }
-    18%, 72% { opacity: 0.55; }
-    100% { opacity: 0; transform: translateX(-26vw); }
-  }
-
+  /* ================================================================
+     Mobile
+     ================================================================ */
   @media (max-width: 640px) {
-    .intro-type__stack {
-      transform: rotate(-3deg) translateY(-1rem);
+    .intro-word {
+      font-size: clamp(4.6rem, 24vw, 7.5rem);
+      line-height: 0.7;
     }
-
-    .intro-type__word {
-      font-size: clamp(4.2rem, 22vw, 7rem);
-      line-height: 0.8;
-    }
-
-    .intro-type__rail {
-      gap: 1.25rem;
-    }
+    .intro-quote-line1 { font-size: clamp(1.2rem, 5vw, 1.6rem); }
+    .intro-quote-line2 { font-size: clamp(1.4rem, 6vw, 2rem); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .intro-type {
-      display: none;
-    }
+    .intro-overlay { display: none; }
   }
 </style>
