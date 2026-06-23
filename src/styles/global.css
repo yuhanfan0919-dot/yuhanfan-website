@@ -43,7 +43,7 @@
 
   /* ---- 字体 ---- */
   --font-serif: 'Source Serif 4', 'Source Serif Pro', 'Noto Serif SC', 'Songti SC', serif;
-  --font-sans:  'Inter', system-ui, -apple-system, 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-sans:  'Inter', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, 'Microsoft YaHei', sans-serif;
   --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
 
   /* ---- 容器宽度 ---- */

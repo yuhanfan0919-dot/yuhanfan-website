@@ -16,12 +16,11 @@ const taglineLines = data.tagline.split('\n');
       <!-- 左侧：文字内容 -->
       <div class="md:col-span-7 lg:col-span-8">
         <!-- H1: 问候 + 名字（Robin / Zitilei 风格的开场） -->
-        <h1 class="display text-5xl md:text-6xl lg:text-7xl mb-5 reveal">
-          {data.greeting}
+        <h1 class="display text-5xl md:text-6xl lg:text-7xl mb-5 reveal" set:html={data.greeting.replace('Rain', '<span style="color:var(--color-accent)">Rain</span>')}>
         </h1>
 
         <!-- H2: 原主标题降级为价值主张副标题 -->
-        <h2 class="display text-3xl md:text-4xl lg:text-5xl mb-8 reveal" style="color: var(--color-ink-2); font-weight: 500;">
+        <h2 class="display text-2xl md:text-3xl lg:text-4xl mb-8 reveal" style="color: var(--color-ink-2); font-weight: 500;">
           {titlePrefixLines.map((line, index) => (
             <span class="block">
               {line}

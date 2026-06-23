@@ -1,0 +1,200 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// 照片清单：改照片只改这个数组 + 放文件
+const scenes = [
+  { cat: 'BOULDERING',  title: '攀岩',         img: 'climbing.jpg',          note: '墙上只有下一个支点，很简单。',             rot: -3 },
+  { cat: 'OUTDOOR',     title: '野攀',         img: 'climbing-outdoor.jpg',  note: '把岩馆里练出的胆量，搬到真实的山上。',     rot: 2.5, pos: 'center 30%' },
+  { cat: 'SURF',        title: '冲浪',         img: 'surf.jpg',              note: '在不可控的浪里找平衡。',                   rot: -2 },
+  { cat: 'FREEDIVE',    title: '潜水',         img: 'dive.jpg',              note: '下潜越深，世界越安静。',                   rot: 3 },
+  { cat: 'FUNERGY',     title: '攒局',         img: 'funergy.jpg',           note: '我攒了个局，把陌生人变成一起流汗的朋友。', rot: -2.5 },
+  { cat: 'FACILITATOR', title: '重启人生沙盘', img: 'sandbox.png',           note: '陪人把「我到底想要什么」摆到桌面上。',     rot: 2, small: true },
+];
+---
+
+<Layout title="Playground · 工作之外的范雨寒" lang="zh" hideChrome>
+  <div class="pg">
+    <div class="pg-nav">
+      <div class="pg-nav-left">
+        <p>范雨寒 · Rain</p>
+        <p class="dim">工作之外，停不下来的人</p>
+      </div>
+      <a href="/" class="pg-nav-right">← 返回主页</a>
+    </div>
+
+    <header class="pg-intro">
+      <p class="pg-intro-cat">OFF THE CLOCK</p>
+      <p class="pg-intro-sub">爬墙、追浪、下潜、攒局——<br/>不穿「求职西装」的我。</p>
+      <span class="pg-scroll-hint">向下滚 ↓</span>
+    </header>
+
+    {scenes.map((s) => (
+      <section class="scene">
+        <div class="scene-stage">
+          <figure class="scene-card" data-rot={s.rot}>
+            <img src={`/playground/${s.img}`} alt={s.title} style={s.pos ? `object-position:${s.pos};` : ''} loading="lazy" />
+          </figure>
+          <h2 class={`scene-title ${s.small ? 'scene-title--sm' : ''}`}>{s.title}</h2>
+          <p class="scene-cat">{s.cat}</p>
+        </div>
+        <p class="scene-note">{s.note}</p>
+      </section>
+    ))}
+
+    <section class="scene pg-end">
+      <div class="scene-stage">
+        <figure class="scene-card" data-rot="-1">
+          <img src="/playground/crew.jpg" alt="FUNergy 的伙伴们" loading="lazy" />
+        </figure>
+        <h2 class="scene-title">这群人</h2>
+      </div>
+      <div class="pg-end-cta">
+        <p>想认识这样的我?</p>
+        <a href="/#contact" class="pg-sayhi">say hi</a>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style is:global>
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+</style>
+
+<style>
+  .pg { background: #0B0B0E; color: #fff; overflow-x: clip; }
+
+  .pg-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 1.75rem 2rem; pointer-events: none;
+  }
+  .pg-nav a { pointer-events: auto; }
+  .pg-nav-left p { font-size: 0.85rem; font-weight: 600; line-height: 1.4; text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
+  .pg-nav-left .dim { font-weight: 400; opacity: 0.6; }
+  .pg-nav-right { font-size: 0.85rem; color: #fff; text-decoration: none; opacity: 0.85; text-shadow: 0 1px 8px rgba(0,0,0,0.6); transition: opacity 0.2s; }
+  .pg-nav-right:hover { opacity: 1; }
+
+  .pg-intro {
+    min-height: 90vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 0 2rem; max-width: 1100px; margin: 0 auto;
+  }
+  .pg-intro-cat { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.28em; opacity: 0.55; margin-bottom: 1.5rem; }
+  .pg-intro-sub { font-family: 'Noto Serif SC', serif; font-size: clamp(1.5rem, 4vw, 2.8rem); line-height: 1.5; opacity: 0.92; }
+  .pg-scroll-hint { margin-top: 3.5rem; font-family: var(--font-mono); font-size: 0.8rem; opacity: 0.4; }
+
+  .scene {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 10rem 2rem;
+  }
+  .scene-stage {
+    position: relative;
+    width: min(1000px, 92vw);
+    perspective: 1400px;
+  }
+  /* transform 完全交给 GSAP 管，CSS 不写 transform */
+  .scene-card {
+    position: relative; margin: 0;
+    aspect-ratio: 16 / 10;
+    border-radius: 6px; overflow: hidden;
+    transform-style: preserve-3d;
+    box-shadow: 0 50px 120px -50px rgba(0,0,0,0.9);
+    will-change: transform;
+  }
+  .scene-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .scene-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(11,11,14,0.5) 0%, rgba(11,11,14,0.05) 35%, rgba(11,11,14,0.35) 100%);
+  }
+
+  /* 标题居中也交给 GSAP(set xPercent/yPercent)，CSS 只定位锚点 */
+  .scene-title {
+    position: absolute; top: 50%; left: 50%;
+    font-family: 'Noto Serif SC', serif; font-weight: 700;
+    font-size: clamp(4rem, 14vw, 12rem); line-height: 1; color: #fff;
+    text-shadow: 0 10px 50px rgba(0,0,0,0.6);
+    pointer-events: none; white-space: nowrap; z-index: 5; will-change: transform;
+  }
+  .scene-title--sm { font-size: clamp(2rem, 7vw, 5rem); }
+
+  .scene-cat { position: absolute; bottom: -2.5rem; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.24em; opacity: 0.5; }
+  .scene-note { margin-top: 4rem; font-size: clamp(1rem, 2vw, 1.3rem); text-align: center; opacity: 0.78; max-width: 32rem; }
+
+  .pg-end-cta { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 6; }
+  .pg-end-cta > p { font-family: 'Noto Serif SC', serif; font-size: clamp(1.5rem, 4vw, 2.5rem); margin-bottom: 1.5rem; }
+  .pg-sayhi { display: inline-block; font-family: var(--font-mono); font-size: 1rem; letter-spacing: 0.1em; color: #0B0B0E; background: #fff; padding: 0.85rem 2.5rem; border-radius: 9999px; text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .scene { min-height: auto; padding: 5rem 1.25rem; }
+    .scene-card { aspect-ratio: 4/5; }
+    .scene-title { font-size: clamp(3rem, 16vw, 5rem); }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import Lenis from 'lenis';
+
+  gsap.registerPlugin(ScrollTrigger);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Lenis 平滑滚动 + ScrollTrigger 联动
+  if (!reduce) {
+    const lenis = new Lenis({ lerp: 0.09 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  // 卡片：随滚动 3D 透视倾斜(进入→正→离开) + 视差 + 基础 Z 倾斜
+  gsap.utils.toArray<HTMLElement>('.scene-card').forEach((card) => {
+    const scene = card.closest('.scene');
+    const baseRot = parseFloat(card.dataset.rot || '0');
+    gsap.set(card, { rotationZ: baseRot });
+    gsap.fromTo(card,
+      { rotateX: 16, yPercent: 14, scale: 0.9 },
+      {
+        rotateX: -12, yPercent: -10, scale: 1, ease: 'none',
+        scrollTrigger: { trigger: scene, start: 'top bottom', end: 'bottom top', scrub: 1 },
+      }
+    );
+    gsap.from(card, {
+      opacity: 0, duration: 0.9, ease: 'power2.out',
+      scrollTrigger: { trigger: scene, start: 'top 82%' },
+    });
+  });
+
+  // 大标题：先居中(xPercent/yPercent -50)，再随滚动做 y 视差(扫过画面)
+  gsap.utils.toArray<HTMLElement>('.scene-title').forEach((title) => {
+    const scene = title.closest('.scene');
+    gsap.set(title, { xPercent: -50, yPercent: -50 });
+    gsap.fromTo(title,
+      { y: 120 },
+      {
+        y: -120, ease: 'none',
+        scrollTrigger: { trigger: scene, start: 'top bottom', end: 'bottom top', scrub: 1 },
+      }
+    );
+  });
+
+  // hover：图片朝鼠标方向轻微 3D 倾斜(≤2.5°，柔和，离开平滑回正)
+  // 作用在内层 <img> 上，跟 GSAP 管的外层 .scene-card 滚动倾斜分层，不冲突
+  const TILT = 2.5;
+  gsap.utils.toArray<HTMLElement>('.scene-card').forEach((card) => {
+    const img = card.querySelector<HTMLElement>('img');
+    if (!img) return;
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      img.style.transition = 'transform 0.15s ease-out';
+      img.style.transform = `rotateX(${-py * 2 * TILT}deg) rotateY(${px * 2 * TILT}deg) scale(1.04)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      img.style.transition = 'transform 0.5s ease-out';
+      img.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+    });
+  });
+</script>

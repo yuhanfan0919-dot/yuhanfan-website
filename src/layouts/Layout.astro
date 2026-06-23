@@ -7,12 +7,14 @@ interface Props {
   title: string;
   description?: string;
   lang?: 'zh' | 'en';
+  hideChrome?: boolean;
 }
 
 const {
   title,
   description = 'Rain Fan · 把流程交给 Agent · 财务出身的 AI 落地工程师 · Claude Code agent 实战 · oppachikin 已上线收到首笔付款。',
   lang = 'zh',
+  hideChrome = false,
 } = Astro.props;
 ---
 
@@ -33,11 +35,11 @@ const {
     <title>{title}</title>
   </head>
   <body class="min-h-screen">
-    <Header lang={lang} />
+    {!hideChrome && <Header lang={lang} />}
     <main>
       <slot />
     </main>
-    <Footer lang={lang} />
+    {!hideChrome && <Footer lang={lang} />}
 
     <!-- 滚动入场动画 -->
     <script>

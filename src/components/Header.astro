@@ -1,16 +1,13 @@
 ---
+import { zh, en } from '../data/content.ts';
+
 interface Props {
   lang: 'zh' | 'en';
 }
 const { lang } = Astro.props;
 
-// 导航锚点
-const nav = [
-  { label: 'Projects', href: '#projects' },
-  { label: 'About', href: '#about' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'Contact', href: '#contact' },
-];
+// 导航锚点（中英文从 content.ts 取，跟随语言切换）
+const nav = (lang === 'zh' ? zh : en).nav;
 
 // 中英文 toggle 两端 href
 const zhHref = lang === 'zh' ? '#' : '/';

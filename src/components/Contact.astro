@@ -27,6 +27,9 @@ const { data } = Astro.props;
           <a
             href={method.href}
             class={i === 0 ? 'btn-primary' : 'btn-ghost'}
+            {...(method.href.startsWith('http') || method.href.endsWith('.pdf')
+              ? { target: '_blank', rel: 'noopener noreferrer' }
+              : {})}
           >
             {method.label}
           </a>

@@ -4,7 +4,7 @@ import Layout from '../../../layouts/Layout.astro';
 
 <Layout
   title="oppachikin — Online ordering for a Minsk-local fried chicken shop | Rain Fan"
-  description="A production-grade e-commerce system shipped from 0 to 1 in 5 weeks by a self-taught developer using AI co-pilots."
+  description="A production-grade e-commerce system delivered 0 to 1 in 5 weeks for a real paying client, with Cursor + Claude Code."
   lang="en"
 >
   <article class="container-page py-20 md:py-28 max-w-3xl">
@@ -18,10 +18,19 @@ import Layout from '../../../layouts/Layout.astro';
     <h1 class="display text-4xl md:text-6xl mb-6">
       oppachikin<span class="text-accent">.</span>
     </h1>
-    <p class="font-serif text-xl md:text-2xl text-muted mb-10 leading-snug">
+    <p class="font-serif text-xl md:text-2xl text-muted mb-6 leading-snug">
       Online ordering system for a Minsk-local fried chicken shop — a production-grade
-      e-commerce system shipped from 0 to 1 in 5 weeks, by a self-taught dev using AI co-pilots.
+      e-commerce system delivered 0 to 1 in 5 weeks for a real paying client, with Cursor + Claude Code.
     </p>
+
+    <a
+      href="https://oppachikin.by"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-2 text-sm font-mono text-accent hover:underline mb-10"
+    >
+      Visit the live site <span aria-hidden="true">↗</span>
+    </a>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-16">
       <div class="p-4 bg-canvas border border-border rounded-xl">
@@ -30,15 +39,15 @@ import Layout from '../../../layouts/Layout.astro';
       </div>
       <div class="p-4 bg-canvas border border-border rounded-xl">
         <p class="font-mono text-xs text-muted mb-1">Code</p>
-        <p class="font-serif text-2xl font-semibold">9,850 lines</p>
+        <p class="font-serif text-2xl font-semibold">13,000+ lines</p>
       </div>
       <div class="p-4 bg-canvas border border-border rounded-xl">
         <p class="font-mono text-xs text-muted mb-1">Pages / API</p>
-        <p class="font-serif text-2xl font-semibold">23 / 19</p>
+        <p class="font-serif text-2xl font-semibold">15 / 20</p>
       </div>
       <div class="p-4 bg-canvas border border-border rounded-xl">
         <p class="font-mono text-xs text-muted mb-1">Commits</p>
-        <p class="font-serif text-2xl font-semibold">52</p>
+        <p class="font-serif text-2xl font-semibold">80</p>
       </div>
     </div>
 
@@ -47,13 +56,13 @@ import Layout from '../../../layouts/Layout.astro';
         <p class="eyebrow mb-3">01</p>
         <h2 class="font-serif text-3xl font-semibold text-ink mb-4">The problem</h2>
         <p class="leading-relaxed mb-4">
-          My sister runs a fried chicken shop in Minsk, Belarus. Unlike China's "everything-on-Meituan"
+          A fried chicken shop in Minsk, Belarus brought me on. Unlike China's "everything-on-Meituan"
           delivery ecosystem, Minsk has weak local delivery platform coverage — most restaurant orders
           still come through walk-ins, phone calls, and the shop's own website.
           <strong>A website here isn't a bonus channel — it's the primary acquisition channel.</strong>
         </p>
         <p class="leading-relaxed">
-          She hired me, <strong>paid me a development fee</strong>, and gave me my first real freelance gig.
+          The owner hired me, <strong>paid me a development fee</strong> — my first real freelance gig.
         </p>
       </section>
 
@@ -61,11 +70,11 @@ import Layout from '../../../layouts/Layout.astro';
         <p class="eyebrow mb-3">02</p>
         <h2 class="font-serif text-3xl font-semibold text-ink mb-4">My angle</h2>
         <p class="leading-relaxed">
-          I was a financial analyst at SF Tech with no formal frontend/backend experience.
-          My bet going in: <strong>using Cursor + Claude Code, I could translate my understanding
-          of business and users into working code.</strong>
-          AI handles syntax, library choices, best practices; I handle product judgment, debugging
-          intuition, and the feedback loop with a real customer (my sister).
+          I come from finance and audit, not a CS track — and that's the edge.
+          My bet going in: <strong>with Cursor + Claude Code, I could translate a deep read of the
+          business and its users into working, production code.</strong>
+          AI handles syntax, library choices, best practices; I own product judgment, debugging
+          intuition, and the feedback loop with a real paying customer.
         </p>
       </section>
 
@@ -153,16 +162,36 @@ import Layout from '../../../layouts/Layout.astro';
 
       <section>
         <p class="eyebrow mb-3">05</p>
+        <h2 class="font-serif text-3xl font-semibold text-ink mb-6">Data-driven delivery pricing & multi-exit dispatch</h2>
+
+        <p class="leading-relaxed mb-4">
+          The other half of going live was delivery pricing. A Vercel Cron job samples real-time
+          Yandex courier fares for <strong>8 fixed routes (0.9–12 km) every 10 minutes</strong> into Supabase,
+          collecting <strong>2,592 samples in about 5 days</strong>.
+        </p>
+        <p class="leading-relaxed mb-4">
+          The output: a <strong>weekday-hour peak grid</strong> (off-peak / micro / strong) ×
+          <strong>10 distance bands</strong> fare table, with a weekend surcharge stacking on top and 12 km+
+          always routed to a human. The owner signed off the final grid — the Tuesday-to-Thursday
+          off-peak call was a business judgment, not the data's.
+        </p>
+        <p class="leading-relaxed">
+          Dispatch itself is multi-exit by design: Yandex's scheduled-order quote parameter silently
+          fails, and the same route <strong>jumped over 11 BYN within 10 minutes</strong> in our samples. So the
+          system re-quotes at dispatch time and uses the free <code class="font-mono text-sm bg-highlight px-1.5 py-0.5 rounded">claims/create</code>
+          as a true-price probe (only <code class="font-mono text-sm bg-highlight px-1.5 py-0.5 rounded">accept</code> is charged) —
+          auto-dispatching the normal case, and routing 12 km+ / anomalies / failures to a human.
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow mb-3">06</p>
         <h2 class="font-serif text-3xl font-semibold text-ink mb-4">AI collaboration workflow</h2>
         <p class="leading-relaxed mb-4">
           Day-to-day coding in Cursor. Architecture-level decisions: discussed in Claude Code chat,
           weighing trade-offs, then generating code. Complex integrations (e.g. Alfa Bank): fed the
           gateway docs into Claude Code, had it produce a doc-grounded integration plan, then
           debugged together.
-        </p>
-        <p class="leading-relaxed mb-4 text-muted italic">
-          [Specific vibe-coding moment — TBD: one feature I had zero intuition for, that AI helped
-          me decompose and ship.]
         </p>
         <p class="leading-relaxed">
           The biggest lesson: <strong>AI doesn't make product decisions for me. It makes the
@@ -173,17 +202,18 @@ import Layout from '../../../layouts/Layout.astro';
       </section>
 
       <section>
-        <p class="eyebrow mb-3">06</p>
+        <p class="eyebrow mb-3">07</p>
         <h2 class="font-serif text-3xl font-semibold text-ink mb-4">Current status</h2>
         <ul class="space-y-2 leading-relaxed">
           <li><span class="text-accent mr-2">✓</span>Engineering: done</li>
           <li><span class="text-accent mr-2">✓</span>Security hardening: done</li>
-          <li><span class="text-accent mr-2">⏳</span>Launch: awaiting SMS.by sender name approval (local compliance, not engineering)</li>
+          <li><span class="text-accent mr-2">✓</span>Live: payment flow working end to end, with real paid orders received</li>
+          <li><span class="text-accent mr-2">✓</span>Delivery pricing engine: live (cron sampling + peak-grid fare table + multi-exit dispatch)</li>
         </ul>
       </section>
 
       <section>
-        <p class="eyebrow mb-3">07</p>
+        <p class="eyebrow mb-3">08</p>
         <h2 class="font-serif text-3xl font-semibold text-ink mb-4">What these 5 weeks taught me</h2>
         <ol class="space-y-4 leading-relaxed list-decimal pl-5">
           <li><strong>AI lowers the "can I do this" bar but raises the "have I thought it through" bar.</strong>
@@ -192,7 +222,7 @@ import Layout from '../../../layouts/Layout.astro';
             Features are the start; idempotency, validation, webhook signing, rate limiting, secret
             management — a long tail.</li>
           <li><strong>A paying customer is the best product teacher.</strong>
-            My sister's reactions to the UI taught me more than any tutorial.</li>
+            The owner's reactions to the UI taught me more than any tutorial.</li>
           <li><strong>What's next</strong>: bring this "AI collaboration + business sense" combo into
             companies trying to use agents to improve internal workflows.</li>
         </ol>

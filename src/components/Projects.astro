@@ -39,7 +39,9 @@ const item = data.item;
         class="text-base md:text-lg leading-relaxed mb-8 max-w-3xl"
         style="color: var(--color-ink-2);"
       >
-        {item.description}
+        {item.description.split('\n').map((line) => (
+          <span class="block">{line}</span>
+        ))}
       </p>
 
       <!-- 子模块列表 -->

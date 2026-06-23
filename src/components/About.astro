@@ -9,36 +9,83 @@ const { data } = Astro.props;
 
 <section id="about" class="section">
   <div class="container-page">
-    <div class="grid md:grid-cols-12 gap-12 md:gap-16">
-      <!-- 左侧：双标语 -->
+    <div class="grid md:grid-cols-12 gap-10 md:gap-16">
+      <!-- 左：信条标题 + 彩蛋 -->
       <div class="md:col-span-5">
-        <p class="eyebrow mb-6 reveal">{data.eyebrow}</p>
-        <h2 class="display text-4xl md:text-5xl lg:text-6xl reveal leading-tight">
+        <p class="eyebrow mb-5 reveal">{data.eyebrow}</p>
+        <h2 class="display text-3xl md:text-4xl lg:text-5xl leading-tight reveal">
           {data.titleLines.map((line) => (
             <span class="block">{line}</span>
           ))}
         </h2>
+        <a href={data.playLink.href} class="about-play reveal mt-8">
+          {data.playLink.label}
+        </a>
       </div>
 
-      <!-- 右侧：段落 + pullquote -->
+      <!-- 右：好奇 / 连接 / 行动 -->
       <div class="md:col-span-7">
-        <div class="max-w-prose">
-          {data.paragraphs.map((p) => (
-            <p
-              class="text-base md:text-lg leading-relaxed mb-6 reveal"
-              style="color: var(--color-ink-2);"
-            >
-              {p}
-            </p>
+        <div class="about-traits">
+          {data.traits.map((t) => (
+            <div class="about-trait reveal">
+              <span class="about-trait-label">{t.label}</span>
+              <p class="about-trait-text">
+                <strong>{t.lead}</strong>{t.body}
+              </p>
+            </div>
           ))}
-
-          {data.pullquote && (
-            <blockquote class="pullquote mt-10 text-base md:text-lg reveal">
-              {data.pullquote}
-            </blockquote>
-          )}
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .about-traits {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .about-trait {
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--color-accent);
+  }
+
+  .about-trait-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .about-trait-text {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--color-ink-2);
+  }
+
+  .about-trait-text strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  .about-play {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    letter-spacing: 0.04em;
+    color: var(--color-accent-deep);
+    text-decoration: none;
+    border-bottom: 1px dashed transparent;
+    transition: border-color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .about-play:hover {
+    border-bottom-color: var(--color-accent-deep);
+    opacity: 0.85;
+  }
+</style>

@@ -1,0 +1,221 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const items = [
+  { image: '/playground/climbing.jpg',         text: 'Bouldering' },
+  { image: '/playground/climbing-outdoor.jpg', text: 'Outdoor' },
+  { image: '/playground/surf.jpg',             text: 'Surfing' },
+  { image: '/playground/dive.jpg',             text: 'Freediving' },
+  { image: '/playground/funergy.jpg',          text: 'FUNergy' },
+  { image: '/playground/sandbox.png',          text: 'Sandbox' },
+  { image: '/playground/crew.jpg',             text: 'The Crew' },
+];
+---
+
+<Layout title="Film · 工作之外的范雨寒" lang="zh" hideChrome>
+  <div class="film">
+    <div class="film-nav">
+      <div class="film-nav-left">
+        <p>范雨寒 · Rain</p>
+        <p class="dim">工作之外，停不下来的人</p>
+      </div>
+      <a href="/" class="film-nav-right">← 返回主页</a>
+    </div>
+
+    <p class="film-hint">向下滚动 · 拉动胶卷 ↓</p>
+    <a href="/#contact" class="film-sayhi">say hi</a>
+
+    <div class="film-canvas" data-film data-items={JSON.stringify(items)}></div>
+    <div class="film-titles" data-titles></div>
+    <div class="film-scroll" style={`height:${(items.length + 1) * 100}vh;`}></div>
+  </div>
+</Layout>
+
+<style is:global>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap');
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+  /* 标题由 JS 动态创建，必须用全局样式(scoped 不作用于 JS 元素)；.film 前缀防止泄漏 */
+  .film .film-titles { position: fixed; inset: 0; z-index: 20; pointer-events: none; }
+  .film .film-title {
+    position: absolute; top: 0; left: 0; margin: 0;
+    font-family: 'Playfair Display', serif; font-weight: 600;
+    font-size: clamp(3rem, 9.5vw, 9rem); line-height: 1; color: #fff;
+    letter-spacing: -0.01em;
+    text-shadow: 0 6px 50px rgba(0,0,0,0.7); white-space: nowrap;
+    opacity: 0; will-change: opacity, transform;
+  }
+  .film .film-title span { display: inline-block; }
+</style>
+
+<style>
+  .film { background: #0B0B0E; color: #fff; }
+  .film-canvas { position: fixed; inset: 0; z-index: 1; }
+  .film-canvas canvas { display: block; }
+  .film-scroll { position: relative; z-index: 0; pointer-events: none; }
+
+  .film-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 1.75rem 2rem; pointer-events: none;
+  }
+  .film-nav a { pointer-events: auto; }
+  .film-nav-left p { font-size: 0.85rem; font-weight: 600; line-height: 1.4; text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
+  .film-nav-left .dim { font-weight: 400; opacity: 0.6; }
+  .film-nav-right { font-size: 0.85rem; color: #fff; text-decoration: none; opacity: 0.85; text-shadow: 0 1px 8px rgba(0,0,0,0.6); transition: opacity 0.2s; }
+  .film-nav-right:hover { opacity: 1; }
+
+  /* .film-titles / .film-title 样式移到下方 is:global(因标题由 JS 动态创建，scoped 样式不作用于它) */
+
+  .film-hint { position: fixed; bottom: 1.75rem; left: 50%; transform: translateX(-50%); z-index: 40; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.18em; opacity: 0.5; text-shadow: 0 1px 8px rgba(0,0,0,0.6); pointer-events: none; }
+  .film-sayhi { position: fixed; bottom: 1.75rem; right: 2rem; z-index: 40; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.1em; color: #0B0B0E; background: #fff; padding: 0.55rem 1.5rem; border-radius: 9999px; text-decoration: none; }
+</style>
+
+<script>
+  import * as THREE from 'three';
+  import Lenis from 'lenis';
+
+  const container = document.querySelector<HTMLElement>('[data-film]');
+  if (container) {
+    const items = JSON.parse(container.dataset.items || '[]');
+    const titlesWrap = document.querySelector<HTMLElement>('[data-titles]');
+    const titleEls: HTMLElement[] = items.map(() => {
+      const el = document.createElement('h2');
+      el.className = 'film-title';
+      titlesWrap?.appendChild(el);
+      return el;
+    });
+    const revealed: boolean[] = items.map(() => false);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0b0b0e);
+    scene.fog = new THREE.Fog(0x0b0b0e, 26, 80);
+
+    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 240);
+    // 相机位置在下方按圆环尺寸设置(靠近前壁、不在正中心→相邻照片夹角小、连续不割裂)
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    container.appendChild(renderer.domElement);
+
+    // 光影
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const key = new THREE.DirectionalLight(0xfff2e6, 1.1);
+    key.position.set(4, 5, 8); scene.add(key);
+    const rim = new THREE.DirectionalLight(0x9cb4ff, 0.45);
+    rim.position.set(-5, -2, 4); scene.add(rim);
+
+    // 超大环模型：照片排在半径 R 的大圆柱内壁，相机靠近前壁(不在圆心)
+    // === 4 个独立旋钮(互不干扰) ===
+    const planeW = 15.2, planeH = 9.5; // 照片网格尺寸(一般不动，大小靠 CAM_D 调)
+    const R = 26;            // 【弯曲度】越小越弯 ← 你主要调这个
+    const CAM_D = 18;        // 【照片大小】相机到最前照片的距离，越小→照片越大
+    const GAP = 1.9;         // 【缝隙】两张照片间的空隙(弧长)，越大缝越大
+    const ROLL = 0.05;       // 【倾斜】每张微倾弧度，越小越竖直/整齐，0=完全不歪
+    const STEP = (planeH + GAP) / R; // 自动按弧长算角间隔：改 R 时缝隙/大小都不受影响
+    camera.position.set(0, 0, -(R - CAM_D)); // 相机在圆柱内、靠近 z=-R 的前壁，看凹面
+
+    const loader = new THREE.TextureLoader();
+    const meshes: THREE.Mesh[] = [];
+    items.forEach((it: any) => {
+      // 照片贴在半径 R 的大圆柱内壁(前方 -z)，相机在内侧看到凹面；R 超大→自弯很缓、接近平面
+      const geo = new THREE.PlaneGeometry(planeW, planeH, 24, 48);
+      const p = geo.attributes.position as THREE.BufferAttribute;
+      for (let v = 0; v < p.count; v++) {
+        const y = p.getY(v);
+        const a = y / R;
+        p.setY(v, R * Math.sin(a));
+        p.setZ(v, R - R * Math.cos(a));   // 以照片自身中心为原点(a=0→0)，凹面朝相机；微倾即可绕自身中心
+      }
+      p.needsUpdate = true;
+      geo.computeVertexNormals();
+      const tex = loader.load(it.image);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85, metalness: 0.0, side: THREE.FrontSide });
+      const mesh = new THREE.Mesh(geo, mat);
+      scene.add(mesh);
+      meshes.push(mesh);
+    });
+
+    const totalAngle = (items.length - 1) * STEP;
+
+    // 把每张照片摆到圆周上(圆心在 z=-R，theta=0 的照片正对相机、在 z=0 中央)
+    function layout(globalAngle: number) {
+      meshes.forEach((m, i) => {
+        const theta = globalAngle - i * STEP;
+        // 照片中心摆到半径R圆柱上的角度槽，绕X转成切向——几何体居中→ROLL绕自身中心、不甩偏(无错落)
+        m.position.set(0, R * Math.sin(theta), -R * Math.cos(theta));
+        m.rotation.set(theta, 0, ROLL);
+      });
+    }
+    layout(0);
+
+    // Lenis 平滑滚动 → 圆轮旋转角度
+    const lenis = new Lenis({ lerp: 0.08 });
+    let progress = 0;
+    lenis.on('scroll', (e: any) => {
+      const max = e.dimensions ? e.dimensions.scrollHeight - e.dimensions.height : 1;
+      progress = max > 0 ? e.scroll / max : 0;
+    });
+
+    // 每张照片各一个标题，叠在该照片中间、跟着照片一起移动；进画面时逐字动画一次
+    const _v = new THREE.Vector3();
+    function revealTitle(el: HTMLElement, text: string) {
+      el.innerHTML = text.split('').map((ch) =>
+        `<span>${ch === ' ' ? '&nbsp;' : ch}</span>`
+      ).join('');
+      el.querySelectorAll('span').forEach((s, i) => {
+        (s as HTMLElement).animate(
+          [
+            { opacity: 0, transform: 'translateY(0.55em) rotate(6deg)', filter: 'blur(8px)' },
+            { opacity: 1, transform: 'translateY(0) rotate(0)', filter: 'blur(0)' },
+          ],
+          { duration: 620, delay: i * 55, easing: 'cubic-bezier(0.2,0.75,0.2,1)', fill: 'both' }
+        );
+      });
+    }
+    function updateTitle(globalAngle: number) {
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      titleEls.forEach((el, i) => {
+        const theta = globalAngle - i * STEP;
+        // 照片中心世界坐标 → 投影到屏幕，标题贴在该照片中间随它移动(不再钉死屏幕中心)
+        _v.set(0, R * Math.sin(theta), -R * Math.cos(theta)).project(camera);
+        el.style.left = (_v.x * 0.5 + 0.5) * w + 'px';
+        el.style.top = (-_v.y * 0.5 + 0.5) * h + 'px';
+        el.style.transform = 'translate(-50%, -50%)';
+        // 居中度 → 透明度：只有最居中那张显著，离开渐隐
+        const c = 1 - Math.abs(theta) / (STEP / 2);
+        let o = Math.max(0, Math.min(1, (c - 0.25) / 0.75));
+        o = o * o * (3 - 2 * o);
+        el.style.opacity = String(o);
+        if (o > 0.05 && !revealed[i]) { revealTitle(el, items[i].text); revealed[i] = true; } // 进画面→动一次
+        else if (o <= 0.02 && revealed[i]) { revealed[i] = false; }                            // 离开→重置
+      });
+    }
+
+    function render(time: number) {
+      lenis.raf(time);
+      const g = progress * totalAngle;
+      layout(g); // 滚动驱动整轮旋转
+      updateTitle(g);
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    const applySize = () => {
+      const cw = container.clientWidth || window.innerWidth;
+      const ch = container.clientHeight || window.innerHeight;
+      if (!cw || !ch) return;
+      camera.aspect = cw / ch; camera.updateProjectionMatrix();
+      renderer.setSize(cw, ch);
+    };
+    new ResizeObserver(applySize).observe(container);
+    window.addEventListener('resize', applySize);
+    applySize();
+    (window as any).__FILM = { camZ: camera.position.z, R, STEP };
+  }
+</script>
