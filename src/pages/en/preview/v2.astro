@@ -1,0 +1,285 @@
+---
+// V2 · Bold Statement — minimalist manifesto style
+// Warm sand #E8DCC7 + rust #C44829 + oversized Bricolage Grotesque
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>V2 · Bold · Rain Fan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #E8DCC7;
+        --ink: #1F1F1F;
+        --muted: #6B6358;
+        --accent: #C44829;
+        --accent-dark: #8E3318;
+        --paper: #F5ECDC;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: 'Manrope', 'Noto Sans SC', system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* Preview nav */
+      .preview-nav {
+        position: fixed; top: 1rem; right: 1rem; z-index: 50;
+        background: var(--ink); color: var(--paper);
+        border-radius: 9999px; padding: 0.375rem 0.5rem;
+        display: flex; gap: 0.25rem; align-items: center;
+        font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+      }
+      .preview-nav a, .preview-nav span {
+        color: var(--paper); text-decoration: none;
+        opacity: 0.55;
+        padding: 0.25rem 0.625rem; border-radius: 9999px;
+        transition: all 0.2s;
+      }
+      .preview-nav a:hover { opacity: 1; background: var(--accent); }
+      .preview-nav .current { opacity: 1; background: var(--accent); font-weight: 500; }
+
+      .wrap { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+      /* Top status bar */
+      .status-bar {
+        padding: 1.5rem 0;
+        display: flex; justify-content: space-between; align-items: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem; color: var(--muted);
+        text-transform: uppercase; letter-spacing: 0.15em;
+      }
+      .status-bar .dot {
+        display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+        background: var(--accent); margin-right: 0.5rem;
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
+
+      /* HUGE HERO */
+      .hero {
+        padding: 4rem 0 6rem;
+        position: relative;
+      }
+      .hero-statement {
+        font-family: 'Bricolage Grotesque', 'Noto Sans SC', sans-serif;
+        font-variation-settings: 'opsz' 96;
+        font-weight: 600;
+        font-size: clamp(3rem, 13vw, 11rem);
+        line-height: 0.88;
+        letter-spacing: -0.05em;
+        margin-bottom: 2rem;
+      }
+      .hero-statement .accent {
+        color: var(--accent);
+        font-style: italic;
+        font-weight: 700;
+      }
+      .hero-statement .strike {
+        position: relative; color: var(--muted);
+      }
+      .hero-statement .strike::after {
+        content: ""; position: absolute;
+        left: 0; right: 0; top: 52%;
+        height: 0.12em;
+        background: var(--accent);
+        transform: rotate(-3deg);
+      }
+
+      .hero-meta {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-top: 4rem;
+        max-width: 100%;
+      }
+      @media (min-width: 768px) {
+        .hero-meta { grid-template-columns: 1fr 1fr; gap: 4rem; }
+      }
+      .hero-meta-block h3 {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--accent);
+        margin-bottom: 1rem;
+      }
+      .hero-meta-block p {
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: var(--ink);
+      }
+
+      .hero-cta {
+        margin-top: 4rem;
+        display: flex; gap: 1rem; flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-flex; align-items: center; gap: 0.625rem;
+        font-size: 0.9375rem; font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+      .btn-primary {
+        background: var(--ink); color: var(--bg);
+        padding: 1.125rem 2rem; border-radius: 4px;
+        font-family: 'Bricolage Grotesque', sans-serif;
+      }
+      .btn-primary:hover { background: var(--accent); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+      .btn-ghost {
+        color: var(--ink);
+        padding: 1.125rem 2rem;
+        border: 2px solid var(--ink);
+        border-radius: 4px;
+        font-family: 'Bricolage Grotesque', sans-serif;
+      }
+      .btn-ghost:hover { background: var(--ink); color: var(--bg); }
+
+      /* About section */
+      .section {
+        padding: 6rem 0;
+        border-top: 2px solid var(--ink);
+      }
+      .section-eyebrow {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.25em;
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+      }
+      .section-title {
+        font-family: 'Bricolage Grotesque', 'Noto Sans SC', sans-serif;
+        font-variation-settings: 'opsz' 48;
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 600;
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+        margin-bottom: 3rem;
+        max-width: 38rem;
+      }
+      .about-text p {
+        font-size: 1.125rem; line-height: 1.75;
+        margin-bottom: 1.5rem;
+        max-width: 42rem;
+      }
+      .pullquote {
+        font-family: 'Bricolage Grotesque', sans-serif;
+        font-weight: 500;
+        font-style: italic;
+        font-size: clamp(1.5rem, 3vw, 2.25rem);
+        line-height: 1.25;
+        color: var(--accent);
+        padding: 2rem 0;
+        max-width: 42rem;
+        border-top: 2px solid var(--accent);
+        border-bottom: 2px solid var(--accent);
+        margin: 3rem 0;
+      }
+
+      /* Footer */
+      footer {
+        padding: 3rem 0 4rem;
+        border-top: 2px solid var(--ink);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase; letter-spacing: 0.15em;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="preview-nav">
+      <a href="/en/preview/v1/">V1 Editorial</a>
+      <span class="current">V2 Bold</span>
+      <a href="/en/preview/v3/">V3 Soft</a>
+      <a href="/en/preview/" title="back to index">↩</a>
+    </nav>
+
+    <div class="wrap">
+      <header class="status-bar">
+        <span><span class="dot"></span>AVAILABLE FOR AI ROLES</span>
+        <span>RAIN · 2026</span>
+      </header>
+
+      <section class="hero">
+        <h1 class="hero-statement">
+          I make <span class="strike">spreadsheets</span><br />
+          <span class="accent">agents</span>.
+        </h1>
+
+        <div class="hero-meta">
+          <div class="hero-meta-block">
+            <h3>Who</h3>
+            <p>
+              Rain Fan · Rain. M.A. in Public Finance, CPA, 3 years at KPMG audit.
+              Then I started using AI to rebuild finance workflows, and recently shipped a production-grade e-commerce system in 5 weeks.
+            </p>
+          </div>
+          <div class="hero-meta-block">
+            <h3>What I'm after</h3>
+            <p>
+              AI implementation, Forward Deployed Engineer, AI product roles.
+              My angle: business-savvy finance background + hands-on AI delivery.
+            </p>
+          </div>
+        </div>
+
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#">See projects →</a>
+          <a class="btn btn-ghost" href="#">Get in touch</a>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="section-eyebrow">// 01 · About</p>
+        <h2 class="section-title">
+          From reading companies,<br />
+          to building their tools.
+        </h2>
+
+        <div class="about-text">
+          <p>
+            My foundation is finance: M.A. in Public Finance from SWUFE, CPA, 3 years at KPMG Shenzhen audit — dual-standard consolidations for 30+ subsidiaries, leading financial due diligence for IPO-bound clients. That gave me two things: the ability to read a company, and a deep aversion to repetitive work.
+          </p>
+          <p>
+            In 2024 I left KPMG and joined a short-form video startup as a finance BP. I first brought AI into multi-platform revenue reconciliation, lifting efficiency by 30%. From that moment I saw clearly —
+          </p>
+        </div>
+
+        <blockquote class="pullquote">
+          AI doesn't free programmers; it frees people who understand the business but are trapped by the process.
+        </blockquote>
+
+        <div class="about-text">
+          <p>
+            This year I used Cursor + Claude Code to deliver a real, paid e-commerce system in 5 weeks.
+            Now I'm looking for a role that combines "business understanding" with "getting things done with AI."
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <footer class="wrap">
+      <p>V2 · Bold Statement — Sand #E8DCC7 · Rust #C44829 · Bricolage Grotesque / Manrope / JetBrains Mono</p>
+    </footer>
+  </body>
+</html>

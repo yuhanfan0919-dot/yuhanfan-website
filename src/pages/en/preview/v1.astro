@@ -1,0 +1,303 @@
+---
+// V1 · Editorial — magazine-editorial style
+// Deep forest #2D4A2B + warm sand #F5EFE2 + Fraunces oversized serif
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>V1 · Editorial · Rain Fan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #F5EFE2;
+        --paper: #FCFAF5;
+        --ink: #1A1A1A;
+        --muted: #5C5650;
+        --accent: #2D4A2B;
+        --accent-soft: #5C7A4D;
+        --border: #D8CFBE;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: 'Inter', 'Noto Sans SC', sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Preview nav (sticky chip) */
+      .preview-nav {
+        position: fixed; top: 1rem; right: 1rem; z-index: 50;
+        background: var(--paper); border: 1px solid var(--border);
+        border-radius: 9999px; padding: 0.375rem 0.5rem;
+        display: flex; gap: 0.25rem; align-items: center;
+        font-size: 0.75rem; font-family: 'Inter', monospace;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      }
+      .preview-nav a, .preview-nav span {
+        color: var(--muted); text-decoration: none;
+        padding: 0.25rem 0.625rem; border-radius: 9999px;
+        transition: all 0.2s;
+      }
+      .preview-nav a:hover { background: var(--accent); color: var(--paper); }
+      .preview-nav .current { color: var(--paper); background: var(--accent); font-weight: 500; }
+
+      .wrap { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+      /* Top bar / masthead */
+      .masthead {
+        padding-top: 2rem; padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex; justify-content: space-between; align-items: baseline;
+        font-family: 'Inter', monospace;
+        font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+        color: var(--muted);
+      }
+      .masthead-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1rem; letter-spacing: 0;
+        text-transform: none; color: var(--ink);
+        font-style: italic;
+      }
+
+      /* Hero */
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding: 5rem 0 4rem;
+        align-items: center;
+      }
+      @media (min-width: 900px) {
+        .hero { grid-template-columns: 1.5fr 1fr; gap: 5rem; }
+      }
+      .hero-eyebrow {
+        font-family: 'Inter', monospace;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+        display: flex; align-items: center; gap: 1rem;
+      }
+      .hero-eyebrow::before {
+        content: ""; height: 1px; width: 2rem; background: var(--accent);
+      }
+      .hero-title {
+        font-family: 'Fraunces', 'Noto Serif SC', serif;
+        font-size: clamp(3.25rem, 8.5vw, 6.5rem);
+        font-weight: 500;
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        font-variation-settings: 'opsz' 144;
+        margin-bottom: 1.5rem;
+      }
+      .hero-title em {
+        font-style: italic;
+        font-weight: 400;
+        color: var(--accent);
+        font-variation-settings: 'opsz' 144;
+      }
+      .hero-role {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 1.375rem;
+        color: var(--muted);
+        margin-bottom: 2rem;
+        font-variation-settings: 'opsz' 36;
+      }
+      .hero-tagline {
+        font-size: 1.0625rem;
+        color: var(--ink);
+        max-width: 36rem;
+        line-height: 1.75;
+        margin-bottom: 2.5rem;
+      }
+      .hero-cta { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        font-size: 0.875rem; font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: var(--accent); color: var(--paper);
+        padding: 0.875rem 1.75rem; border-radius: 9999px;
+      }
+      .btn-primary:hover { background: var(--ink); transform: translateX(2px); }
+      .btn-ghost {
+        color: var(--ink);
+        border-bottom: 1px solid var(--ink);
+        padding: 0 0 0.125rem 0;
+      }
+      .btn-ghost:hover { color: var(--accent); border-color: var(--accent); }
+
+      /* Hero figure (placeholder for photo) */
+      .hero-figure {
+        aspect-ratio: 3/4;
+        background:
+          linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-figure::before {
+        content: "01"; position: absolute;
+        top: 1.5rem; left: 1.5rem;
+        font-family: 'Fraunces', serif; font-style: italic;
+        font-size: 1rem;
+        color: rgba(255,255,255,0.7);
+        letter-spacing: 0.05em;
+      }
+      .hero-figure::after {
+        content: "Rain"; position: absolute;
+        bottom: 1.25rem; right: 1.5rem;
+        font-family: 'Fraunces', serif; font-style: italic;
+        font-size: 3.5rem; font-weight: 300;
+        color: rgba(255,255,255,0.25);
+        letter-spacing: -0.04em;
+      }
+
+      /* Section */
+      .section {
+        padding: 5rem 0;
+        border-top: 1px solid var(--border);
+      }
+      .section-eyebrow {
+        font-family: 'Inter', monospace;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: var(--accent);
+        margin-bottom: 2rem;
+      }
+      .section-title {
+        font-family: 'Fraunces', 'Noto Serif SC', serif;
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 400;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin-bottom: 3rem;
+        max-width: 36rem;
+        font-variation-settings: 'opsz' 96;
+      }
+
+      .about-grid {
+        display: grid; gap: 2rem;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 900px) {
+        .about-grid { grid-template-columns: 1fr 2fr; gap: 4rem; }
+      }
+      .about-aside {
+        font-family: 'Fraunces', serif; font-style: italic;
+        font-size: 1.125rem; color: var(--accent);
+        font-variation-settings: 'opsz' 36;
+      }
+      .about-text p {
+        margin-bottom: 1.5rem;
+        font-size: 1.0625rem;
+        line-height: 1.8;
+        max-width: 38rem;
+      }
+      .pullquote {
+        font-family: 'Fraunces', 'Noto Serif SC', serif;
+        font-style: italic;
+        font-size: 1.625rem;
+        line-height: 1.45;
+        color: var(--accent);
+        border-left: 2px solid var(--accent);
+        padding-left: 1.75rem;
+        max-width: 38rem;
+        margin: 2.5rem 0;
+        font-variation-settings: 'opsz' 96;
+      }
+
+      /* Footer */
+      footer {
+        padding: 3rem 0 4rem;
+        border-top: 1px solid var(--border);
+        font-size: 0.75rem;
+        color: var(--muted);
+        font-family: 'Inter', monospace;
+        letter-spacing: 0.05em;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="preview-nav">
+      <span class="current">V1 Editorial</span>
+      <a href="/en/preview/v2/">V2 Bold</a>
+      <a href="/en/preview/v3/">V3 Soft</a>
+      <a href="/en/preview/" title="back to index">↩</a>
+    </nav>
+
+    <div class="wrap">
+      <header class="masthead">
+        <span>FOLIO · MMXXVI</span>
+        <span class="masthead-title">Rain Fan · Rain</span>
+        <span>VOL. I</span>
+      </header>
+
+      <section class="hero">
+        <div>
+          <p class="hero-eyebrow">A finance person becoming a builder</p>
+          <h1 class="hero-title">
+            Finance,<br />then <em>code</em>.<br />Then both.
+          </h1>
+          <p class="hero-role">Rain Fan · Rain — Finance analyst turning AI builder.</p>
+          <p class="hero-tagline">
+            M.A. in Public Finance from Southwestern University of Finance and Economics, CPA, 3 years at KPMG Shenzhen audit.
+            Then I started using AI to rebuild finance workflows — this year I'm writing code and shipping products myself.
+            I want to help teams still stuck in repetitive work hand the flow over to agents.
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#">See projects <span>→</span></a>
+            <a class="btn btn-ghost" href="#">Get in touch</a>
+          </div>
+        </div>
+        <div class="hero-figure"></div>
+      </section>
+
+      <section class="section">
+        <p class="section-eyebrow">Essay I · About</p>
+        <h2 class="section-title">The path isn't neat,<br />but the thread is consistent.</h2>
+        <div class="about-grid">
+          <aside class="about-aside">
+            "AI won't make product decisions for me, but it has shrunk the distance from 'the solution I can imagine' to 'working implementation' by 10×."
+          </aside>
+          <div class="about-text">
+            <p>
+              My foundation is finance: B.A. in Investment from Tianjin Normal University, M.A. in Public Finance from SWUFE, CPA Accounting passed, 3 years at KPMG Shenzhen audit — dual-standard consolidations for 30+ subsidiaries, leading financial due diligence for IPO-bound clients. That gave me two things: the ability to read a company, and a deep aversion to repetitive work.
+            </p>
+            <p>
+              In 2024 I left KPMG and joined a short-form video startup as a finance BP. There I first brought AI and VBA into multi-platform revenue reconciliation, lifting efficiency by 30%. From that moment I saw one thing clearly —
+            </p>
+            <blockquote class="pullquote">
+              AI doesn't free programmers; it frees people who understand the business but are trapped by the process.
+            </blockquote>
+            <p>
+              In 2026 I spent 5 weeks using Cursor + Claude Code to deliver a complete, paid e-commerce system for my sister's fried chicken shop in Minsk. That was my first closed loop from "finance person" to "independent product shipper."
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="wrap">
+      <p>V1 · Editorial — Forest #2D4A2B · Sand #F5EFE2 · Fraunces / Inter</p>
+    </footer>
+  </body>
+</html>

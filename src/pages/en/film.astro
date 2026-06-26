@@ -1,0 +1,802 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const items = [
+  { image: '/playground/climbing.jpg', text: 'Bouldering' },
+  { image: '/playground/climbing-outdoor.jpg', text: 'Outdoor' },
+  { image: '/playground/surf.jpg', text: 'Surfing' },
+  { image: '/playground/dive.jpg', text: 'Freediving' },
+  { image: '/playground/funergy.jpg', text: 'FUNergy' },
+  { image: '/playground/sandbox.png', text: 'Sandbox' },
+  { image: '/playground/crew.jpg', text: 'The Crew' },
+];
+
+const filmItems = items.map((item, index) => ({
+  ...item,
+  index,
+  order: String(index + 1).padStart(2, '0'),
+}));
+---
+
+<Layout title="Film · Rain off the clock" lang="en" hideChrome>
+  <div class="film">
+    <div class="film-nav">
+      <div class="film-nav-left">
+        <p>Rain Fan · Rain</p>
+        <p class="dim">Never off the clock</p>
+      </div>
+      <a href="/en/" class="film-nav-right">← Back home</a>
+    </div>
+
+    <p class="film-hint film-hint-desktop">Scroll down · pull the film ↓</p>
+    <p class="film-hint film-hint-mobile">Swipe to browse · tap to view</p>
+    <a href="/en/#contact" class="film-sayhi">say hi</a>
+
+    <div class="film-canvas" data-film data-items={JSON.stringify(items)}></div>
+    <div class="film-titles" data-titles></div>
+    <div class="film-scroll" style={`height:${(items.length + 1) * 100}vh;`}></div>
+
+    <section class="film-mobile-shell" data-film-mobile>
+      <div class="film-mobile-list">
+        {filmItems.map((item) => (
+          <button
+            type="button"
+            class="film-mobile-card reveal"
+            data-film-open={item.index}
+            aria-label={`View ${item.text}`}
+          >
+            <span class="film-mobile-media">
+              <img
+                src={item.image}
+                alt={item.text}
+                loading={item.index === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+              <span class="film-mobile-shade"></span>
+            </span>
+            <span class="film-mobile-meta">
+              <span class="film-mobile-order">{item.order} / {filmItems.length}</span>
+              <span class="film-mobile-title">{item.text}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <dialog class="film-lightbox" data-film-dialog aria-label="Photo viewer">
+        <div class="film-lightbox-shell">
+          <button
+            type="button"
+            class="film-lightbox-close"
+            data-film-close
+            aria-label="Close photo viewer"
+          >
+            ×
+          </button>
+
+          <div class="film-lightbox-track" data-film-track>
+            {filmItems.map((item) => (
+              <article class="film-lightbox-slide" data-film-slide>
+                <img src={item.image} alt={item.text} loading="lazy" decoding="async" />
+              </article>
+            ))}
+          </div>
+
+          <div class="film-lightbox-info">
+            <div class="film-lightbox-copy">
+              <p class="film-lightbox-order" data-film-order>01 / {filmItems.length}</p>
+              <h2 class="film-lightbox-title" data-film-title>{filmItems[0].text}</h2>
+            </div>
+            <div class="film-lightbox-dots" data-film-dots>
+              {filmItems.map((item) => (
+                <span
+                  class:list={['film-lightbox-dot', { 'is-active': item.index === 0 }]}
+                  data-film-dot={item.index}
+                ></span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </dialog>
+    </section>
+  </div>
+</Layout>
+
+<style is:global>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap');
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .film .film-titles {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  .film .film-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: clamp(3rem, 9.5vw, 9rem);
+    line-height: 1;
+    color: #fff;
+    letter-spacing: -0.01em;
+    text-shadow: 0 6px 50px rgba(0, 0, 0, 0.7);
+    white-space: nowrap;
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+
+  .film .film-title span {
+    display: inline-block;
+  }
+ </style>
+
+<style>
+  .film {
+    background: #0b0b0e;
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  .film-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .film-canvas canvas {
+    display: block;
+  }
+
+  .film-scroll {
+    position: relative;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .film-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.75rem 2rem;
+    pointer-events: none;
+  }
+
+  .film-nav a {
+    pointer-events: auto;
+  }
+
+  .film-nav-left p {
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  }
+
+  .film-nav-left .dim {
+    font-weight: 400;
+    opacity: 0.6;
+  }
+
+  .film-nav-right {
+    font-size: 0.85rem;
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.85;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+    transition: opacity 0.2s;
+  }
+
+  .film-nav-right:hover {
+    opacity: 1;
+  }
+
+  .film-hint {
+    position: fixed;
+    bottom: 1.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 40;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    opacity: 0.5;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .film-hint-mobile,
+  .film-mobile-shell {
+    display: none;
+  }
+
+  .film-sayhi {
+    position: fixed;
+    bottom: 1.75rem;
+    right: 2rem;
+    z-index: 40;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: #0b0b0e;
+    background: #fff;
+    padding: 0.55rem 1.5rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+  }
+
+  .film-mobile-shell {
+    position: relative;
+    z-index: 5;
+    min-height: 100vh;
+  }
+
+  .film-mobile-list {
+    padding: 6.5rem 1rem 7rem;
+    display: grid;
+    gap: 1rem;
+    scroll-snap-type: y mandatory;
+  }
+
+  .film-mobile-card {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: min(78vh, 720px);
+    border: none;
+    padding: 0;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: #141419;
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+    scroll-snap-align: start;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    transform: translateY(24px);
+  }
+
+  .film-mobile-media,
+  .film-mobile-media img,
+  .film-mobile-shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .film-mobile-media img {
+    object-fit: cover;
+  }
+
+  .film-mobile-shade {
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.12) 40%, rgba(0, 0, 0, 0.68) 100%),
+      radial-gradient(circle at top right, rgba(255, 255, 255, 0.16), transparent 35%);
+  }
+
+  .film-mobile-meta {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.15rem 1.15rem 1.25rem;
+  }
+
+  .film-mobile-order {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+    opacity: 0.72;
+  }
+
+  .film-mobile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.25rem, 10vw, 3.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .film-lightbox {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    margin: 0;
+    inset: 0;
+    background: rgba(11, 11, 14, 0.98);
+    color: #fff;
+    box-shadow: none;
+  }
+
+  .film-lightbox::backdrop {
+    background: rgba(11, 11, 14, 0.86);
+    backdrop-filter: blur(10px);
+  }
+
+  .film-lightbox-shell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .film-lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 3;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+  }
+
+  .film-lightbox-track {
+    flex: 1;
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior: contain;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .film-lightbox-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .film-lightbox-slide {
+    flex: 0 0 100%;
+    width: 100vw;
+    height: 100%;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1rem 7.25rem;
+  }
+
+  .film-lightbox-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .film-lightbox-info {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1rem 1.4rem;
+    background: linear-gradient(180deg, rgba(11, 11, 14, 0) 0%, rgba(11, 11, 14, 0.78) 55%, rgba(11, 11, 14, 0.92) 100%);
+  }
+
+  .film-lightbox-copy {
+    min-width: 0;
+  }
+
+  .film-lightbox-order {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.62;
+    margin-bottom: 0.4rem;
+  }
+
+  .film-lightbox-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.9rem, 8vw, 3rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+
+  .film-lightbox-dots {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.3rem;
+    flex-shrink: 0;
+  }
+
+  .film-lightbox-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.24);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .film-lightbox-dot.is-active {
+    transform: scale(1.5);
+    background: #fff;
+  }
+
+  @media (max-width: 767px), (pointer: coarse) {
+    .film-canvas,
+    .film-titles,
+    .film-scroll,
+    .film-hint-desktop {
+      display: none;
+    }
+
+    .film-mobile-shell,
+    .film-hint-mobile {
+      display: block;
+    }
+
+    .film-nav {
+      padding: 1.15rem 1rem 0;
+    }
+
+    .film-nav-left p,
+    .film-nav-right {
+      font-size: 0.78rem;
+    }
+
+    .film-hint {
+      bottom: 1.15rem;
+      left: 1rem;
+      transform: none;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      opacity: 0.52;
+    }
+
+    .film-sayhi {
+      right: 1rem;
+      bottom: 1rem;
+      padding: 0.65rem 1.15rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (min-width: 768px) and (pointer: fine) {
+    .film-mobile-shell,
+    .film-hint-mobile {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  const DESKTOP_QUERY = '(min-width: 768px) and (pointer: fine)';
+
+  const desktopMode = window.matchMedia(DESKTOP_QUERY);
+  const isDesktopMode = () => desktopMode.matches;
+
+  function setupModeRefresh() {
+    const handler = () => window.location.reload();
+    if (typeof desktopMode.addEventListener === 'function') {
+      desktopMode.addEventListener('change', handler);
+    } else if (typeof desktopMode.addListener === 'function') {
+      desktopMode.addListener(handler);
+    }
+  }
+
+  function setupMobileFilm() {
+    const mobileRoot = document.querySelector('[data-film-mobile]');
+    if (!(mobileRoot instanceof HTMLElement)) return;
+
+    const dialog = mobileRoot.querySelector('[data-film-dialog]');
+    const track = mobileRoot.querySelector('[data-film-track]');
+    const title = mobileRoot.querySelector('[data-film-title]');
+    const order = mobileRoot.querySelector('[data-film-order]');
+    const closeButton = mobileRoot.querySelector('[data-film-close]');
+    const openButtons = [...mobileRoot.querySelectorAll('[data-film-open]')];
+    const slides = [...mobileRoot.querySelectorAll('[data-film-slide]')];
+    const dots = [...mobileRoot.querySelectorAll('[data-film-dot]')];
+
+    if (!(dialog instanceof HTMLDialogElement) || !(track instanceof HTMLElement)) return;
+
+    const total = slides.length;
+    if (!total) return;
+
+    let activeIndex = 0;
+    let lockedScrollY = 0;
+
+    const syncInfo = (index) => {
+      const clamped = Math.max(0, Math.min(total - 1, index));
+      activeIndex = clamped;
+
+      const slideImage = slides[clamped]?.querySelector('img');
+      if (slideImage instanceof HTMLImageElement && title instanceof HTMLElement) {
+        title.textContent = slideImage.alt;
+      }
+
+      if (order instanceof HTMLElement) {
+        order.textContent = `${String(clamped + 1).padStart(2, '0')} / ${total}`;
+      }
+
+      dots.forEach((dot, dotIndex) => {
+        dot.classList.toggle('is-active', dotIndex === clamped);
+      });
+    };
+
+    const scrollToIndex = (index, behavior = 'smooth') => {
+      const target = slides[index];
+      if (!(target instanceof HTMLElement)) return;
+      target.scrollIntoView({ behavior, block: 'nearest', inline: 'start' });
+    };
+
+    const openLightbox = (index) => {
+      lockedScrollY = window.scrollY;
+      syncInfo(index);
+      dialog.showModal();
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      requestAnimationFrame(() => scrollToIndex(index, 'auto'));
+    };
+
+    const closeLightbox = () => {
+      if (!dialog.open) return;
+      dialog.close();
+    };
+
+    const restoreScroll = () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      window.scrollTo({ top: lockedScrollY, behavior: 'auto' });
+    };
+
+    openButtons.forEach((button, index) => {
+      if (!(button instanceof HTMLButtonElement)) return;
+      button.addEventListener('click', () => openLightbox(index));
+    });
+
+    closeButton?.addEventListener('click', closeLightbox);
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) closeLightbox();
+    });
+
+    dialog.addEventListener('close', restoreScroll);
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeLightbox();
+        return;
+      }
+
+      if (event.key === 'ArrowRight') {
+        const next = Math.min(activeIndex + 1, total - 1);
+        syncInfo(next);
+        scrollToIndex(next);
+      }
+
+      if (event.key === 'ArrowLeft') {
+        const prev = Math.max(activeIndex - 1, 0);
+        syncInfo(prev);
+        scrollToIndex(prev);
+      }
+    });
+
+    let scrollFrame = 0;
+    track.addEventListener(
+      'scroll',
+      () => {
+        if (scrollFrame) cancelAnimationFrame(scrollFrame);
+        scrollFrame = requestAnimationFrame(() => {
+          const nextIndex = Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+          syncInfo(nextIndex);
+        });
+      },
+      { passive: true }
+    );
+
+    syncInfo(0);
+  }
+
+  async function setupDesktopFilm() {
+    const container = document.querySelector('[data-film]');
+    if (!(container instanceof HTMLElement)) return;
+
+    const [{ default: Lenis }, THREE] = await Promise.all([import('lenis'), import('three')]);
+
+    const items = JSON.parse(container.dataset.items || '[]');
+    const titlesWrap = document.querySelector('[data-titles]');
+    const titleEls = items.map(() => {
+      const el = document.createElement('h2');
+      el.className = 'film-title';
+      titlesWrap?.appendChild(el);
+      return el;
+    });
+    const revealed = items.map(() => false);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0b0b0e);
+    scene.fog = new THREE.Fog(0x0b0b0e, 26, 80);
+
+    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 240);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const key = new THREE.DirectionalLight(0xfff2e6, 1.1);
+    key.position.set(4, 5, 8);
+    scene.add(key);
+    const rim = new THREE.DirectionalLight(0x9cb4ff, 0.45);
+    rim.position.set(-5, -2, 4);
+    scene.add(rim);
+
+    const planeW = 15.2;
+    const planeH = 9.5;
+    const radius = 26;
+    const cameraDistance = 18;
+    const gap = 1.9;
+    const roll = 0.05;
+    const step = (planeH + gap) / radius;
+    camera.position.set(0, 0, -(radius - cameraDistance));
+
+    const loader = new THREE.TextureLoader();
+    const meshes = [];
+
+    items.forEach((item) => {
+      const geo = new THREE.PlaneGeometry(planeW, planeH, 24, 48);
+      const position = geo.attributes.position;
+
+      for (let vertex = 0; vertex < position.count; vertex += 1) {
+        const y = position.getY(vertex);
+        const angle = y / radius;
+        position.setY(vertex, radius * Math.sin(angle));
+        position.setZ(vertex, radius - radius * Math.cos(angle));
+      }
+
+      position.needsUpdate = true;
+      geo.computeVertexNormals();
+
+      const texture = loader.load(item.image);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+      const material = new THREE.MeshStandardMaterial({
+        map: texture,
+        roughness: 0.85,
+        metalness: 0,
+        side: THREE.FrontSide,
+      });
+
+      const mesh = new THREE.Mesh(geo, material);
+      scene.add(mesh);
+      meshes.push(mesh);
+    });
+
+    const totalAngle = (items.length - 1) * step;
+
+    function layout(globalAngle) {
+      meshes.forEach((mesh, index) => {
+        const theta = globalAngle - index * step;
+        mesh.position.set(0, radius * Math.sin(theta), -radius * Math.cos(theta));
+        mesh.rotation.set(theta, 0, roll);
+      });
+    }
+
+    layout(0);
+
+    const lenis = new Lenis({ lerp: 0.08 });
+    let progress = 0;
+
+    lenis.on('scroll', (event) => {
+      const max = event.dimensions ? event.dimensions.scrollHeight - event.dimensions.height : 1;
+      progress = max > 0 ? event.scroll / max : 0;
+    });
+
+    const projected = new THREE.Vector3();
+
+    function revealTitle(element, text) {
+      element.innerHTML = text
+        .split('')
+        .map((char) => `<span>${char === ' ' ? '&nbsp;' : char}</span>`)
+        .join('');
+
+      element.querySelectorAll('span').forEach((span, index) => {
+        span.animate(
+          [
+            { opacity: 0, transform: 'translateY(0.55em) rotate(6deg)', filter: 'blur(8px)' },
+            { opacity: 1, transform: 'translateY(0) rotate(0)', filter: 'blur(0)' },
+          ],
+          {
+            duration: 620,
+            delay: index * 55,
+            easing: 'cubic-bezier(0.2,0.75,0.2,1)',
+            fill: 'both',
+          }
+        );
+      });
+    }
+
+    function updateTitle(globalAngle) {
+      const width = container.clientWidth || window.innerWidth;
+      const height = container.clientHeight || window.innerHeight;
+
+      titleEls.forEach((element, index) => {
+        const theta = globalAngle - index * step;
+        projected.set(0, radius * Math.sin(theta), -radius * Math.cos(theta)).project(camera);
+        element.style.left = `${(projected.x * 0.5 + 0.5) * width}px`;
+        element.style.top = `${(-projected.y * 0.5 + 0.5) * height}px`;
+        element.style.transform = 'translate(-50%, -50%)';
+
+        const centeredness = 1 - Math.abs(theta) / (step / 2);
+        let opacity = Math.max(0, Math.min(1, (centeredness - 0.25) / 0.75));
+        opacity = opacity * opacity * (3 - 2 * opacity);
+        element.style.opacity = String(opacity);
+
+        if (opacity > 0.05 && !revealed[index]) {
+          revealTitle(element, items[index].text);
+          revealed[index] = true;
+        } else if (opacity <= 0.02 && revealed[index]) {
+          revealed[index] = false;
+        }
+      });
+    }
+
+    function render(time) {
+      lenis.raf(time);
+      const angle = progress * totalAngle;
+      layout(angle);
+      updateTitle(angle);
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+
+    const applySize = () => {
+      const width = container.clientWidth || window.innerWidth;
+      const height = container.clientHeight || window.innerHeight;
+      if (!width || !height) return;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
+
+    new ResizeObserver(applySize).observe(container);
+    window.addEventListener('resize', applySize);
+    applySize();
+  }
+
+  setupModeRefresh();
+
+  if (isDesktopMode()) {
+    setupDesktopFilm();
+  } else {
+    setupMobileFilm();
+  }
+</script>

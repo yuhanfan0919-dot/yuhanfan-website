@@ -412,14 +412,14 @@ export const en: Content = {
           stack: ['Next.js', 'Supabase', 'Alfa Bank', 'SMS', 'Telegram Bot'],
         },
         {
-          title: 'Delivery pricing engine',
-          description: 'Auto-samples courier fares every 10 min · priced from 2,592 samples · multi-exit dispatch with human fallback',
-          stack: ['Vercel Cron', 'Yandex API', 'Supabase', 'Alfa Bank'],
-        },
-        {
           title: 'Scheduling bot',
           description: '7×24 in production · employee self-service · monthly payroll auto-calc',
           stack: ['Python', 'Telegram Bot', 'Railway', 'Sheets'],
+        },
+        {
+          title: 'Delivery pricing engine',
+          description: 'Auto-samples courier fares every 10 min · priced from 2,592 samples · multi-exit dispatch with human fallback',
+          stack: ['Vercel Cron', 'Yandex API', 'Supabase'],
         },
       ],
       href: '/en/projects/chicken-oppa/',
@@ -446,7 +446,7 @@ export const en: Content = {
         body: "Finance- and audit-trained, I went from automating my own workflow to teaching myself AI coding and shipping a full system on my own; I don't just think — I learn, I try, until it actually runs.",
       },
     ],
-    playLink: { label: 'Off the clock, I never sit still →', href: '/film' },
+    playLink: { label: 'Off the clock, I never sit still →', href: '/en/film' },
   },
   experience: {
     eyebrow: '03 / Experience',

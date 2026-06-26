@@ -1,243 +1,765 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
+
+const highlights = [
+  { label: 'Timeline', value: '5 weeks', detail: '0 to production-grade system' },
+  { label: 'Scope', value: 'External + Internal', detail: 'Customer ordering and store ops designed together' },
+  { label: 'Status', value: 'Live', detail: 'Payment flow working · real paid orders received' },
+  { label: 'Hardening', value: '1 week', detail: 'Security audit completed before launch' },
+];
+
+const securityItems = [
+  ['Duplicate payment callbacks', 'A successful callback can be retried by the gateway due to network issues.', 'Gate state transitions on current order status — duplicates return 200 but trigger no side effects.'],
+  ['Amount tampering', 'The client-submitted total can be changed by a user in the request.', 'Always recompute the final total server-side from item IDs before payment — the frontend price is display-only.'],
+  ['Webhook forgery', 'A public webhook URL can be spoofed, impersonating Telegram.', 'Validate the secret_token in the webhook header; reject mismatches with 401.'],
+  ['OTP abuse', 'SMS codes cost real money; an unprotected endpoint gets drained.', 'Upstash Redis rate limiting by IP + phone number, two dimensions.'],
+];
 ---
 
 <Layout
-  title="oppachikin — Online ordering for a Minsk-local fried chicken shop | Rain Fan"
-  description="A production-grade e-commerce system delivered 0 to 1 in 5 weeks for a real paying client, with Cursor + Claude Code."
+  title="oppachikin project retrospective: from 0 to a production operations system | Rain Fan"
+  description="A production-grade e-commerce and internal operations system delivered 0→1 in 5 weeks for a real paying client, built with AI agent collaboration."
   lang="en"
 >
-  <article class="container-page py-20 md:py-28 max-w-3xl">
-    <a href="/en/" class="inline-flex items-center gap-2 text-sm text-muted hover:text-accent mb-12 transition-colors">
-      <span aria-hidden="true">←</span>
-      <span>Back to home</span>
-    </a>
+  <article class="case-study">
+    <header class="case-hero">
+      <div class="container-page case-hero-grid">
+        <div>
+          <a href="/en/" class="case-back" aria-label="Back to home">
+            <span aria-hidden="true">←</span>
+            <span>Back to home</span>
+          </a>
 
-    <p class="eyebrow mb-6">Project / Mar 2026 – Present</p>
-
-    <h1 class="display text-4xl md:text-6xl mb-6">
-      oppachikin<span class="text-accent">.</span>
-    </h1>
-    <p class="font-serif text-xl md:text-2xl text-muted mb-6 leading-snug">
-      Online ordering system for a Minsk-local fried chicken shop — a production-grade
-      e-commerce system delivered 0 to 1 in 5 weeks for a real paying client, with Cursor + Claude Code.
-    </p>
-
-    <a
-      href="https://oppachikin.by"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 text-sm font-mono text-accent hover:underline mb-10"
-    >
-      Visit the live site <span aria-hidden="true">↗</span>
-    </a>
-
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-16">
-      <div class="p-4 bg-canvas border border-border rounded-xl">
-        <p class="font-mono text-xs text-muted mb-1">Timeline</p>
-        <p class="font-serif text-2xl font-semibold">5 weeks</p>
-      </div>
-      <div class="p-4 bg-canvas border border-border rounded-xl">
-        <p class="font-mono text-xs text-muted mb-1">Code</p>
-        <p class="font-serif text-2xl font-semibold">13,000+ lines</p>
-      </div>
-      <div class="p-4 bg-canvas border border-border rounded-xl">
-        <p class="font-mono text-xs text-muted mb-1">Pages / API</p>
-        <p class="font-serif text-2xl font-semibold">15 / 20</p>
-      </div>
-      <div class="p-4 bg-canvas border border-border rounded-xl">
-        <p class="font-mono text-xs text-muted mb-1">Commits</p>
-        <p class="font-serif text-2xl font-semibold">80</p>
-      </div>
-    </div>
-
-    <div class="space-y-12 text-ink/85">
-      <section>
-        <p class="eyebrow mb-3">01</p>
-        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">The problem</h2>
-        <p class="leading-relaxed mb-4">
-          A fried chicken shop in Minsk, Belarus brought me on. Unlike China's "everything-on-Meituan"
-          delivery ecosystem, Minsk has weak local delivery platform coverage — most restaurant orders
-          still come through walk-ins, phone calls, and the shop's own website.
-          <strong>A website here isn't a bonus channel — it's the primary acquisition channel.</strong>
-        </p>
-        <p class="leading-relaxed">
-          The owner hired me, <strong>paid me a development fee</strong> — my first real freelance gig.
-        </p>
-      </section>
-
-      <section>
-        <p class="eyebrow mb-3">02</p>
-        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">My angle</h2>
-        <p class="leading-relaxed">
-          I come from finance and audit, not a CS track — and that's the edge.
-          My bet going in: <strong>with Cursor + Claude Code, I could translate a deep read of the
-          business and its users into working, production code.</strong>
-          AI handles syntax, library choices, best practices; I own product judgment, debugging
-          intuition, and the feedback loop with a real paying customer.
-        </p>
-      </section>
-
-      <section>
-        <p class="eyebrow mb-3">03</p>
-        <h2 class="font-serif text-3xl font-semibold text-ink mb-6">Architecture & key decisions</h2>
-
-        <div class="overflow-x-auto -mx-2 px-2">
-          <table class="w-full text-sm border-collapse">
-            <thead>
-              <tr class="border-b-2 border-ink">
-                <th class="text-left py-3 font-serif text-base">Layer</th>
-                <th class="text-left py-3 font-serif text-base">Choice</th>
-                <th class="text-left py-3 font-serif text-base">Why</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-border">
-              <tr><td class="py-3 pr-3 text-muted">Framework</td><td class="py-3 pr-3 font-mono text-xs">Next.js 16 + React 19</td><td class="py-3">One codebase, FE + BE</td></tr>
-              <tr><td class="py-3 pr-3 text-muted">UI</td><td class="py-3 pr-3 font-mono text-xs">Tailwind v4 + shadcn/ui</td><td class="py-3">Zero custom CSS to ship a clean look</td></tr>
-              <tr><td class="py-3 pr-3 text-muted">DB</td><td class="py-3 pr-3 font-mono text-xs">Supabase (Postgres)</td><td class="py-3">Auth + RLS out of the box</td></tr>
-              <tr><td class="py-3 pr-3 text-muted">Payments</td><td class="py-3 pr-3 font-mono text-xs">Alfa Bank API</td><td class="py-3">Local-market constraint, not a tech preference</td></tr>
-              <tr><td class="py-3 pr-3 text-muted">Notifications</td><td class="py-3 pr-3 font-mono text-xs">Telegram Bot</td><td class="py-3">Russian-speaking customers all use Telegram</td></tr>
-              <tr><td class="py-3 pr-3 text-muted">SMS</td><td class="py-3 pr-3 font-mono text-xs">SMS.by</td><td class="py-3">Local Belarus operator for OTP</td></tr>
-              <tr><td class="py-3 pr-3 text-muted">Rate limit</td><td class="py-3 pr-3 font-mono text-xs">Upstash Redis</td><td class="py-3">Protect login + OTP endpoints</td></tr>
-            </tbody>
-          </table>
+          <p class="eyebrow mb-5">Project retrospective / 2026.03 – Present</p>
+          <h1 class="display case-title">
+            <a
+              href="https://oppachikin.by"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="case-title-link"
+              title="Visit the live oppachikin site"
+            >oppachikin<span class="case-title-go" aria-hidden="true">↗</span></a>
+          </h1>
+          <p class="case-lead">
+            More than a website for a fried chicken shop —<br />
+            an operations system that spans customer ordering, payment, and delivery<br />
+            all the way to internal scheduling and payroll.
+          </p>
         </div>
 
-        <blockquote class="pullquote mt-8">
-          <p class="mb-2"><strong>A decision I'm proud of</strong>: loyalty points are stored as
-          an append-only transaction log, not as a mutable balance.</p>
-          <p>Direct instinct from my finance background — anything money-shaped needs an audit trail.
-          When something goes wrong, you can replay every change, not just stare at a wrong number.</p>
-        </blockquote>
+        <figure class="case-visual" aria-label="oppachikin online ordering page">
+          <a
+            href="https://oppachikin.by"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit the live oppachikin site"
+          >
+            <img src="/experience/menu02.jpg" alt="oppachikin online ordering menu screenshot" />
+          </a>
+        </figure>
+      </div>
+    </header>
+
+    <main class="container-page case-main">
+      <section class="metric-grid" aria-label="Project highlights">
+        {highlights.map((item) => (
+          <div class="metric-tile">
+            <p>{item.label}</p>
+            <strong>{item.value}</strong>
+            <span>{item.detail}</span>
+          </div>
+        ))}
       </section>
 
-      <section>
-        <p class="eyebrow mb-3">04</p>
-        <h2 class="font-serif text-3xl font-semibold text-ink mb-6">The hardest (and proudest) parts</h2>
+      <section class="case-section">
+        <div class="section-kicker">01 / Customer experience</div>
+        <div class="section-heading">
+          <h2>From "phone calls only" to self-service online ordering</h2>
+          <p>
+            In Minsk, most restaurant orders still come through walk-ins and phone calls. Even Instagram traffic couldn't convert because there was no website to land on. A website here isn't a bonus channel — it's the primary acquisition channel.
+          </p>
+        </div>
 
-        <div class="space-y-8">
-          <div>
-            <h3 class="font-serif text-xl font-semibold mb-2">1. Idempotent payment callbacks</h3>
-            <p class="leading-relaxed">
-              Gateway "success" callbacks get retried due to network issues. Without idempotency,
-              a single payment can flip order state twice and double-credit points. Solution:
-              gate state transitions on current order status — duplicates return 200 but do nothing.
+        <div class="flow-diff">
+          <div class="flow-diff-head">
+            <span class="flow-label">before</span>
+            <span></span>
+            <span class="flow-label">after</span>
+          </div>
+          <ol>
+            <li class="flow-row reveal">
+              <span class="flow-old">Could only order by phone or in person (even from Instagram, you had to call)</span>
+              <span class="flow-arrow" aria-hidden="true">⟶</span>
+              <span class="flow-new">Instagram link goes straight to the site — self-serve anytime</span>
+            </li>
+            <li class="flow-row reveal">
+              <span class="flow-old">No idea whether delivery was available or how much it cost until you called</span>
+              <span class="flow-arrow" aria-hidden="true">⟶</span>
+              <span class="flow-new">Checkout shows the delivery fee before payment</span>
+            </li>
+            <li class="flow-row reveal">
+              <span class="flow-old">Cash only, in-person payment</span>
+              <span class="flow-arrow" aria-hidden="true">⟶</span>
+              <span class="flow-new">Alfa Bank digital payment — fully electronic</span>
+            </li>
+            <li class="flow-row reveal">
+              <span class="flow-old">After ordering, no visibility into status</span>
+              <span class="flow-arrow" aria-hidden="true">⟶</span>
+              <span class="flow-new">Real-time order and delivery tracking from start to finish</span>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <div class="section-kicker">02 / Store operations</div>
+        <div class="section-heading">
+          <h2>From manual tracking to automated workflows</h2>
+          <p>Customers never see this side — but it's where the owner and staff get freed from repetitive tracking, stats, and settlement.</p>
+        </div>
+
+        <div class="flow-diff">
+          <div class="flow-diff-head">
+            <span class="flow-label">before</span>
+            <span></span>
+            <span class="flow-label">after</span>
+          </div>
+          <ol>
+            <li class="flow-row reveal">
+              <span class="flow-old">Staff could only take orders in-store, cook on the spot</span>
+              <span class="flow-arrow" aria-hidden="true">⟶</span>
+              <span class="flow-new">Orders auto-push to a Telegram staff group; mark "done" and customers see the update</span>
+            </li>
+            <li class="flow-row reveal">
+              <span class="flow-old">Delivery meant manually calling a courier every time</span>
+              <span class="flow-arrow" aria-hidden="true">⟶</span>
+              <span class="flow-new">Yandex B2B API auto-dispatches when cooking is done</span>
+            </li>
+            <li class="flow-row reveal">
+              <span class="flow-old">Shift scheduling was a chaotic group chat, easy to miss people</span>
+              <span class="flow-arrow" aria-hidden="true">⟶</span>
+              <span class="flow-new">Telegram bot — one-click self-service shift picking each week</span>
+            </li>
+            <li class="flow-row reveal">
+              <span class="flow-old">The owner manually tallied hours and calculated pay at month-end</span>
+              <span class="flow-arrow" aria-hidden="true">⟶</span>
+              <span class="flow-new">Bot auto-accumulates hours, payroll calculated automatically</span>
+            </li>
+            <li class="flow-row reveal">
+              <span class="flow-old">Returning customers relied entirely on the owner's memory</span>
+              <span class="flow-arrow" aria-hidden="true">⟶</span>
+              <span class="flow-new">Membership loyalty points automatically build repeat business (append-only transaction log — anything money-shaped needs an audit trail)</span>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="case-section pricing-section">
+        <div class="section-kicker">03 / Delivery automation</div>
+        <div class="section-heading">
+          <h2>Pricing delivery with data, not gut feel</h2>
+          <p>Delivery is the easiest place to lose money. Instead of guessing, we sampled real Yandex courier fares across distances and time bands to build a defensible pricing table. After cooking, the system auto-dispatches; edge cases route to a human.</p>
+        </div>
+
+        <div class="pricing-layout">
+          <div class="pricing-panel">
+            <p class="panel-label">How we price</p>
+            <h3>Distance × time-of-day banding from real samples</h3>
+            <div class="sample-equation" aria-label="Sampling scale">
+              <span>8 fixed routes (0.9–12 km)</span>
+              <strong>×</strong>
+              <span>~5 days continuous sampling</span>
+              <strong>=</strong>
+              <span>2,592 samples</span>
+            </div>
+            <p>
+              A Vercel Cron job samples Yandex real-time fares every 10 minutes into Supabase, then bands them by distance × time-of-day (off-peak / light peak / strong peak) to generate the customer-facing price table.
             </p>
           </div>
 
-          <div>
-            <h3 class="font-serif text-xl font-semibold mb-2">2. Server-side total recomputation</h3>
-            <p class="leading-relaxed">
-              The first version trusted the client-submitted total. Classic
-              <strong>amount-tampering vulnerability</strong> — a user could change 25 to 1
-              in the request and eat for a buck. Fix: always recompute the final total server-side
-              from item IDs.
-            </p>
-          </div>
-
-          <div>
-            <h3 class="font-serif text-xl font-semibold mb-2">3. Telegram webhook forgery protection</h3>
-            <p class="leading-relaxed">
-              Used Telegram's <code class="font-mono text-sm bg-highlight px-1.5 py-0.5 rounded">secret_token</code>
-              mechanism — validate the token in the webhook header, reject 401 on mismatch.
-            </p>
-          </div>
-
-          <div>
-            <h3 class="font-serif text-xl font-semibold mb-2">4. Auth & OTP rate limiting</h3>
-            <p class="leading-relaxed">
-              SMS codes cost real money. Login is a classic brute-force target. Upstash Redis
-              limiting on both IP and phone dimensions.
+          <div class="pricing-panel">
+            <p class="panel-label">How we dispatch</p>
+            <h3>Auto by default, human fallback for edge cases</h3>
+            <p>
+              After cooking, the system re-quotes at dispatch time and uses the free <code>claims/create</code> as a true-price probe (only <code>accept</code> is charged). Normal orders auto-dispatch; 12 km+, anomalies, and failures route to a human.
             </p>
           </div>
         </div>
 
-        <p class="text-sm text-muted mt-8 leading-relaxed">
-          None of this was built up front — <strong class="text-ink">I dedicated a full week
-          near launch to a security audit and patched these one by one.</strong> The commit log shows
-          a week of consecutive <code class="font-mono text-xs bg-highlight px-1.5 py-0.5 rounded">security:</code>
-          prefixed commits. This is the part of the project I'm most proud of.
-        </p>
+        <div class="insight-strip">
+          <div>
+            <p>Sampling</p>
+            <strong>2,592 real samples</strong>
+            <span>Cron every 10 min across 8 fixed routes.</span>
+          </div>
+          <div>
+            <p>Pricing</p>
+            <strong>Distance × time-of-day banded</strong>
+            <span>Reproducible, not gut-based.</span>
+          </div>
+          <div>
+            <p>Fallback</p>
+            <strong>Anomalies always go to a human</strong>
+            <span>No hard-forcing edge cases.</span>
+          </div>
+        </div>
       </section>
 
-      <section>
-        <p class="eyebrow mb-3">05</p>
-        <h2 class="font-serif text-3xl font-semibold text-ink mb-6">Data-driven delivery pricing & multi-exit dispatch</h2>
+      <section class="case-section">
+        <div class="section-kicker">04 / Security audit</div>
+        <div class="section-heading">
+          <h2>The most important step before launch: security audit</h2>
+          <p>
+            Getting features to work is just step one. Before going live, every loophole that could cause real financial damage needs to be closed — this system had to hold up to real money and real traffic. None of this was built up front — I dedicated a full week near launch to a security audit and patched these one by one.
+          </p>
+        </div>
 
-        <p class="leading-relaxed mb-4">
-          The other half of going live was delivery pricing. A Vercel Cron job samples real-time
-          Yandex courier fares for <strong>8 fixed routes (0.9–12 km) every 10 minutes</strong> into Supabase,
-          collecting <strong>2,592 samples in about 5 days</strong>.
-        </p>
-        <p class="leading-relaxed mb-4">
-          The output: a <strong>weekday-hour peak grid</strong> (off-peak / micro / strong) ×
-          <strong>10 distance bands</strong> fare table, with a weekend surcharge stacking on top and 12 km+
-          always routed to a human. The owner signed off the final grid — the Tuesday-to-Thursday
-          off-peak call was a business judgment, not the data's.
-        </p>
-        <p class="leading-relaxed">
-          Dispatch itself is multi-exit by design: Yandex's scheduled-order quote parameter silently
-          fails, and the same route <strong>jumped over 11 BYN within 10 minutes</strong> in our samples. So the
-          system re-quotes at dispatch time and uses the free <code class="font-mono text-sm bg-highlight px-1.5 py-0.5 rounded">claims/create</code>
-          as a true-price probe (only <code class="font-mono text-sm bg-highlight px-1.5 py-0.5 rounded">accept</code> is charged) —
-          auto-dispatching the normal case, and routing 12 km+ / anomalies / failures to a human.
-        </p>
+        <div class="security-grid">
+          {securityItems.map(([risk, problem, fix]) => (
+            <article class="risk-card">
+              <p class="risk-label">{risk}</p>
+              <h3>{problem}</h3>
+              <p>{fix}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
-      <section>
-        <p class="eyebrow mb-3">06</p>
-        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">AI collaboration workflow</h2>
-        <p class="leading-relaxed mb-4">
-          Day-to-day coding in Cursor. Architecture-level decisions: discussed in Claude Code chat,
-          weighing trade-offs, then generating code. Complex integrations (e.g. Alfa Bank): fed the
-          gateway docs into Claude Code, had it produce a doc-grounded integration plan, then
-          debugged together.
+      <section class="case-section agent-section">
+        <div class="section-kicker">05 / Agent collaboration</div>
+        <div class="section-heading">
+          <h2>AI didn't think for me — it amplified my judgment</h2>
+          <p>AI doesn't make product decisions for me. It makes the gap between "an idea I can articulate" and "a working implementation" 10x narrower. The bottleneck becomes how clearly I can think. This project is exactly what my resume says: hand the workflow to an agent — after I first figure out the business rules, risk boundaries, and trade-offs.</p>
+        </div>
+
+        <div class="agent-split">
+          <div>
+            <p class="panel-label">What I own</p>
+            <ul>
+              <li>Understanding how a real store actually operates</li>
+              <li>Deciding which risks must be closed before launch</li>
+              <li>Turning "experience" into testable hypotheses</li>
+              <li>Choosing where to automate vs. keep a human in the loop</li>
+              <li>Managing non-code blockers (compliance, external approvals) in the launch plan — e.g., the 5-day wait for SMS alphaname approval</li>
+            </ul>
+          </div>
+          <div>
+            <p class="panel-label">What the agent does</p>
+            <ul>
+              <li>Mapping out API integration paths</li>
+              <li>Generating and refactoring TypeScript code</li>
+              <li>Debugging payment, webhook, and cron issues</li>
+              <li>Translating the security checklist into concrete implementations</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-close">
+        <p class="eyebrow mb-4">Reflection</p>
+        <h2>This isn't proof that I can "build a website."</h2>
+        <p>
+          It's proof that I can sit with a real client, untangle a messy, exception-filled business process, and turn it into a system that runs, can be audited, and can keep iterating.
         </p>
-        <p class="leading-relaxed">
-          The biggest lesson: <strong>AI doesn't make product decisions for me. It makes the
-          gap between "an idea I can articulate" and "a working implementation" 10x narrower.
-          The bottleneck becomes how clearly I can think.</strong>
-          That muscle came from finance, and it transferred cleanly.
-        </p>
+        <a href="/en/#contact" class="btn-primary">Let's talk workflow automation</a>
       </section>
-
-      <section>
-        <p class="eyebrow mb-3">07</p>
-        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">Current status</h2>
-        <ul class="space-y-2 leading-relaxed">
-          <li><span class="text-accent mr-2">✓</span>Engineering: done</li>
-          <li><span class="text-accent mr-2">✓</span>Security hardening: done</li>
-          <li><span class="text-accent mr-2">✓</span>Live: payment flow working end to end, with real paid orders received</li>
-          <li><span class="text-accent mr-2">✓</span>Delivery pricing engine: live (cron sampling + peak-grid fare table + multi-exit dispatch)</li>
-        </ul>
-      </section>
-
-      <section>
-        <p class="eyebrow mb-3">08</p>
-        <h2 class="font-serif text-3xl font-semibold text-ink mb-4">What these 5 weeks taught me</h2>
-        <ol class="space-y-4 leading-relaxed list-decimal pl-5">
-          <li><strong>AI lowers the "can I do this" bar but raises the "have I thought it through" bar.</strong>
-            My finance background turned into an asset — I'm trained to define problems before acting.</li>
-          <li><strong>Production-grade ≠ feature-complete.</strong>
-            Features are the start; idempotency, validation, webhook signing, rate limiting, secret
-            management — a long tail.</li>
-          <li><strong>A paying customer is the best product teacher.</strong>
-            The owner's reactions to the UI taught me more than any tutorial.</li>
-          <li><strong>What's next</strong>: bring this "AI collaboration + business sense" combo into
-            companies trying to use agents to improve internal workflows.</li>
-        </ol>
-      </section>
-    </div>
-
-    <div class="mt-20 pt-10 border-t border-border">
-      <p class="font-serif text-2xl mb-4">Want to talk?</p>
-      <p class="text-muted mb-6">
-        If you're thinking about how to bring AI into a team's workflow —
-        <a href="/en/#contact" class="link">get in touch</a>.
-      </p>
-      <a href="/en/" class="text-sm text-muted hover:text-accent transition-colors">
-        ← Back to home
-      </a>
-    </div>
+    </main>
   </article>
+
 </Layout>
+
+<style>
+  .case-study {
+    background: var(--color-bg-light);
+  }
+
+  .case-hero {
+    padding: 6.5rem 0 4.5rem;
+    background: var(--color-bg-light);
+    border-bottom: 1px dashed var(--color-border);
+  }
+
+  .case-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.75fr);
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .case-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .case-back:hover {
+    color: var(--color-accent);
+  }
+
+  .case-title {
+    margin-bottom: 1.5rem;
+    font-size: clamp(3.25rem, 8vw, 7rem);
+  }
+
+  .case-title-link {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .case-title-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.08em;
+    text-decoration-thickness: 0.06em;
+  }
+
+  .case-title-go {
+    display: inline-block;
+    font-size: 0.36em;
+    vertical-align: super;
+    margin-left: 0.06em;
+    transition: transform 0.2s ease;
+  }
+
+  .case-title-link:hover .case-title-go {
+    transform: translate(0.12em, -0.12em);
+  }
+
+  .case-lead {
+    max-width: 760px;
+    color: var(--color-ink-2);
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 2.5vw, 2.1rem);
+    line-height: 1.35;
+  }
+
+  .panel-label,
+  .section-kicker,
+  .flow-label,
+  .risk-label {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .section-kicker {
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+  }
+
+  .case-visual {
+    overflow: hidden;
+    margin: 0;
+    border: 1px dashed var(--color-border);
+    border-radius: 1rem;
+    background: var(--color-canvas-tint);
+    box-shadow: 0 18px 48px -34px rgba(46, 51, 64, 0.34);
+  }
+
+  .case-visual a {
+    display: block;
+  }
+
+  .case-visual img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 6 / 7;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .case-main {
+    padding-bottom: 6rem;
+  }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 5rem;
+  }
+
+  .metric-tile,
+  .flow-column,
+  .risk-card,
+  .pricing-panel,
+  .system-detail,
+  .agent-split > div,
+  .case-close {
+    border: 1px solid var(--color-border);
+    border-radius: 0.875rem;
+    background: var(--color-canvas);
+    box-shadow: 0 16px 42px -38px rgba(46, 51, 64, 0.28);
+  }
+
+  .metric-tile {
+    padding: 1.1rem;
+  }
+
+  .metric-tile p,
+  .metric-tile span {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+  }
+
+  .metric-tile strong {
+    display: block;
+    margin: 0.35rem 0;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .case-section {
+    padding: 5rem 0;
+    border-top: 1px dashed var(--color-border);
+  }
+
+  .section-heading {
+    margin-top: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading:has(p) {
+    margin-bottom: 1.75rem;
+  }
+
+  .section-heading p {
+    margin-top: 1.1rem;
+    max-width: 52rem;
+  }
+
+  .section-heading h2,
+  .case-close h2 {
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .section-heading p,
+  .case-close p {
+    color: var(--color-ink-2);
+    font-size: 1.04rem;
+    line-height: 1.75;
+  }
+
+  .flow-diff-head {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.25rem;
+    align-items: center;
+    padding-bottom: 0.6rem;
+  }
+
+  .flow-diff-head span:last-child {
+    padding-left: 0.9rem;
+  }
+
+  .flow-diff ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .flow-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 0.85rem 0;
+    border-top: 1px dashed var(--color-border);
+  }
+
+  .flow-old {
+    color: var(--color-ink);
+  }
+
+  .flow-arrow {
+    color: var(--color-accent);
+    font-size: 1.1rem;
+  }
+
+  .flow-new {
+    padding: 0.55rem 0.9rem;
+    border-radius: 0.65rem;
+    background: var(--color-highlight);
+    color: var(--color-ink);
+    font-weight: 500;
+  }
+
+  /* 配对行错峰浮现(复用全局 .reveal/.visible + IntersectionObserver) */
+  .flow-row.reveal:nth-child(2) { transition-delay: 0.08s; }
+  .flow-row.reveal:nth-child(3) { transition-delay: 0.16s; }
+  .flow-row.reveal:nth-child(4) { transition-delay: 0.24s; }
+
+  @media (max-width: 640px) {
+    .flow-diff-head { display: none; }
+    .flow-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    .flow-arrow {
+      transform: rotate(90deg);
+      justify-self: center;
+    }
+  }
+
+  .timeline {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 1rem;
+    align-items: start;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .timeline-item span {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  .timeline-item h3 {
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 600;
+  }
+
+  .timeline-item p,
+  .risk-card p,
+  .pricing-panel p,
+  .system-detail-body,
+  .agent-split li,
+  .insight-strip span,
+  .compliance-row span {
+    color: var(--color-ink-2);
+    line-height: 1.65;
+  }
+
+  .system-map {
+    display: grid;
+    grid-template-columns: 0.85fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .system-node-list {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .system-node {
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    background: var(--color-canvas);
+    color: var(--color-ink-2);
+    font-weight: 600;
+    text-align: left;
+    transition: all 0.2s ease;
+  }
+
+  .system-node:hover,
+  .system-node.active {
+    border-color: var(--color-accent);
+    background: var(--color-highlight);
+    color: var(--color-ink);
+  }
+
+  .system-detail {
+    min-height: 14rem;
+    padding: 1.5rem;
+  }
+
+  .system-detail-title {
+    margin-bottom: 0.75rem;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  .security-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .risk-card {
+    padding: 1.25rem;
+  }
+
+  .risk-card h3 {
+    min-height: 2.6rem;
+    margin: 0.65rem 0 0.85rem;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .pricing-section {
+    margin-inline: -1.5rem;
+    padding-inline: 1.5rem;
+    background: var(--color-bg-mid);
+    border: 1px dashed var(--color-border);
+    border-radius: 1rem;
+  }
+
+  .pricing-layout {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 1rem;
+  }
+
+  .pricing-panel {
+    padding: 1.5rem;
+  }
+
+  .pricing-panel h3 {
+    margin: 0.8rem 0 1rem;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .sample-equation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .sample-equation span,
+  .sample-equation strong {
+    padding: 0.45rem 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-size: 0.86rem;
+  }
+
+  .pricing-panel code {
+    color: var(--color-accent-deep);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  .insight-strip,
+  .compliance-row,
+  .agent-split {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .insight-strip > div,
+  .compliance-row > div {
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.875rem;
+    background: var(--color-canvas);
+    box-shadow: 0 16px 42px -38px rgba(46, 51, 64, 0.28);
+  }
+
+  .insight-strip p,
+  .compliance-row span {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .insight-strip strong,
+  .compliance-row strong {
+    display: block;
+    margin: 0.55rem 0;
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    line-height: 1.2;
+  }
+
+  .agent-split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .agent-split > div {
+    padding: 1.5rem;
+  }
+
+  .agent-split ul {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    padding-left: 1rem;
+  }
+
+  .case-close {
+    margin-top: 5rem;
+    padding: 2rem;
+  }
+
+  .case-close p {
+    max-width: 760px;
+    margin: 1rem 0 1.5rem;
+  }
+
+  @media (max-width: 960px) {
+    .case-hero-grid,
+    .section-heading,
+    .system-map,
+    .pricing-layout,
+    .agent-split {
+      grid-template-columns: 1fr;
+    }
+
+    .metric-grid,
+    .security-grid,
+    .insight-strip,
+    .compliance-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+  }
+
+  @media (max-width: 640px) {
+    .case-hero {
+      padding-top: 5.25rem;
+    }
+
+    .metric-grid,
+    .flow-compare,
+    .security-grid,
+    .insight-strip,
+    .compliance-row {
+      grid-template-columns: 1fr;
+    }
+
+    .timeline-item {
+      grid-template-columns: 3rem 1fr;
+    }
+  }
+</style>
