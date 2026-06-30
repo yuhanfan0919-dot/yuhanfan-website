@@ -12,6 +12,8 @@ const nav = (lang === 'zh' ? zh : en).nav;
 // 中英文 toggle 两端 href
 const zhHref = lang === 'zh' ? '#' : '/';
 const enHref = lang === 'en' ? '#' : '/en/';
+const homeHref = lang === 'zh' ? '/' : '/en/';
+const resolveNavHref = (href: string) => href.startsWith('#') ? `${homeHref}${href}` : href;
 ---
 
 <header
@@ -33,7 +35,7 @@ const enHref = lang === 'en' ? '#' : '/en/';
     <nav class="hidden md:flex items-center gap-7 lg:gap-9 text-sm" style="color: var(--color-ink-2);">
       {nav.map((item) => (
         <a
-          href={item.href}
+          href={resolveNavHref(item.href)}
           class="nav-link"
         >
           {item.label}

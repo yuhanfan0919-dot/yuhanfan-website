@@ -1,7 +1,7 @@
 ---
 ---
 
-<div class="intro-overlay" data-intro-overlay aria-hidden="true">
+<div class="intro-overlay intro-overlay--pending" data-intro-overlay aria-hidden="true">
   <!-- Phase 1: NICE TO MEET YOU（大字镂空 → 放大 → 淡去） -->
   <div class="intro-phase1" data-phase1>
     <span class="intro-word" style="--i:0">NICE</span>
@@ -100,6 +100,8 @@
   if (!overlay || reduceMotion || (!forceReplay && hasSeenIntro())) {
     removeOverlay();
   } else {
+    overlay.classList.remove('intro-overlay--pending');
+
     // Phase 1 播放 ~2.0s 后淡去（加快一丢丢）
     window.setTimeout(() => phase1?.classList.add('intro-phase1--out'), 2000);
 
@@ -132,6 +134,12 @@
       radial-gradient(circle at 86% 80%, rgba(123, 130, 240, 0.08), transparent 38%),
       #FAFBFC;
     transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+
+  .intro-overlay--pending {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .intro-overlay--exit {

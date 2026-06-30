@@ -10,7 +10,7 @@ const items = data.items;
 
 const closeAria = lang === 'zh' ? '关闭' : 'Close';
 const detailAria = lang === 'zh' ? '查看详情' : 'View details';
-const insightLabel = lang === 'zh' ? '我学到的' : 'Key insight';
+const insightLabel = 'Deep Think';
 
 // slug → 实际 logo 图片路径（统一在 public/experience/，kpmg + 无限进制用 -hires 高清版）
 const imagePathMap: Record<string, string> = {
@@ -218,10 +218,6 @@ const imagePathMap: Record<string, string> = {
           ))}
         </ul>
 
-        <!-- 引用块结论 -->
-        <blockquote class="pullquote text-sm md:text-base">
-          {it.modalQuote}
-        </blockquote>
       </div>
     </dialog>
   ))}

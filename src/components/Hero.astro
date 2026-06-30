@@ -19,29 +19,30 @@ const taglineLines = data.tagline.split('\n');
         <h1 class="display text-5xl md:text-6xl lg:text-7xl mb-5 reveal" set:html={data.greeting.replace('Rain', '<span style="color:var(--color-accent)">Rain</span>')}>
         </h1>
 
-        <!-- H2: 原主标题降级为价值主张副标题 -->
-        <h2 class="display text-2xl md:text-3xl lg:text-4xl mb-8 reveal" style="color: var(--color-ink-2); font-weight: 500;">
-          {titlePrefixLines.map((line, index) => (
-            <span class="block">
-              {line}
-              {index === titlePrefixLines.length - 1 && (
-                <>
-                  <span style="color:var(--color-accent); font-weight: 600;">{data.titleAccent}</span>{data.titleSuffix}
-                </>
-              )}
+        <!-- H2: 原主标题降级为价值主张副标题（content.ts 置空时不渲染） -->
+        {data.titlePrefix.trim() && (
+          <h2 class="display text-2xl md:text-3xl lg:text-4xl mb-8 reveal" style="color: var(--color-ink-2); font-weight: 500;">
+            {titlePrefixLines.map((line, index) => (
+              <span class="block">
+                {line}
+                {index === titlePrefixLines.length - 1 && (
+                  <>
+                    <span style="color:var(--color-accent); font-weight: 600;">{data.titleAccent}</span>{data.titleSuffix}
+                  </>
+                )}
+              </span>
+            ))}
+          </h2>
+        )}
+
+        <!-- 三段式 pill chips -->
+        <div class="flex flex-wrap items-center gap-2 md:gap-3 mb-10 reveal">
+          {data.subtitle.map((s) => (
+            <span class="hero-chip">
+              <span>{s}</span>
             </span>
           ))}
-        </h2>
-
-        <!-- 三段式 mono 副标题 -->
-        <p class="font-mono text-xs md:text-sm uppercase tracking-[0.18em] mb-10 reveal" style="color:var(--color-ink-2)">
-          {data.subtitle.map((s, i) => (
-            <>
-              <span class="font-semibold">{s}</span>
-              {i < data.subtitle.length - 1 && <span class="mx-2" style="color:var(--color-muted)">·</span>}
-            </>
-          ))}
-        </p>
+        </div>
 
         <!-- Tagline -->
         <p class="text-base md:text-lg leading-relaxed max-w-3xl reveal mb-10" style="color:var(--color-ink-2)">
@@ -94,3 +95,26 @@ const taglineLines = data.tagline.split('\n');
     </div>
   </div>
 </section>
+
+<style>
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.875rem;
+    border-radius: 9999px;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-ink-2);
+    background: var(--color-canvas-tint);
+    border: 1px solid transparent;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+  .hero-chip:hover {
+    background: var(--color-highlight);
+    color: var(--color-accent-deep);
+    transform: translateY(-1px);
+  }
+</style>

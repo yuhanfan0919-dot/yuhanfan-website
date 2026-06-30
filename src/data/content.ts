@@ -112,23 +112,23 @@ export interface Content {
 export const zh: Content = {
   hero: {
     eyebrow: '范雨寒 · Rain Fan',
-    greeting: 'Hi, 我是 Rain.',
-    titlePrefix: '梳理真实业务流程，\n交付',
-    titleAccent: '一体化系统和自动化工具',
-    titleSuffix: '。',
+    greeting: 'Hi, 我是 Rain',
+    titlePrefix: '',
+    titleAccent: '',
+    titleSuffix: '',
     subtitle: ['Forward Deployed Engineer', 'AI 应用落地', '从业务诊断到上线交付'],
     tagline:
-      '审计训练让我读懂十几家企业的采购、销售、生产和资金流程。\n从0到1完成需求分析 → 与 AI agent 协作开发 → 上线部署全流程，\n交付真实用户在用的下单、付款、配送、订单追踪系统。\n目前正在寻找 FDE / AI 应用落地 / 全栈交付方向的机会。',
+      '从0到1完成需求分析 → 与 AI agent 协作开发 → 上线部署全流程，\n交付真实用户在用的下单、付款、配送、订单追踪系统。\n目前正在寻找 FDE / AI 应用落地 / 全栈交付方向的机会。',
     cta: {
-      primary: { label: '看作品 →', href: '#projects' },
+      primary: { label: '看作品 →', href: '/projects/chicken-oppa/' },
       secondary: { label: '联系我', href: '#contact' },
     },
     portrait: '/portrait.png',
   },
   nav: [
     { label: '作品', href: '#projects' },
-    { label: '关于', href: '#about' },
     { label: '经历', href: '#experience' },
+    { label: '关于', href: '#about' },
     { label: '联系', href: '#contact' },
   ],
   projects: {
@@ -142,7 +142,7 @@ export const zh: Content = {
       submodules: [
         {
           title: '在线点餐系统',
-          description: '5 周首发上线 · 15 页面 + 20 API · 含支付安全加固',
+          description: '5 周首发上线 · 23 页面 + 19 API · 含支付安全加固',
           stack: ['Next.js', 'Supabase', 'Alfa Bank', 'SMS', 'Telegram Bot'],
         },
         {
@@ -161,8 +161,8 @@ export const zh: Content = {
     },
   },
   about: {
-    eyebrow: '02 / About',
-    titleLines: ['对世界好奇，对人真诚，把事做成。'],
+    eyebrow: '03 / About',
+    titleLines: ['对世界好奇，', '对人真诚，', '把事做成。'],
     traits: [
       {
         label: '好奇',
@@ -180,10 +180,10 @@ export const zh: Content = {
         body: '财务审计出身，从改进自己的工作流，到自学 AI coding、独立把一套系统上线；我不爱空想，会自己去学、去试，直到它真的跑起来。',
       },
     ],
-    playLink: { label: '工作之外，我是个停不下来的人 →', href: '/film' },
+    playLink: { label: '工作之外的我 →', href: '/film' },
   },
   experience: {
-    eyebrow: '03 / Experience',
+    eyebrow: '02 / Experience',
     title: '我做过的事。',
     deepThinkTitle: '✦ Deep Think · 我从每份工作里悟到的 1 件事——',
     items: [
@@ -192,9 +192,9 @@ export const zh: Content = {
         number: '01',
         category: 'PRODUCTION CUSTOMER SYSTEM',
         company: 'oppachikin',
-        title: '明斯克炸鸡店全套数字化运营',
+        title: '真实客户的生产级运营系统',
         description:
-          '为真实付费客户 5 周 0→1 交付完整产品，上线后用数据持续运营：需求挖掘 → 架构 → 全栈开发 → 生产上线 → 数据驱动定价，我做判断、agent 做实现。',
+          '为真实付费客户 5 周 0→1 交付生产系统，覆盖下单、支付、配送、排班与薪资；我定义业务规则和风险边界，再与 AI agents 协作实现。',
         metricA: { value: '5 周', label: '交付' },
         metricB: { value: '首单', label: '付款入账' },
         imageSlug: 'oppachikin',
@@ -202,11 +202,11 @@ export const zh: Content = {
         deepThinkContent:
           '用 agent 做全栈交付，最反直觉的一件事是——agent 越强，越要先做计划。先定架构、定边界、定 agent 能动什么不能动什么，再写第一行代码。否则 AI 节省下来的实现成本，会被"方向错了"的代价全部吃掉。',
         modalIntro:
-          '为明斯克一家本地炸鸡店从 0 到 1 交付完整数字化运营：Next.js + Supabase 全栈电商、Yandex 配送集成与数据驱动定价、Python + Telegram 排班 bot，全部由 Claude Code agent 协作实现。',
+          '为明斯克一家本地炸鸡店从 0 到 1 交付生产级运营系统：对外是在线下单、支付、配送与订单追踪；对内是 Telegram 排班 bot、员工自助选班与月结工资自动核算。我的角色是定义业务规则、风险边界与交付节奏，再与 Claude Code / Codex 等 AI agents 协作实现。',
         modalBullets: [
           {
             title: '全栈交付',
-            body: '15 个页面 + 20 个 API + 完整支付/通知/会员体系。5 周首发上线，至今 80 commits、约 1.3 万行 TypeScript 持续迭代。',
+            body: '5 周首发上线，覆盖 23 个页面、19 个 API，以及支付、通知、会员、订单追踪等关键链路。系统已上线、跑通支付，并收到真实付款订单。',
           },
           {
             title: '数据驱动定价',
@@ -218,60 +218,60 @@ export const zh: Content = {
           },
           {
             title: '生产级安全',
-            body: '专门一周做安全加固——金额服务端再校验、回调幂等、webhook 验签（常数时间比较）、Redis 分级限流；这套我能讲清、能自己 debug，不是 agent 黑盒。',
+            body: '专门一周做安全加固——金额服务端再校验、回调幂等、webhook 验签（常数时间比较）、Redis 分级限流；关键链路由我复核和调试，确保 agent 产出的代码能真正进入生产环境。',
           },
           {
             title: '真实闭环 + 对内延伸',
             body: 'SMS 接口跑通后，已收到第一笔真实付款订单；排班 bot 7×24 在跑（Python + Telegram + Railway），员工自助选班、月结工资自动核算。',
           },
         ],
-        modalQuote: '"我做判断，agent 做实现。"——这是 Claude Code 时代全栈交付的真实分工。',
+        modalQuote: '"AI agent 能加速实现，但方向、边界和验收必须由人来定。"',
       },
       {
         slug: 'shunfeng',
         number: '02',
         category: 'INTERNAL WORKFLOW AUTOMATION',
         company: '顺丰科技',
-        title: 'KA 报表 + 验收流程自动化',
+        title: 'KA 项目经营闭环自动化',
         description:
-          '以内部业务方为客户，把每月 6 份重复报表（KA 验收 / 回款 / 开票 / 项目损益等）从人工 1 天压到 2 小时。',
+          '面向内部业务团队，梳理 KA 项目从验收到开票、回款、损益与商业化支持的月结链路，把 6 份核心报表 / 台账从分散 Excel 收敛为结构化流程。',
         metricA: { value: '6 份', label: '月结报表' },
         metricB: { value: '1 天 → 2 小时', label: '4× 提速' },
         imageSlug: 'shunfeng',
-        deepThinkChip: '财务自动化',
+        deepThinkChip: '流程自动化',
         deepThinkContent:
           'AI 自动化的起点不是技术，是痛感——你得先被某个重复流程反复折磨过，才能想清楚"它为什么一直这么做"，才能判断哪里能自动化、哪里不能。做对工具的前提是真的痛过。',
         modalIntro:
-          '在顺丰科技半年里，把 KA 项目下游月结的 6 份核心报表 / 验收文档自动化——KA 项目损益表、头部快消客户项目验收、回款拆分、开票台账等。',
+          '负责 KA 项目商业化下游的关键协同流程，覆盖项目验收、开票台账、回款登记、损益跟踪与商业化报告支持；将每月 6 份高频报表 / 台账脚本化和流程化，处理时长从 1 天压到 2 小时。',
         modalBullets: [
           {
-            title: 'KA 项目损益自动化',
-            body: '月度 KA 项目损益报表的取数、清洗、归集流程脚本化，每月一键生成。',
+            title: '验收 + 回款链路',
+            body: '将 KA 项目验收登记、里程碑材料复核、回款认领与台账维护串成统一流程，及时提示应验未验和异常回款。',
           },
           {
-            title: '客户验收流程',
-            body: '头部快消客户 7 月验收（新增门店分析 / IMC 分析 / 开票台账），从分散 Excel 操作整合为一套流程。',
+            title: '损益与商业化支持',
+            body: '将 KA 项目损益报表的取数、清洗、归集流程脚本化，并支持商业化报告中的项目成本确认，让经营结果更快对齐业务实际。',
           },
           {
-            title: '回款 + 开票管理',
-            body: '未回款拆分、批量开票模板，把"人 + Excel + 邮件"的反复对接收敛到结构化数据。',
+            title: '台账与流程收口',
+            body: '把合同评审、报价 / 投标评审、合同档案、项目变更记录等节点收敛到结构化台账，减少"人 + Excel + 邮件"的反复对接。',
           },
           {
-            title: '需求价值分析',
-            body: '半年度需求价值分析报告——梳理上下游岗位的 AI 提效落点，输出"哪里值得自动化"的判断。',
+            title: '内部流程自动化视角',
+            body: '这份工作本质不是"做几张表"，而是先读懂业务链路和风险点，再判断哪些步骤该自动化、哪些步骤必须保留人工判断。',
           },
         ],
         modalQuote:
-          '"做对工具的前提是真的痛过。"——半年里我用脚本省下的时间，刚好够我去理解这些流程为什么一直这么做。',
+          '"做对工具的前提是真的痛过。"——真正的自动化不是替人填表，而是把业务链路里的重复、等待和风险点整理成可运行的流程。',
       },
       {
         slug: 'wuxianjz',
         number: '03',
         category: 'DATA OPERATIONS AUTOMATION',
-        company: '无限进制（短剧）',
-        title: '多平台收入对账自动化',
+        company: '无限进制',
+        title: '多平台数据运营自动化',
         description:
-          '把 iOS / Google / PayPal / Checkout 数百份原始报表的清洗 + 对账流程脚本化，效率提升 30%。',
+          '用 VBA + Power Query 把 iOS / Google / PayPal / Checkout 数百份原始报表的清洗、归集与对账流程模型化，效率提升 30%。',
         metricA: { value: '+30%', label: '效率提升' },
         metricB: { value: '3 平台', label: 'iOS / Google / PP' },
         imageSlug: 'wuxianjz',
@@ -279,11 +279,11 @@ export const zh: Content = {
         deepThinkContent:
           '规模化的财务工作里，真正的杠杆不是把每件事做得更快，是把共同规则抽象成模型——做一次、用 100 次。',
         modalIntro:
-          '在短剧创业公司无限进制做财务分析。AI 还远没有现在强大的年代，靠 VBA + Power Query 把 4 件规模化重复工作变成了 4 套可复用模型。',
+          '用 VBA + Power Query 把多平台收入、广告投放、预算和经营月报等重复工作变成可复用的数据模型。',
         modalBullets: [
           {
             title: '多平台收入对账',
-            body: 'AI + Excel VBA 工具实现 iOS / Google / Checkout / PayPal 数百份报表的智能清洗 + 统一收入核对模型，效率 +30%。',
+            body: '用 VBA + Power Query 清洗 iOS / Google / Checkout / PayPal 数百份原始报表，统一收入核对口径，整体效率提升 30%。',
           },
           {
             title: '广告投放数据归集',
@@ -305,10 +305,10 @@ export const zh: Content = {
         slug: 'kpmg',
         number: '04',
         category: 'BUSINESS PROCESS DIAGNOSTICS',
-        company: 'KPMG 深圳',
-        title: '上市公司审计与财务尽调',
+        company: 'KPMG',
+        title: '业务流程诊断与财务尽调',
         description:
-          '三年主导上市 / 拟上市公司的双准则合并报表、行业尽调与业财流程诊断——读懂一家公司怎么运转，正是我做 AI 落地的前置能力。',
+          '三年参与上市 / 拟上市公司的双准则合并报表、行业尽调与业财流程诊断；这套读懂销售、采购、生产、资金流的训练，是我做 AI 落地的前置能力。',
         metricA: { value: '30+', label: '子公司合并' },
         metricB: { value: '100+', label: '重大合同审查' },
         imageSlug: 'kpmg',
@@ -316,7 +316,7 @@ export const zh: Content = {
         deepThinkContent:
           '深入理解一家公司，从财务报表入手——但真正的洞察在销售、采购、生产、资金的业务流程里。',
         modalIntro:
-          '在 KPMG 深圳做的是"读懂一家公司"的工作。主导多家港股 / A 股上市公司年报审计 + 拟上市公司财务尽调，覆盖 PRC + HKFRS 双准则。',
+          '主导多家港股 / A 股上市公司年报审计 + 拟上市公司财务尽调，覆盖 PRC + HKFRS 双准则。',
         modalBullets: [
           {
             title: '行业尽调与财务验证',
@@ -347,7 +347,7 @@ export const zh: Content = {
       'Claude Code',
       'Cursor',
       'Agent 工作流',
-      'RAG / Tool Use',
+      '端到端交付',
       '解决方案设计',
       '需求挖掘 → 交付',
       '全栈交付',
@@ -366,7 +366,6 @@ export const zh: Content = {
       '我目前在找 AI 落地 / FDE 方向 / AI Solutions / Agent Workflow Automation 相关机会。倾向深圳或远程，也欢迎真实业务场景的 agent 落地讨论。',
     methods: [
       { label: '写邮件 →', href: 'mailto:yuhanfan0919@gmail.com' },
-      { label: 'GitHub →', href: 'https://github.com/yuhanfan0919-dot' },
       { label: '下载 PDF 简历 →', href: '/Rain-Fan-FDE-Resume.pdf' },
     ],
   },
@@ -378,23 +377,23 @@ export const zh: Content = {
 export const en: Content = {
   hero: {
     eyebrow: 'Rain Fan',
-    greeting: 'Hi, I am Rain.',
-    titlePrefix: 'I map real business workflows\nand ship ',
-    titleAccent: 'integrated systems and automation',
-    titleSuffix: '.',
+    greeting: 'Hi, I am Rain',
+    titlePrefix: '',
+    titleAccent: '',
+    titleSuffix: '',
     subtitle: ['Forward Deployed Engineer', 'AI in production', 'From diagnosis to go-live'],
     tagline:
-      "Audit trained me to read the purchasing, sales, production, and cash flows of a dozen-plus companies;\nworking with AI agents, I shipped a live ordering, payment, delivery, and settlement system real users rely on.\nCurrently looking for Forward Deployed Engineer / AI delivery roles.",
+      "Working with AI agents, I shipped a live ordering, payment, delivery, and settlement system real users rely on.\nCurrently looking for Forward Deployed Engineer / AI delivery roles.",
     cta: {
-      primary: { label: 'See projects →', href: '#projects' },
+      primary: { label: 'See projects →', href: '/en/projects/chicken-oppa/' },
       secondary: { label: 'Get in touch', href: '#contact' },
     },
     portrait: '/portrait.png',
   },
   nav: [
     { label: 'Projects', href: '#projects' },
-    { label: 'About', href: '#about' },
     { label: 'Experience', href: '#experience' },
+    { label: 'About', href: '#about' },
     { label: 'Contact', href: '#contact' },
   ],
   projects: {
@@ -404,11 +403,11 @@ export const en: Content = {
       name: 'oppachikin',
       status: '✅ Live · First paid order received',
       description:
-        'A full digital operations stack delivered 0→1 for a real paying client — a Minsk fried chicken shop: customer ordering on the outside, employee scheduling on the inside. End to end: I made the judgment calls, Claude Code agents did the implementation.',
+        'A full digital operations stack delivered 0→1 for a real paying client — a Minsk fried chicken shop: customer ordering on the outside, employee scheduling on the inside. End to end: I defined the rules and boundaries, then collaborated with AI agents to implement.',
       submodules: [
         {
           title: 'Online ordering system',
-          description: 'First launch in 5 weeks · 15 pages + 20 APIs · production-grade security',
+          description: 'First launch in 5 weeks · 23 pages + 19 APIs · production-grade security',
           stack: ['Next.js', 'Supabase', 'Alfa Bank', 'SMS', 'Telegram Bot'],
         },
         {
@@ -427,8 +426,8 @@ export const en: Content = {
     },
   },
   about: {
-    eyebrow: '02 / About',
-    titleLines: ['Curious about the world. Real with people. I make things happen.'],
+    eyebrow: '03 / About',
+    titleLines: ['Curious about the world.', 'Real with people.', 'I make things happen.'],
     traits: [
       {
         label: 'Curiosity',
@@ -446,10 +445,10 @@ export const en: Content = {
         body: "Finance- and audit-trained, I went from automating my own workflow to teaching myself AI coding and shipping a full system on my own; I don't just think — I learn, I try, until it actually runs.",
       },
     ],
-    playLink: { label: 'Off the clock, I never sit still →', href: '/en/film' },
+    playLink: { label: 'Rain off the clock →', href: '/en/film' },
   },
   experience: {
-    eyebrow: '03 / Experience',
+    eyebrow: '02 / Experience',
     title: 'What I shipped.',
     deepThinkTitle: '✦ Deep Think · One thing I learned from each role—',
     items: [
@@ -458,9 +457,9 @@ export const en: Content = {
         number: '01',
         category: 'PRODUCTION CUSTOMER SYSTEM',
         company: 'oppachikin',
-        title: 'A full digital ops stack for a Minsk-local fried chicken shop',
+        title: 'A production system for a real paying client',
         description:
-          'A complete product delivered 0→1 for a real paying client in 5 weeks, then operated on data: discovery → architecture → full-stack build → production launch → data-driven pricing. I made the calls, agents did the implementation.',
+          'Delivered a production system for a real paying client in 5 weeks, covering ordering, payment, delivery, scheduling, and payroll. I defined the business rules and risk boundaries, then collaborated with AI agents to implement.',
         metricA: { value: '5 wks', label: 'shipped' },
         metricB: { value: '1st', label: 'paid order' },
         imageSlug: 'oppachikin',
@@ -468,11 +467,11 @@ export const en: Content = {
         deepThinkContent:
           "The most counter-intuitive lesson from shipping full-stack with agents: the stronger the agent, the more important it is to plan first. Define the architecture, the boundaries, what the agent can and cannot touch—before writing the first line of code. Otherwise the implementation cost AI saves you gets eaten by the cost of going in the wrong direction.",
         modalIntro:
-          'A full digital ops stack for a local fried chicken shop in Minsk—Next.js + Supabase full-stack e-commerce, Yandex delivery integration with data-driven pricing, plus a Python + Telegram scheduling bot, all delivered with Claude Code agent collaboration.',
+          'For a local fried chicken shop in Minsk, I delivered a production operations system from 0 to 1: customer ordering, payment, delivery, and order tracking on the outside; Telegram scheduling, employee self-service, and monthly payroll automation on the inside. My role was to define the business rules, risk boundaries, and delivery rhythm, then collaborate with AI agents including Claude Code and Codex to implement.',
         modalBullets: [
           {
             title: 'Full-stack delivery',
-            body: '15 pages + 20 APIs + full payment/notification/membership stack. First launch in 5 weeks; 80 commits and ~13,000 lines of TypeScript and counting.',
+            body: 'First launch in 5 weeks, covering 23 pages, 19 APIs, and the payment, notification, membership, and order-tracking flows. The system is live, payment tested, and has received a real paid order.',
           },
           {
             title: 'Data-driven pricing',
@@ -484,7 +483,7 @@ export const en: Content = {
           },
           {
             title: 'Production-grade security',
-            body: 'A dedicated week of hardening—server-side amount validation, idempotent callbacks, webhook signature verification (constant-time comparison), tiered Redis rate limiting. I can explain and debug all of it myself; it is not an agent black box.',
+            body: 'A dedicated week of hardening—server-side amount validation, idempotent callbacks, webhook signature verification (constant-time comparison), tiered Redis rate limiting. I reviewed and debugged the critical path myself so agent-generated code could safely enter production.',
           },
           {
             title: 'Closed loop + internal ops',
@@ -492,53 +491,53 @@ export const en: Content = {
           },
         ],
         modalQuote:
-          '"I make the judgment, the agent does the implementation."—this is the real division of labor in the Claude Code era.',
+          '"AI agents accelerate implementation; direction, boundaries, and acceptance still need human judgment."',
       },
       {
         slug: 'shunfeng',
         number: '02',
         category: 'INTERNAL WORKFLOW AUTOMATION',
         company: 'SF Tech',
-        title: 'Monthly KA reporting + acceptance flow automation',
+        title: 'KA close-to-cash workflow automation',
         description:
-          'Treating internal business teams as my customers, took 6 monthly recurring reports (KA acceptance, payback, invoicing, P&L) from a full day each down to 2 hours.',
+          'Worked with internal business teams to streamline the monthly KA workflow from acceptance to invoicing, receivables, P&L, and commercialization support, turning 6 recurring reports / ledgers into a structured process.',
         metricA: { value: '6 reports', label: 'per month' },
         metricB: { value: '1 day → 2 hrs', label: '4× faster' },
         imageSlug: 'shunfeng',
-        deepThinkChip: 'AI for finance',
+        deepThinkChip: 'Workflow automation',
         deepThinkContent:
           "The starting point for AI automation isn't the technology—it's the pain. You have to have been repeatedly tortured by a process before you can really think through \"why has it always been done this way,\" and only then can you tell what should be automated and what shouldn't. The prerequisite for building the right tool is real pain.",
         modalIntro:
-          'Six months at SF Tech automating the monthly cadence of 6 core reports and acceptance documents downstream of KA projects—P&L, top FMCG client acceptance, payback splits, invoicing ledgers, and more.',
+          'Supported the downstream commercialization workflow of KA projects, covering project acceptance, invoicing ledgers, receivables registration, P&L tracking, and commercialization reporting. I automated and standardized 6 recurring monthly reports / ledgers, reducing effort from 1 day to 2 hours.',
         modalBullets: [
           {
-            title: 'KA P&L automation',
-            body: 'Monthly KA project P&L data extraction, cleaning, and aggregation scripted—generated with one click.',
+            title: 'Acceptance + receivables workflow',
+            body: 'Connected milestone acceptance tracking, document checks, receivables registration, and ledger maintenance into one repeatable process.',
           },
           {
-            title: 'Customer acceptance flow',
-            body: "Top FMCG client July acceptance (new store analysis / IMC analysis / invoicing ledger), consolidating scattered Excel operations into a single flow.",
+            title: 'P&L and commercialization support',
+            body: 'Scripted the monthly extraction, cleaning, and aggregation flow for KA project P&L, while supporting project-level cost confirmation for commercialization reporting.',
           },
           {
-            title: 'Payback + invoicing',
-            body: 'Unpaid amount splits and bulk invoicing templates—collapsing the "person + Excel + email" back-and-forth into structured data.',
+            title: 'Ledger and coordination structure',
+            body: 'Standardized contract review, quotation review, contract filing, and project change tracking into structured ledgers instead of scattered Excel and email coordination.',
           },
           {
-            title: 'Semi-annual value analysis',
-            body: 'A semi-annual analysis of where AI productivity gains would land across upstream/downstream roles—producing the judgment of "where is it worth automating."',
+            title: 'Workflow-first automation mindset',
+            body: 'The value was not just generating reports faster, but understanding the business flow first and deciding what should be automated versus what should remain judgment-based.',
           },
         ],
         modalQuote:
-          '"The prerequisite for building the right tool is real pain."—the time my scripts saved me was exactly enough to figure out why these flows existed the way they did.',
+          '"The prerequisite for building the right tool is real pain." The real automation work is not filling spreadsheets faster; it is turning repeated handoffs, waiting, and risk points into a runnable workflow.',
       },
       {
         slug: 'wuxianjz',
         number: '03',
         category: 'DATA OPERATIONS AUTOMATION',
-        company: 'Wuxian Jinzhi (short-form video)',
-        title: 'Multi-platform revenue reconciliation automation',
+        company: 'Wuxian Jinzhi',
+        title: 'Multi-platform data operations automation',
         description:
-          'Scripted the cleansing + reconciliation of hundreds of raw reports across iOS / Google / PayPal / Checkout—+30% efficiency.',
+          'Built VBA + Power Query models for cleansing, aggregating, and reconciling hundreds of raw reports across iOS / Google / PayPal / Checkout, improving efficiency by 30%.',
         metricA: { value: '+30%', label: 'efficiency' },
         metricB: { value: '3 platforms', label: 'iOS / GG / PP' },
         imageSlug: 'wuxianjz',
@@ -546,11 +545,11 @@ export const en: Content = {
         deepThinkContent:
           "In scaled finance work, the real lever isn't doing each thing faster—it's abstracting the shared rules into a model. Build it once, use it 100 times.",
         modalIntro:
-          "Finance analyst at short-form video startup Wuxian Jinzhi. Back when AI was nowhere near today's capability, I built 4 reusable models on top of VBA + Power Query.",
+          "Used VBA + Power Query to turn recurring work across revenue, ad spend, budgeting, and operating reports into reusable data models.",
         modalBullets: [
           {
             title: 'Multi-platform reconciliation',
-            body: 'AI + Excel VBA pipeline cleansing hundreds of reports across iOS / Google / Checkout / PayPal into a unified revenue model. +30% efficiency.',
+            body: 'Built a VBA + Power Query pipeline to cleanse hundreds of raw iOS / Google / Checkout / PayPal reports into one revenue reconciliation model, improving efficiency by 30%.',
           },
           {
             title: 'Ad spend aggregation',
@@ -572,10 +571,10 @@ export const en: Content = {
         slug: 'kpmg',
         number: '04',
         category: 'BUSINESS PROCESS DIAGNOSTICS',
-        company: 'KPMG Shenzhen',
-        title: 'Listed-company audits and financial DD',
+        company: 'KPMG',
+        title: 'Business-process diagnostics through audit and DD',
         description:
-          'Three years leading dual-standard consolidations, industry DD, and business-process diagnostics for listed and IPO-bound clients—learning to read how a company actually runs, which is exactly the front-end skill of AI delivery.',
+          'Three years across dual-standard consolidations, industry DD, and business-process diagnostics for listed and IPO-bound clients, learning to read sales, procurement, production, and cash flows before proposing fixes.',
         metricA: { value: '30+', label: 'subsidiaries consolidated' },
         metricB: { value: '100+', label: 'major contracts reviewed' },
         imageSlug: 'kpmg',
@@ -583,7 +582,7 @@ export const en: Content = {
         deepThinkContent:
           'To deeply understand a company, you start with the financial statements—but the real insight is in the business flows of sales, procurement, production, and cash.',
         modalIntro:
-          'At KPMG Shenzhen I did the work of "reading a company." Led annual audits and IPO-bound financial DD across PRC + HKFRS dual standards for HK / A-share listed clients.',
+          'Led annual audits and IPO-bound financial DD across PRC + HKFRS dual standards for HK / A-share listed clients.',
         modalBullets: [
           {
             title: 'Industry DD + financial validation',
@@ -614,7 +613,7 @@ export const en: Content = {
       'Claude Code',
       'Cursor',
       'Agent workflows',
-      'RAG / Tool use',
+      'End-to-end delivery',
       'Solution design',
       'Discovery → delivery',
       'Full-stack delivery',
@@ -633,7 +632,6 @@ export const en: Content = {
       "I'm looking for AI implementation, Forward Deployed Engineering, AI Solutions, and Agent Workflow Automation roles. Preference: Shenzhen or remote.",
     methods: [
       { label: 'Email →', href: 'mailto:yuhanfan0919@gmail.com' },
-      { label: 'GitHub →', href: 'https://github.com/yuhanfan0919-dot' },
       { label: 'Download CV (PDF) →', href: '/Rain-Fan-FDE-Resume.pdf' },
     ],
   },
