@@ -8,7 +8,10 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "resume:zh": "typst compile --root . resume/rain-zh.typ public/Rain-Fan-FDE-Resume-ZH.pdf",
+    "resume:en": "typst compile --root . resume/rain-en.typ public/Rain-Fan-FDE-Resume-EN.pdf",
+    "resume:build": "npm run resume:zh && npm run resume:en"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.0",

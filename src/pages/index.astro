@@ -19,5 +19,12 @@ import { zh as content } from '../data/content.ts';
   <Projects data={content.projects} />
   <Experience data={content.experience} lang="zh" />
   <About data={content.about} />
-  <Contact data={content.contact} />
+  <Contact
+    data={content.contact}
+    lang="zh"
+    resumes={[
+      { label: '中文', href: '/Rain-Fan-FDE-Resume-ZH.pdf' },
+      { label: 'EN', href: '/Rain-Fan-FDE-Resume-EN.pdf' },
+    ]}
+  />
 </Layout>

@@ -3,9 +3,81 @@ import type { Content } from '../data/content.ts';
 
 interface Props {
   data: Content['contact'];
+  lang: 'zh' | 'en';
+  resumes: Array<{ label: string; href: string }>;
 }
-const { data } = Astro.props;
+const { data, lang, resumes } = Astro.props;
+
+const resumeButtonLabel = lang === 'zh' ? '下载简历' : 'Download CV';
+const dropdownId = 'resume-dropdown-' + Math.random().toString(36).slice(2, 9);
 ---
+
+<style>
+  .resume-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  .resume-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 220px;
+    background: var(--color-canvas);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    box-shadow: 0 20px 50px -20px rgba(46, 51, 64, .18);
+    padding: 6px;
+    z-index: 50;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  .resume-dropdown.open .resume-dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .resume-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+  .resume-dropdown-item:hover {
+    background: var(--color-canvas-tint);
+    color: var(--color-accent-deep);
+  }
+  .resume-dropdown-item .flag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--color-muted);
+    min-width: 22px;
+  }
+  .resume-chevron {
+    transition: transform 0.2s ease;
+  }
+  .resume-dropdown.open .resume-chevron {
+    transform: rotate(180deg);
+  }
+</style>
+
+<script>
+  // Simple click-outside to close dropdown
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    document.querySelectorAll('.resume-dropdown.open').forEach((el) => {
+      if (!el.contains(target)) el.classList.remove('open');
+    });
+  });
+</script>
 
 <section id="contact" class="section">
   <div class="container-page">
@@ -21,19 +93,51 @@ const { data } = Astro.props;
         {data.body}
       </p>
 
-      <!-- 3 个 CTA 按钮 -->
-      <div class="flex flex-wrap gap-3 md:gap-4 reveal">
-        {data.methods.map((method, i) => (
-          <a
-            href={method.href}
-            class={i === 0 ? 'btn-primary' : 'btn-ghost'}
-            {...(method.href.startsWith('http') || method.href.endsWith('.pdf')
-              ? { target: '_blank', rel: 'noopener noreferrer' }
-              : {})}
+      <!-- CTA 按钮：联系 + 下载简历（点击展开下拉） -->
+      <div class="flex flex-wrap items-center gap-3 md:gap-4 reveal">
+        {data.methods
+          .filter((m) => !m.href.endsWith('.pdf'))
+          .map((method, i) => (
+            <a
+              href={method.href}
+              class={i === 0 ? 'btn-primary' : 'btn-ghost'}
+              {...(method.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            >
+              {method.label}
+            </a>
+          ))}
+
+        <!-- 下载简历：点击展开下拉菜单 -->
+        <div class="resume-dropdown" id={dropdownId} data-dropdown>
+          <button
+            type="button"
+            class="btn-ghost"
+            aria-haspopup="true"
+            aria-expanded="false"
+            onclick={`const d=document.getElementById('${dropdownId}');const open=d.classList.toggle('open');this.setAttribute('aria-expanded', open?'true':'false');`}
           >
-            {method.label}
-          </a>
-        ))}
+            <span>{resumeButtonLabel}</span>
+            <svg class="resume-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <div class="resume-dropdown-menu" role="menu">
+            {resumes.map((r) => (
+              <a
+                href={r.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="resume-dropdown-item"
+                role="menuitem"
+                onclick={`document.getElementById('${dropdownId}')?.classList.remove('open');`}
+              >
+                <span class="flag">{r.label.length <= 3 ? r.label : r.label.slice(0, 2).toUpperCase()}</span>
+                <span>{r.label.length <= 3 ? (lang === 'zh' ? (r.label === 'EN' ? 'English CV' : '中文简历') : (r.label === 'EN' ? 'English CV' : '中文简历')) : r.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   </div>

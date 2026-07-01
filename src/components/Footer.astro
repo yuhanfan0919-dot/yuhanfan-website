@@ -1,20 +1,8 @@
 ---
-interface Props {
-  lang: 'zh' | 'en';
-}
-const { lang } = Astro.props;
-
-const t = lang === 'zh'
-  ? {
-      tagline: '用 AI 让"还在做重复劳动的人"先解放出来。',
-      built: '本站用 Astro + Tailwind + Claude Code 搭建',
-      year: '© 2026 Rain Fan',
-    }
-  : {
-      tagline: "Bringing AI to the people who haven't had the chance yet.",
-      built: 'Built with Astro + Tailwind + Claude Code',
-      year: '© 2026 Rain Fan',
-    };
+const t = {
+  tagline: 'AI for repetition. Humans for creation.',
+  year: '© 2026 Rain Fan',
+};
 ---
 
 <footer
@@ -31,8 +19,7 @@ const t = lang === 'zh'
           {t.tagline}
         </p>
       </div>
-      <div class="text-xs space-y-1 font-mono" style="color: var(--color-whisper);">
-        <p>{t.built}</p>
+      <div class="text-xs font-mono" style="color: var(--color-whisper);">
         <p>{t.year}</p>
       </div>
     </div>

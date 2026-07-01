@@ -366,7 +366,6 @@ export const zh: Content = {
       '我目前在找 AI 落地 / FDE 方向 / AI Solutions / Agent Workflow Automation 相关机会。倾向深圳或远程，也欢迎真实业务场景的 agent 落地讨论。',
     methods: [
       { label: '写邮件 →', href: 'mailto:yuhanfan0919@gmail.com' },
-      { label: '下载 PDF 简历 →', href: '/Rain-Fan-FDE-Resume.pdf' },
     ],
   },
 };
@@ -377,15 +376,15 @@ export const zh: Content = {
 export const en: Content = {
   hero: {
     eyebrow: 'Rain Fan',
-    greeting: 'Hi, I am Rain',
+    greeting: "Hi, I'm Rain",
     titlePrefix: '',
     titleAccent: '',
     titleSuffix: '',
     subtitle: ['Forward Deployed Engineer', 'AI in production', 'From diagnosis to go-live'],
     tagline:
-      "Working with AI agents, I shipped a live ordering, payment, delivery, and settlement system real users rely on.\nCurrently looking for Forward Deployed Engineer / AI delivery roles.",
+      "Co-piloting with AI agents, I own the entire 0-to-1 lifecycle—from requirement analysis to deploying live systems.\nRecently shipped a full-suite ordering, payment, delivery, and order tracking platform relied on by real users.\nCurrently seeking opportunities in Forward Deployed Engineering / AI Application Delivery / Full-Stack Delivery.",
     cta: {
-      primary: { label: 'See projects →', href: '/en/projects/chicken-oppa/' },
+      primary: { label: 'View Projects →', href: '/en/projects/chicken-oppa/' },
       secondary: { label: 'Get in touch', href: '#contact' },
     },
     portrait: '/portrait.png',
@@ -401,7 +400,7 @@ export const en: Content = {
     title: 'Production workflows I shipped.',
     item: {
       name: 'oppachikin',
-      status: '✅ Live · First paid order received',
+      status: '✅ Live · Taking orders',
       description:
         'A full digital operations stack delivered 0→1 for a real paying client — a Minsk fried chicken shop: customer ordering on the outside, employee scheduling on the inside. End to end: I defined the rules and boundaries, then collaborated with AI agents to implement.',
       submodules: [
@@ -632,7 +631,6 @@ export const en: Content = {
       "I'm looking for AI implementation, Forward Deployed Engineering, AI Solutions, and Agent Workflow Automation roles. Preference: Shenzhen or remote.",
     methods: [
       { label: 'Email →', href: 'mailto:yuhanfan0919@gmail.com' },
-      { label: 'Download CV (PDF) →', href: '/Rain-Fan-FDE-Resume.pdf' },
     ],
   },
 };
