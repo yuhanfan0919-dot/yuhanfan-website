@@ -116,9 +116,9 @@ export const zh: Content = {
     titlePrefix: '',
     titleAccent: '',
     titleSuffix: '',
-    subtitle: ['Forward Deployed Engineer', 'AI 应用落地', '从业务诊断到上线交付'],
+    subtitle: ['Forward Deployed Engineer', 'AI 解决方案工程师', '全栈交付工程师'],
     tagline:
-      '从0到1完成需求分析 → 与 AI agent 协作开发 → 上线部署全流程，\n交付真实用户在用的下单、付款、配送、订单追踪系统。\n目前正在寻找 FDE / AI 应用落地 / 全栈交付方向的机会。',
+      '从0到1完成需求分析 → 与 AI agents 协作开发 → 上线部署全流程，\n交付真实用户在用的下单、付款、配送、订单追踪系统。\n目前正在寻找 FDE / AI 解决方案工程师 / 全栈交付工程师方向的机会。',
     cta: {
       primary: { label: '看作品 →', href: '/projects/chicken-oppa/' },
       secondary: { label: '联系我', href: '#contact' },
@@ -200,7 +200,7 @@ export const zh: Content = {
         imageSlug: 'oppachikin',
         deepThinkChip: '全栈交付',
         deepThinkContent:
-          '用 agent 做全栈交付，最反直觉的一件事是——agent 越强，越要先做计划。先定架构、定边界、定 agent 能动什么不能动什么，再写第一行代码。否则 AI 节省下来的实现成本，会被"方向错了"的代价全部吃掉。',
+          '用 AI agents 做全栈交付，最反直觉的一件事是——AI agents 越强，越要先做计划。先定架构、定边界、定 AI agents 能动什么不能动什么，再写第一行代码。否则 AI 节省下来的实现成本，会被"方向错了"的代价全部吃掉。',
         modalIntro:
           '为明斯克一家本地炸鸡店从 0 到 1 交付生产级运营系统：对外是在线下单、支付、配送与订单追踪；对内是 Telegram 排班 bot、员工自助选班与月结工资自动核算。我的角色是定义业务规则、风险边界与交付节奏，再与 Claude Code / Codex 等 AI agents 协作实现。',
         modalBullets: [
@@ -218,14 +218,14 @@ export const zh: Content = {
           },
           {
             title: '生产级安全',
-            body: '专门一周做安全加固——金额服务端再校验、回调幂等、webhook 验签（常数时间比较）、Redis 分级限流；关键链路由我复核和调试，确保 agent 产出的代码能真正进入生产环境。',
+            body: '专门一周做安全加固——金额服务端再校验、回调幂等、webhook 验签（常数时间比较）、Redis 分级限流；关键链路由我复核和调试，确保 AI agents 产出的代码能真正进入生产环境。',
           },
           {
             title: '真实闭环 + 对内延伸',
             body: 'SMS 接口跑通后，已收到第一笔真实付款订单；排班 bot 7×24 在跑（Python + Telegram + Railway），员工自助选班、月结工资自动核算。',
           },
         ],
-        modalQuote: '"AI agent 能加速实现，但方向、边界和验收必须由人来定。"',
+        modalQuote: '"AI agents 能加速实现，但方向、边界和验收必须由人来定。"',
       },
       {
         slug: 'shunfeng',
@@ -271,9 +271,9 @@ export const zh: Content = {
         company: '无限进制',
         title: '多平台数据运营自动化',
         description:
-          '用 VBA + Power Query 把 iOS / Google / PayPal / Checkout 数百份原始报表的清洗、归集与对账流程模型化，效率提升 30%。',
+          '用 VBA + Power Query 把 iOS / Google / PayPal 三平台数百份原始报表的清洗、归集与对账流程模型化，效率提升 30%。',
         metricA: { value: '+30%', label: '效率提升' },
-        metricB: { value: '3 平台', label: 'iOS / Google / PP' },
+        metricB: { value: '3 平台', label: 'iOS / Google / PayPal' },
         imageSlug: 'wuxianjz',
         deepThinkChip: '多平台对账',
         deepThinkContent:
@@ -283,7 +283,7 @@ export const zh: Content = {
         modalBullets: [
           {
             title: '多平台收入对账',
-            body: '用 VBA + Power Query 清洗 iOS / Google / Checkout / PayPal 数百份原始报表，统一收入核对口径，整体效率提升 30%。',
+            body: '用 VBA + Power Query 清洗 iOS / Google / PayPal 三平台数百份原始报表，统一收入核对口径，整体效率提升 30%。',
           },
           {
             title: '广告投放数据归集',
@@ -305,7 +305,7 @@ export const zh: Content = {
         slug: 'kpmg',
         number: '04',
         category: 'BUSINESS PROCESS DIAGNOSTICS',
-        company: 'KPMG',
+        company: '毕马威会计师事务所',
         title: '业务流程诊断与财务尽调',
         description:
           '三年参与上市 / 拟上市公司的双准则合并报表、行业尽调与业财流程诊断；这套读懂销售、采购、生产、资金流的训练，是我做 AI 落地的前置能力。',
@@ -346,7 +346,7 @@ export const zh: Content = {
     chips: [
       'Claude Code',
       'Cursor',
-      'Agent 工作流',
+      'AI agents 工作流',
       '端到端交付',
       '解决方案设计',
       '需求挖掘 → 交付',
@@ -363,9 +363,9 @@ export const zh: Content = {
     eyebrow: '04 / Contact',
     title: '想聊 AI 落地吗？',
     body:
-      '我目前在找 AI 落地 / FDE 方向 / AI Solutions / Agent Workflow Automation 相关机会。倾向深圳或远程，也欢迎真实业务场景的 agent 落地讨论。',
+      '我目前在找 FDE / AI 解决方案工程师 / 全栈交付工程师相关机会，也欢迎真实业务场景的 AI agents 落地讨论。',
     methods: [
-      { label: '写邮件 →', href: 'mailto:yuhanfan0919@gmail.com' },
+      { label: '写邮件 →', href: 'mailto:yuhanfan@163.com' },
     ],
   },
 };
@@ -380,9 +380,9 @@ export const en: Content = {
     titlePrefix: '',
     titleAccent: '',
     titleSuffix: '',
-    subtitle: ['Forward Deployed Engineer', 'AI in production', 'From diagnosis to go-live'],
+    subtitle: ['Forward Deployed Engineer', 'AI Solutions Engineer', 'Full-stack Engineer'],
     tagline:
-      "Co-piloting with AI agents, I own the entire 0-to-1 lifecycle—from requirement analysis to deploying live systems.\nRecently shipped a full-suite ordering, payment, delivery, and order tracking platform relied on by real users.\nCurrently seeking opportunities in Forward Deployed Engineering / AI Application Delivery / Full-Stack Delivery.",
+      "Working with AI agents, I own the 0-to-1 delivery lifecycle—from requirement analysis to deploying live systems.\nRecently shipped an end-to-end ordering, payment, delivery, and order-tracking system used by real customers.\nCurrently seeking Forward Deployed Engineer / AI Solutions Engineer / Full-stack Engineer roles.",
     cta: {
       primary: { label: 'View Projects →', href: '/en/projects/chicken-oppa/' },
       secondary: { label: 'Get in touch', href: '#contact' },
@@ -464,7 +464,7 @@ export const en: Content = {
         imageSlug: 'oppachikin',
         deepThinkChip: 'Full-stack delivery',
         deepThinkContent:
-          "The most counter-intuitive lesson from shipping full-stack with agents: the stronger the agent, the more important it is to plan first. Define the architecture, the boundaries, what the agent can and cannot touch—before writing the first line of code. Otherwise the implementation cost AI saves you gets eaten by the cost of going in the wrong direction.",
+          "The most counter-intuitive lesson from shipping full-stack with AI agents: the more capable the AI agents are, the more important it is to plan first. Define the architecture, boundaries, and what AI agents can and cannot touch before writing the first line of code. Otherwise the implementation cost AI saves gets eaten by the cost of going in the wrong direction.",
         modalIntro:
           'For a local fried chicken shop in Minsk, I delivered a production operations system from 0 to 1: customer ordering, payment, delivery, and order tracking on the outside; Telegram scheduling, employee self-service, and monthly payroll automation on the inside. My role was to define the business rules, risk boundaries, and delivery rhythm, then collaborate with AI agents including Claude Code and Codex to implement.',
         modalBullets: [
@@ -482,7 +482,7 @@ export const en: Content = {
           },
           {
             title: 'Production-grade security',
-            body: 'A dedicated week of hardening—server-side amount validation, idempotent callbacks, webhook signature verification (constant-time comparison), tiered Redis rate limiting. I reviewed and debugged the critical path myself so agent-generated code could safely enter production.',
+            body: 'A dedicated week of hardening—server-side amount validation, idempotent callbacks, webhook signature verification (constant-time comparison), tiered Redis rate limiting. I reviewed and debugged the critical path myself so code generated with AI agents could safely enter production.',
           },
           {
             title: 'Closed loop + internal ops',
@@ -496,7 +496,7 @@ export const en: Content = {
         slug: 'shunfeng',
         number: '02',
         category: 'INTERNAL WORKFLOW AUTOMATION',
-        company: 'SF Tech',
+        company: 'SF Technology',
         title: 'KA close-to-cash workflow automation',
         description:
           'Worked with internal business teams to streamline the monthly KA workflow from acceptance to invoicing, receivables, P&L, and commercialization support, turning 6 recurring reports / ledgers into a structured process.',
@@ -505,7 +505,7 @@ export const en: Content = {
         imageSlug: 'shunfeng',
         deepThinkChip: 'Workflow automation',
         deepThinkContent:
-          "The starting point for AI automation isn't the technology—it's the pain. You have to have been repeatedly tortured by a process before you can really think through \"why has it always been done this way,\" and only then can you tell what should be automated and what shouldn't. The prerequisite for building the right tool is real pain.",
+          "The starting point for AI automation is not the technology—it is repeated exposure to the workflow. Only after operating a process end to end can you tell which steps should be automated and which should remain judgment-based.",
         modalIntro:
           'Supported the downstream commercialization workflow of KA projects, covering project acceptance, invoicing ledgers, receivables registration, P&L tracking, and commercialization reporting. I automated and standardized 6 recurring monthly reports / ledgers, reducing effort from 1 day to 2 hours.',
         modalBullets: [
@@ -527,18 +527,18 @@ export const en: Content = {
           },
         ],
         modalQuote:
-          '"The prerequisite for building the right tool is real pain." The real automation work is not filling spreadsheets faster; it is turning repeated handoffs, waiting, and risk points into a runnable workflow.',
+          '"Good automation starts with understanding the workflow." The real work is not filling spreadsheets faster; it is turning repeated handoffs, waiting, and risk points into a runnable workflow.',
       },
       {
         slug: 'wuxianjz',
         number: '03',
         category: 'DATA OPERATIONS AUTOMATION',
-        company: 'Wuxian Jinzhi',
+        company: 'Beyond Infinity Technology',
         title: 'Multi-platform data operations automation',
         description:
-          'Built VBA + Power Query models for cleansing, aggregating, and reconciling hundreds of raw reports across iOS / Google / PayPal / Checkout, improving efficiency by 30%.',
+          'Built VBA + Power Query models for cleansing, aggregating, and reconciling hundreds of raw reports across iOS / Google / PayPal, improving efficiency by 30%.',
         metricA: { value: '+30%', label: 'efficiency' },
-        metricB: { value: '3 platforms', label: 'iOS / GG / PP' },
+        metricB: { value: '3 platforms', label: 'iOS / Google / PayPal' },
         imageSlug: 'wuxianjz',
         deepThinkChip: 'Multi-platform reconciliation',
         deepThinkContent:
@@ -548,7 +548,7 @@ export const en: Content = {
         modalBullets: [
           {
             title: 'Multi-platform reconciliation',
-            body: 'Built a VBA + Power Query pipeline to cleanse hundreds of raw iOS / Google / Checkout / PayPal reports into one revenue reconciliation model, improving efficiency by 30%.',
+            body: 'Built a VBA + Power Query pipeline to cleanse hundreds of raw iOS / Google / PayPal reports into one revenue reconciliation model, improving efficiency by 30%.',
           },
           {
             title: 'Ad spend aggregation',
@@ -570,7 +570,7 @@ export const en: Content = {
         slug: 'kpmg',
         number: '04',
         category: 'BUSINESS PROCESS DIAGNOSTICS',
-        company: 'KPMG',
+        company: 'KPMG Huazhen LLP',
         title: 'Business-process diagnostics through audit and DD',
         description:
           'Three years across dual-standard consolidations, industry DD, and business-process diagnostics for listed and IPO-bound clients, learning to read sales, procurement, production, and cash flows before proposing fixes.',
@@ -611,7 +611,7 @@ export const en: Content = {
     chips: [
       'Claude Code',
       'Cursor',
-      'Agent workflows',
+      'AI agents delivery workflow',
       'End-to-end delivery',
       'Solution design',
       'Discovery → delivery',
@@ -628,9 +628,9 @@ export const en: Content = {
     eyebrow: '04 / Contact',
     title: "Let's talk AI implementation.",
     body:
-      "I'm looking for AI implementation, Forward Deployed Engineering, AI Solutions, and Agent Workflow Automation roles. Preference: Shenzhen or remote.",
+      "I'm looking for Forward Deployed Engineer / AI Solutions Engineer / Full-stack Engineer roles, and I'm open to discussing real-world AI agents deployment scenarios.",
     methods: [
-      { label: 'Email →', href: 'mailto:yuhanfan0919@gmail.com' },
+      { label: 'Email →', href: 'mailto:yuhanfan@163.com' },
     ],
   },
 };

@@ -67,7 +67,7 @@
       #align(left + horizon)[
         #text(size: 24pt, weight: "bold", fill: ink)[范雨寒 Rain]
         #v(-1pt)
-        #text(size: 8.8pt, fill: ink)[求职意向：FDE / AI落地工程师 / 全栈开发工程师]
+        #text(size: 8.8pt, fill: ink)[求职意向：FDE / AI 解决方案工程师 / 全栈交付工程师]
       ]
     ]
   ],
@@ -136,7 +136,7 @@
 )
 
 #entry(
-  [KPMG 深圳],
+  [毕马威会计师事务所],
   [审计助理经理],
   [2021.07 - 2024.01],
   [业务流程诊断与财务尽调],
@@ -169,5 +169,5 @@
 #line(length: 100%, stroke: 0.65pt + rule)
 #v(3pt)
 #text(size: 8.5pt, fill: body)[
-Agent 工作流 · TypeScript / Next.js · Python · Supabase · SQL · Excel VBA / Power Query · 业务流程诊断 · 解决方案设计
+AI agents 工作流 · TypeScript / Next.js · Python · Supabase · SQL · Excel VBA / Power Query · 业务流程诊断 · 解决方案设计
 ]

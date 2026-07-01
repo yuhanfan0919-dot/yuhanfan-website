@@ -19,7 +19,10 @@ const scenes = [
         <p>Rain Fan · Rain</p>
         <p class="dim">Never off the clock</p>
       </div>
-      <a href="/en/" class="pg-nav-right">← Back home</a>
+      <div class="pg-nav-actions">
+        <a href="/playground/" class="pg-lang-link">中</a>
+        <a href="/en/" class="pg-nav-right">← Back home</a>
+      </div>
     </div>
 
     <header class="pg-intro">
@@ -72,10 +75,17 @@ const scenes = [
     padding: 1.75rem 2rem; pointer-events: none;
   }
   .pg-nav a { pointer-events: auto; }
+  .pg-nav-actions { display: flex; align-items: center; gap: 1rem; pointer-events: auto; }
   .pg-nav-left p { font-size: 0.85rem; font-weight: 600; line-height: 1.4; text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
   .pg-nav-left .dim { font-weight: 400; opacity: 0.6; }
   .pg-nav-right { font-size: 0.85rem; color: #fff; text-decoration: none; opacity: 0.85; text-shadow: 0 1px 8px rgba(0,0,0,0.6); transition: opacity 0.2s; }
   .pg-nav-right:hover { opacity: 1; }
+  .pg-lang-link {
+    padding: 0.25rem 0.55rem; border: 1px solid rgba(255,255,255,0.28); border-radius: 999px;
+    color: #fff; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em;
+    text-decoration: none; opacity: 0.85; text-shadow: 0 1px 8px rgba(0,0,0,0.6); transition: opacity 0.2s;
+  }
+  .pg-lang-link:hover { opacity: 1; }
 
   .pg-intro {
     min-height: 90vh; display: flex; flex-direction: column; justify-content: center;

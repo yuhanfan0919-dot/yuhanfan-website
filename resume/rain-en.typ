@@ -67,7 +67,7 @@
       #align(left + horizon)[
         #serif(text(size: 23pt)[Rain Fan])
         #v(-1pt)
-        #text(size: 8.4pt, fill: ink)[Target roles: FDE / AI Solutions Engineer / Full-stack Engineer]
+        #text(size: 8.4pt, fill: ink)[Target roles: Forward Deployed Engineer / AI Solutions Engineer / Full-stack Engineer]
       ]
     ]
   ],
@@ -112,7 +112,7 @@
 #section[EXPERIENCE]
 
 #entry(
-  [SF Tech],
+  [SF Technology],
   [Financial Analysis],
   [2025.04 - 2025.10],
   [KA close-to-cash workflow automation],
@@ -124,7 +124,7 @@
 )
 
 #entry(
-  [Wuxian Jinzhi],
+  [Beyond Infinity Technology],
   [Financial Analyst],
   [2024.07 - 2024.10],
   [Multi-platform data operations automation],
@@ -136,7 +136,7 @@
 )
 
 #entry(
-  [KPMG Shenzhen],
+  [KPMG Huazhen LLP],
   [Assistant Audit Manager],
   [2021.07 - 2024.01],
   [Business-process diagnostics through audit and DD],
@@ -169,5 +169,5 @@
 #line(length: 100%, stroke: 0.65pt + rule)
 #v(3pt)
 #text(size: 7.8pt, fill: body)[
-Agent workflows · TypeScript / Next.js · Python · Supabase · SQL · Excel VBA / Power Query · Business-process diagnostics · Solution design
+AI agents delivery workflow · TypeScript / Next.js · Python · Supabase · SQL · Excel VBA / Power Query · Business-process diagnostics · Solution design
 ]

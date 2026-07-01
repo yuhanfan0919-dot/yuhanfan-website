@@ -17,7 +17,7 @@ const securityItems = [
 ---
 
 <Layout
-  title="oppachikin 项目复盘：把炸鸡店流程交给 agent | Rain Fan"
+  title="oppachikin 项目复盘：把炸鸡店流程交给 AI agents | Rain Fan"
   description="一个由非科班开发者借助 AI 协作，从外部点餐系统延伸到内部运营流程的真实项目复盘。"
   lang="zh"
 >
@@ -85,22 +85,22 @@ const securityItems = [
           </div>
           <ol>
             <li class="flow-row reveal">
-              <span class="flow-old">只能打电话、或到店点单（在 Instagram 看到也只能打电话）</span>
+              <span class="flow-old"><strong class="flow-row-title">下单渠道</strong>只能打电话、或到店点单（在 Instagram 看到也只能打电话）</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
               <span class="flow-new">Instagram 链接一点直达官网，随时自助下单</span>
             </li>
             <li class="flow-row reveal">
-              <span class="flow-old">下单前根本不知道能不能送、运费多少</span>
+              <span class="flow-old"><strong class="flow-row-title">配送透明度</strong>下单前根本不知道能不能送、运费多少</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
               <span class="flow-new">官网下外卖单，支付时即可显示配送费</span>
             </li>
             <li class="flow-row reveal">
-              <span class="flow-old">付款只能到店、只能用现金</span>
+              <span class="flow-old"><strong class="flow-row-title">支付方式</strong>付款只能到店、只能用现金</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
               <span class="flow-new">Alfa Bank 电子支付，全程电子化</span>
             </li>
             <li class="flow-row reveal">
-              <span class="flow-old">下单后只能干等，不知道做没做、送到哪</span>
+              <span class="flow-old"><strong class="flow-row-title">订单追踪</strong>下单后只能干等，不知道做没做、送到哪</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
               <span class="flow-new">全程实时查看订单与配送状态</span>
             </li>
@@ -123,27 +123,27 @@ const securityItems = [
           </div>
           <ol>
             <li class="flow-row reveal">
-              <span class="flow-old">店员只能在店里接单、现场制作</span>
+              <span class="flow-old"><strong class="flow-row-title">接单出餐</strong>店员只能在店里接单、现场制作</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
               <span class="flow-new">网站下单自动推送 Telegram 员工群，一键接单；<br />点「制作完成」顾客同步看到状态</span>
             </li>
             <li class="flow-row reveal">
-              <span class="flow-old">送外卖全靠员工手动叫车</span>
+              <span class="flow-old"><strong class="flow-row-title">配送调度</strong>送外卖全靠员工手动叫车</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
               <span class="flow-new">对接 Yandex B2B API，制作完成自动叫车</span>
             </li>
             <li class="flow-row reveal">
-              <span class="flow-old">员工排班靠群里接龙，乱、还容易漏</span>
+              <span class="flow-old"><strong class="flow-row-title">员工排班</strong>员工排班靠群里接龙，乱、还容易漏</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
               <span class="flow-new">每周用 Telegram bot 一键自助选班</span>
             </li>
             <li class="flow-row reveal">
-              <span class="flow-old">老板每到月底手动统计工时、算工资</span>
+              <span class="flow-old"><strong class="flow-row-title">工时薪资</strong>老板每到月底手动统计工时、算工资</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
               <span class="flow-new">bot 自动累计工时、直接算好工资</span>
             </li>
             <li class="flow-row reveal">
-              <span class="flow-old">回头客全靠老板记、留不住</span>
+              <span class="flow-old"><strong class="flow-row-title">会员留存</strong>回头客全靠老板记、留不住</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
               <span class="flow-new">会员积分自动沉淀回头客</span>
             </li>
@@ -221,10 +221,10 @@ const securityItems = [
       </section>
 
       <section class="case-section agent-section">
-        <div class="section-kicker">05 / Agent collaboration</div>
+        <div class="section-kicker">05 / AI agents collaboration</div>
         <div class="section-heading">
           <h2>AI 没有替我思考，但它放大了我的判断</h2>
-          <p>这个项目最像我简历里那句话：把流程交给 agent。前提是，我先把业务规则、风险边界和取舍想清楚。</p>
+          <p>这个项目最像我简历里那句话：把流程交给 AI agents。前提是，我先把业务规则、风险边界和取舍想清楚。</p>
         </div>
 
         <div class="agent-split">
@@ -235,11 +235,10 @@ const securityItems = [
               <li>判断哪些风险上线前必须补</li>
               <li>把“经验”转成可验证的数据假设</li>
               <li>决定哪里自动化，哪里保留人工兜底</li>
-              <li>把合规、外部审批这类“非代码”阻塞排进上线计划（如等了 5 天的短信 alphaname 审批）</li>
             </ul>
           </div>
           <div>
-            <p class="panel-label">Agent 负责</p>
+            <p class="panel-label">AI agents 负责</p>
             <ul>
               <li>拆解 API 对接路径</li>
               <li>生成和重构 TypeScript 代码</li>
@@ -248,15 +247,6 @@ const securityItems = [
             </ul>
           </div>
         </div>
-      </section>
-
-      <section class="case-close">
-        <p class="eyebrow mb-4">Reflection</p>
-        <h2>这不是一个“我会写网站”的证明。</h2>
-        <p>
-          它更像一个证据：我能和真实客户一起，把一个模糊、琐碎、充满例外的业务流程，拆成能运行、能审计、能继续迭代的系统。
-        </p>
-        <a href="/#contact" class="btn-primary">聊聊流程自动化</a>
       </section>
     </main>
   </article>
@@ -476,6 +466,28 @@ const securityItems = [
 
   .flow-old {
     color: var(--color-ink);
+  }
+
+  .flow-row-title {
+    display: flex;
+    align-items: center;
+    gap: 0.42rem;
+    margin-bottom: 0.28rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .flow-row-title::before {
+    content: '';
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 999px;
+    background: currentColor;
+    box-shadow: 0 0 0 0.18rem color-mix(in srgb, var(--color-accent) 16%, transparent);
+    flex: 0 0 auto;
   }
 
   .flow-arrow {

@@ -25,7 +25,10 @@ const filmItems = items.map((item, index) => ({
         <p>范雨寒 · Rain</p>
         <p class="dim">工作之外，停不下来的人</p>
       </div>
-      <a href="/" class="film-nav-right">← 返回主页</a>
+      <div class="film-nav-actions">
+        <a href="/en/film/" class="film-lang-link">EN</a>
+        <a href="/" class="film-nav-right">← 返回主页</a>
+      </div>
     </div>
 
     <p class="film-hint film-hint-desktop">向下滚动 · 拉动胶卷 ↓</p>
@@ -182,6 +185,13 @@ const filmItems = items.map((item, index) => ({
     pointer-events: auto;
   }
 
+  .film-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    pointer-events: auto;
+  }
+
   .film-nav-left p {
     font-size: 0.85rem;
     font-weight: 600;
@@ -204,6 +214,23 @@ const filmItems = items.map((item, index) => ({
   }
 
   .film-nav-right:hover {
+    opacity: 1;
+  }
+
+  .film-lang-link {
+    padding: 0.25rem 0.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    opacity: 0.85;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  }
+
+  .film-lang-link:hover {
     opacity: 1;
   }
 
@@ -465,7 +492,8 @@ const filmItems = items.map((item, index) => ({
     }
 
     .film-nav-left p,
-    .film-nav-right {
+    .film-nav-right,
+    .film-lang-link {
       font-size: 0.78rem;
     }
 

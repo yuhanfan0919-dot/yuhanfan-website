@@ -9,9 +9,24 @@ const { lang } = Astro.props;
 // 导航锚点（中英文从 content.ts 取，跟随语言切换）
 const nav = (lang === 'zh' ? zh : en).nav;
 
-// 中英文 toggle 两端 href
-const zhHref = lang === 'zh' ? '#' : '/';
-const enHref = lang === 'en' ? '#' : '/en/';
+// 中英文 toggle 两端 href：同页切换；无法映射的页面回退到对应语言首页
+const pathname = Astro.url.pathname;
+const normalizePath = (path: string) => {
+  if (path === '') return '/';
+  return path.endsWith('/') ? path : `${path}/`;
+};
+const currentPath = normalizePath(pathname);
+const toEnMap: Record<string, string> = {
+  '/': '/en/',
+  '/projects/chicken-oppa/': '/en/projects/chicken-oppa/',
+  '/film/': '/en/film/',
+  '/playground/': '/en/playground/',
+};
+const toZhMap: Record<string, string> = Object.fromEntries(
+  Object.entries(toEnMap).map(([zhPath, enPath]) => [enPath, zhPath])
+);
+const zhHref = lang === 'zh' ? '#' : (toZhMap[currentPath] ?? '/');
+const enHref = lang === 'en' ? '#' : (toEnMap[currentPath] ?? '/en/');
 const homeHref = lang === 'zh' ? '/' : '/en/';
 const resolveNavHref = (href: string) => href.startsWith('#') ? `${homeHref}${href}` : href;
 ---

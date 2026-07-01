@@ -2,7 +2,7 @@
 import Layout from '../../../layouts/Layout.astro';
 
 const highlights = [
-  { label: 'Timeline', value: '5 Weeks', detail: 'From zero to a production-grade e-commerce system.' },
+  { label: 'Timeline', value: '5 Weeks', detail: 'From zero to a production ordering and operations system.' },
   { label: 'Scope', value: 'External + Internal', detail: 'Customer ordering and store operations designed in tandem.' },
   { label: 'Status', value: 'Live', detail: 'End-to-end payment pipeline verified · Processing real-world paid orders.' },
   { label: 'Pre-launch Risk Audit', value: '1 Week', detail: 'Rigorous audit of payments, webhook callbacks, and rate limiting prior to launch.' },
@@ -18,7 +18,7 @@ const securityItems = [
 
 <Layout
   title="oppachikin project retrospective: from 0 to a production operations system | Rain Fan"
-  description="A production-grade e-commerce and internal operations system delivered 0→1 in 5 weeks for a real paying client, built with AI agent collaboration."
+  description="A production ordering and internal operations system delivered 0→1 in 5 weeks for a real paying client, built through collaboration with AI agents."
   lang="en"
 >
   <article class="case-study">
@@ -100,7 +100,7 @@ const securityItems = [
             <li class="flow-row reveal">
               <span class="flow-old"><strong class="flow-row-title">Payment Method</strong> Cash-only, in-person transactions.</span>
               <span class="flow-arrow" aria-hidden="true">⟶</span>
-              <span class="flow-new">Integrated Alfa Bank digital payments for a 100% cashless flow.</span>
+              <span class="flow-new">Integrated Alfa Bank online payments, enabling a cashless checkout flow.</span>
             </li>
             <li class="flow-row reveal">
               <span class="flow-old"><strong class="flow-row-title">Order Tracking</strong> Blind waiting post-purchase with no status updates.</span>
@@ -226,10 +226,10 @@ const securityItems = [
       </section>
 
       <section class="case-section agent-section">
-        <div class="section-kicker">05 / Agent collaboration</div>
+        <div class="section-kicker">05 / Collaboration with AI agents</div>
         <div class="section-heading">
           <h2>AI didn't think for me — it amplified my judgment</h2>
-          <p>AI doesn't make product decisions for me. It makes the gap between "an idea I can articulate" and "a working implementation" 10x narrower. The bottleneck becomes how clearly I can think. This project is exactly what my resume says: hand the workflow to an agent — after I first figure out the business rules, risk boundaries, and trade-offs.</p>
+          <p>AI does not make product decisions for me. It reduces the distance between a well-specified idea and a working implementation. The bottleneck becomes how clearly I can define the business rules, risk boundaries, and trade-offs before handing work to AI agents.</p>
         </div>
 
         <div class="agent-split">
@@ -240,11 +240,10 @@ const securityItems = [
               <li>Deciding which risks must be closed before launch</li>
               <li>Turning "experience" into testable hypotheses</li>
               <li>Choosing where to automate vs. keep a human in the loop</li>
-              <li>Managing non-code blockers (compliance, external approvals) in the launch plan — e.g., the 5-day wait for SMS alphaname approval</li>
             </ul>
           </div>
           <div>
-            <p class="panel-label">What the agent does</p>
+            <p class="panel-label">What AI agents do</p>
             <ul>
               <li>Mapping out API integration paths</li>
               <li>Generating and refactoring TypeScript code</li>
@@ -253,15 +252,6 @@ const securityItems = [
             </ul>
           </div>
         </div>
-      </section>
-
-      <section class="case-close">
-        <p class="eyebrow mb-4">Reflection</p>
-        <h2>This isn't proof that I can "build a website."</h2>
-        <p>
-          It's proof that I can sit with a real client, untangle a messy, exception-filled business process, and turn it into a system that runs, can be audited, and can keep iterating.
-        </p>
-        <a href="/en/#contact" class="btn-primary">Let's talk workflow automation</a>
       </section>
     </main>
   </article>
@@ -484,14 +474,26 @@ const securityItems = [
   }
 
   .flow-row-title {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.42rem;
     font-family: var(--font-mono);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-muted);
+    color: var(--color-accent);
     margin-bottom: 0.35rem;
+  }
+
+  .flow-row-title::before {
+    content: '';
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 999px;
+    background: currentColor;
+    box-shadow: 0 0 0 0.18rem color-mix(in srgb, var(--color-accent) 16%, transparent);
+    flex: 0 0 auto;
   }
 
   .flow-arrow {
