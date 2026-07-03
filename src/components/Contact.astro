@@ -126,8 +126,7 @@ const dropdownId = 'resume-dropdown-' + Math.random().toString(36).slice(2, 9);
             {resumes.map((r) => (
               <a
                 href={r.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                download={r.href.split('/').pop()}
                 class="resume-dropdown-item"
                 role="menuitem"
                 onclick={`document.getElementById('${dropdownId}')?.classList.remove('open');`}
