@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title: string;
@@ -40,6 +41,7 @@ const {
       <slot />
     </main>
     {!hideChrome && <Footer lang={lang} />}
+    <Analytics />
 
     <!-- 滚动入场动画 -->
     <script>
@@ -56,6 +58,87 @@ const {
       );
 
       document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    </script>
+
+    <!-- 求职转化埋点：只记录关键点击，不记录个人身份 -->
+    <script>
+      import { track } from '@vercel/analytics';
+
+      const params = new URLSearchParams(window.location.search);
+      const queryReferral =
+        params.get('ref') ||
+        params.get('utm_source') ||
+        params.get('source');
+
+      const externalReferrer = (() => {
+        try {
+          if (!document.referrer) return null;
+          const referrerUrl = new URL(document.referrer);
+          return referrerUrl.hostname === window.location.hostname
+            ? null
+            : referrerUrl.hostname;
+        } catch {
+          return null;
+        }
+      })();
+
+      const storedReferral = sessionStorage.getItem('portfolio_ref');
+      const referral = queryReferral || storedReferral || externalReferrer || 'direct';
+      if (queryReferral || !storedReferral) {
+        sessionStorage.setItem('portfolio_ref', referral);
+      }
+
+      const locale = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+
+      document.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement | null;
+        const link = target?.closest('a[href]') as HTMLAnchorElement | null;
+        if (!link) return;
+
+        const href = link.getAttribute('href') || '';
+        const eventBase = {
+          ref: referral,
+          locale,
+          source_path: window.location.pathname,
+        };
+
+        if (href.startsWith('mailto:')) {
+          track('contact_email_click', eventBase);
+          return;
+        }
+
+        let url: URL;
+        try {
+          url = new URL(href, window.location.href);
+        } catch {
+          return;
+        }
+
+        const targetPath = url.pathname;
+
+        if (targetPath.endsWith('.pdf')) {
+          track('resume_download_click', {
+            ...eventBase,
+            resume_lang: targetPath.includes('-ZH') ? 'zh' : 'en',
+          });
+          return;
+        }
+
+        if (targetPath.includes('/projects/chicken-oppa')) {
+          track('project_case_click', {
+            ...eventBase,
+            project: 'oppachikin',
+          });
+          return;
+        }
+
+        if (url.origin !== window.location.origin) {
+          track('external_link_click', {
+            ...eventBase,
+            target_host: url.hostname,
+          });
+        }
+      });
     </script>
   </body>
 </html>
