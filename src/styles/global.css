@@ -77,6 +77,19 @@ body {
   background: transparent;
 }
 
+:where(p, li) {
+  text-wrap: pretty;
+  line-break: loose;
+}
+
+:where(.display, h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.no-break {
+  white-space: nowrap;
+}
+
 ::selection {
   background: var(--color-accent);
   color: #fff;
