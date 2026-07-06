@@ -426,22 +426,22 @@ export const en: Content = {
   },
   about: {
     eyebrow: '03 / About',
-    titleLines: ['Curious about the world.', 'Real with people.', 'I make things happen.'],
+    titleLines: ['Curious about the world.', 'Genuine with people.', 'Obsessed with making things happen.'],
     traits: [
       {
         label: 'Curiosity',
-        lead: 'A natural curiosity about the world.',
-        body: "It draws me to how real businesses actually work; I'll dive into any unfamiliar field and get into the operation to solve real problems.",
+        lead: 'Driven by a natural curiosity about how the business world works.',
+        body: 'I thrive on diving into unfamiliar domains, getting my hands dirty on the front lines, and solving real-world problems.',
       },
       {
         label: 'Connection',
-        lead: 'I connect with people, for real.',
-        body: "I started the FUNergy sports community and coach 'life-reset' sandbox sessions — not because I like a crowd, but because good connections help people see more possibilities.",
+        lead: 'Believer in authentic human connection.',
+        body: "Whether founding the 'FUNergy' sports community or coaching 'Reset Life' simulation games, my goal is always to create a high-energy space where people unlock new possibilities together.",
       },
       {
         label: 'Action',
-        lead: 'I turn ideas into action.',
-        body: "Finance- and audit-trained, I went from automating my own workflow to teaching myself AI coding and shipping a full system on my own; I don't just think — I learn, I try, until it actually runs.",
+        lead: 'Obsessed with turning ideas into reality.',
+        body: "Coming from a financial audit background, I evolved from optimizing daily workflows to teaching myself AI-assisted coding and shipping full-stack systems. I don't just ideate—I learn, build, and execute until it runs seamlessly.",
       },
     ],
     playLink: { label: 'Rain off the clock →', href: '/en/film' },
